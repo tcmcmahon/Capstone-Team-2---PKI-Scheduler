@@ -42,7 +42,7 @@ CREATE TABLE Stage_Course_Sheet(
   Comments VARCHAR(256),
   Notes_1 VARCHAR(256),
   Notes_2 VARCHAR(256)
-)
+);
 
 CREATE TABLE RoomsList(
   Room_Number VARCHAR(20),
@@ -51,9 +51,9 @@ CREATE TABLE RoomsList(
   Special_Attributes VARCHAR(256),
   Seats INT,
   Computers INT
-)
+);
 
 CREATE TABLE CourseLookup(
   Orig_Course CHAR(9),
   CoList_Course CHAR(9)
-)
+);
