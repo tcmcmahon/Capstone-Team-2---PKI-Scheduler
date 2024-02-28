@@ -29,7 +29,7 @@ function App() {
       }
     } catch (error) {
       console.error('Error uploading file:', error);
-      alert('Error uploading file!');
+      alert('Error uploading file: ' + error.message); // Log the error message received from the server
     }
   };
 
