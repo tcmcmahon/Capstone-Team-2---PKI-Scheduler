@@ -6,6 +6,9 @@ const path = require('path');
 const app = express();
 const PORT = 3001;
 
+const fs = require("fs");
+const { parse } = require("csv-parse");
+
 // Enable CORS for all routes
 app.use(cors());
 
@@ -38,3 +41,10 @@ app.post('/upload', upload.single('file'), (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+fs.createReadStream("./uploads/1709130873678_Spring2023.csv")
+  .pipe(parse({delimiter: ",", from_line: 2}))
+  .on("data", function(row)
+  {
+    console.log(row);
+  })
