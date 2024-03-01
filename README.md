@@ -1,5 +1,16 @@
 # Capstone-Team-2---PKI-Scheduler
 
+### ABOUT THE APPLICATION:
+  This application is a web application using React as the front-end and Node.js as the back-end. The goal is to take a CSV file given by the University of Nebraska at Omaha registrar/faculty that has information about the courses for the given semester. Our application will allow uploading of the file through the frontend, and parsing of the file in the backend. Parsing is to take the file and run the data through a scheduling algorithm to create an efficient assignment of courses to classrooms in the PKI building.
+
+### RELEASE NOTES:
+  MILESTONE 1:
+  In the current version as of now, we have created the front-end and styled it, and created the back-end with basic parsing functionality. The front-end allows for uploading of a CSV file, and the back-end takes the file and outputs the contents of the file to the command line.
+  We have multiple branches, each showing the work done by each person. We named each branch as first initial/lastname/point of branch. Frederic's branch (fshope) created the database definitions for the upcoming milestone. This is not merged to main for Milestone 1, but will be merged in Milestone 2.
+  Josh's branch (jshadbolt) first created the basic web app and the basic backend. 
+  Travis's (tmcmahon) branch branched off of Josh's, and styled the web app and outputted the CSV file contents to the command line.
+  Josh's branch (updated) then put the parsing code in a function, and added some changes to the overall parsing structure.
+
 ### APPLICATION ACCESS:
   #### IF NOT USING APP/TOOL SUCH AS FORK/GITHUB DESKTOP:
     1. Go to repository, tcmcmahon/Capstone-Team2-PKI-Scheduler
