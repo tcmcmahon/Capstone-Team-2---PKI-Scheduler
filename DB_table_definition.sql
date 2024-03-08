@@ -54,6 +54,6 @@ CREATE TABLE RoomsList(
 );
 
 CREATE TABLE CourseLookup(
-  Orig_Course CHAR(9),
-  CoList_Course CHAR(9)
+  Orig_Course CHAR(15),
+  CoList_Course CHAR(15)
 );

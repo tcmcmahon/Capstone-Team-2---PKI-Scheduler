@@ -1,4 +1,4 @@
-INSERT INTO CrossListedCourses
+INSERT INTO CourseLookup
     (
     Orig_Course, CoList_Course
     )
