@@ -1,0 +1,74 @@
+{
+    "108": {
+        "Zoom-Ready": true,
+        "Colab": false,
+        "Lab": false,
+        "Displays": {
+            "Type": "TV",
+            "Number": 3,
+            "Size": 80 
+        },
+        "Info": {
+            "IS&T": true,
+            "CoE": true,
+            "Classroom-type": "video",
+            "Conference-type": "HDMI",
+            "Display": "Mini DisplayPort"
+        },
+        "Seats": 12,
+        "Computers": 1
+    },
+    "145": {},
+    "149": {},
+    "150": {
+        "Zoom-Ready": true,
+        "Colab": false,
+        "Lab": false,
+        "Displays": {
+            "Type": "TV",
+            "Number": 3,
+            "Size": 80 
+        },
+        "Info": {
+            "IS&T": true,
+            "CoE": true,
+            "Classroom-type": "video",
+            "Conference-type": "HDMI",
+            "Display": "Mini DisplayPort"
+        },
+        "Seats": 12,
+        "Computers": 1
+    },
+    "151": {},
+    "153": {},
+    "154A": {},
+    "154B": {},
+    "154C": {},
+    "154D": {},
+    "154E": {},
+    "154F": {},
+    "155": {},
+    "157": {},
+    "158": {},
+    "160": {},
+    "161": {},
+    "164": {},
+    "249": {},
+    "250": {},
+    "252": {},
+    "256": {},
+    "259": {},
+    "260": {},
+    "261": {},
+    "263": {},
+    "269": {},
+    "270": {},
+    "274": {},
+    "276": {},
+    "279": {},
+    "350": {},
+    "352": {},
+    "361": {},
+    "368": {},
+    "391A": {}
+}

@@ -8,20 +8,11 @@ var { parse } = require("csv-parse");
 var csvData = [];
 
 fs.createReadStream('./server/uploads/test.csv')
-    .pipe(parse({delimiter: ':', quote: '"', escape: ' '}))
-    .on('data', function(csvrow) {
-        console.log(csvData);
-        csvData.push(csvrow);
-    })
-    .on('end', function() {
-        console.log(csvData);
+    .pipe(parse({ delimiter: ',', from_line: 2 }))
+    .on('data', function (row) {
+        // console.log(row);
+        csvData.push(row);
     });
 
-// fs.readFile('server/uploads/test.csv', function (err, data) {
-//     if (err) {
-//         return console.error(err);
-//     }
-//     console.log('Ansynchronous read: ' + data.toString());
-// });
-
 matchRooms();
+console.log(csvData);
