@@ -1,3 +1,5 @@
+import matchRooms from 'restrictions';
+
 const express = require('express');
 const cors = require('cors')
 const multer = require('multer');
@@ -44,6 +46,7 @@ app.listen(PORT, () => {
 });
 
 function printCSVtoCLI(filePath) {
+  matchRooms()
   fs.createReadStream(filePath)
     .pipe(parse({ delimiter: ",", from_line: 2 }))
     .on("data", function (row) {
