@@ -7,162 +7,74 @@ var csvData = [];
 var classData = []; // will hold instances of classDescription
 
 
-// delay for a number of milliseconds
-function sleep(delay) {
-    var start = new Date().getTime();
-    while (new Date().getTime < start + delay);
-}
-
-
 function readCSVData() {
     fs.createReadStream('./server/uploads/test.csv')
-    .pipe(parse({from_line: 2}))
+    .pipe(parse({from_line: 4}))
     .on('data', function (row) {
         csvData.push(row);
     })
     .on('end', function() {
-        var cd = ClassDescription;
-        for (var i = 0; i < csvData.length; i++) { 
-            sleep(1000);
-            tmp = i % 42;
-            switch(tmp) { // TODO: fix this so that it will add the individual data to the classDescription object
-                case 0:
-                    cd.name = csvData[i];
-                    break;
-                case 1:
-                    cd.term = csvData[i];
-                    break;
-                case 2:
-                    cd.deptCode = csvData[i];
-                    break;
-                case 3:
-                    cd.subjCode = csvData[i];
-                    break;
-                case 4:
-                    cd.catalogNumber = csvData[i];
-                    break;
-                case 5:
-                    cd.course = csvData[i];
-                    break;
-                case 6:
-                    cd.sectionNumber = csvData[i];
-                    break;
-                case 7:
-                    cd.courseTitle = csvData[i];
-                    break;
-                case 8:
-                    cd.sectionType = csvData[i];
-                    break;
-                case 9:
-                    cd.topic = csvData[i];
-                    break;
-                case 10:
-                    cd.meetingPattern = csvData[i];
-                    break;
-                case 11:
-                    cd.meetings = csvData[i];
-                    break;
-                case 12:
-                    cd.instructor = csvData[i];
-                    break;
-                case 13:
-                    cd.room = csvData[i];
-                    break;
-                case 14:
-                    cd.status = csvData[i];
-                    break;
-                case 15:
-                    cd.session = csvData[i];
-                    break;
-                case 16:
-                    cd.campus = csvData[i];
-                    break;
-                case 17:
-                    cd.instMethod = csvData[i];
-                    break;
-                case 18:
-                    cd.integPattern = csvData[i];
-                    break;
-                case 19:
-                    cd.schedulePrint = csvData[i];
-                    break;
-                case 20:
-                    cd.consent = csvData[i];
-                    break;
-                case 21:
-                    cd.creditHrsMin = csvData[i];
-                    break;
-                case 22:
-                    cd.creditHrs = csvData[i];
-                    break;
-                case 23:
-                    cd.gradeMode = csvData[i];
-                    break;
-                case 24:
-                    cd.attributes = csvData[i];
-                    break;
-                case 25:
-                    cd.courseAttributes = csvData[i];
-                    break;
-                case 26:
-                    cd.roomAttributes = csvData[i];
-                    break;
-                case 27:
-                    cd.enrolled = csvData[i];
-                    break;
-                case 28:
-                    cd.maximumEnrollments = csvData[i];
-                    break;
-                case 29:
-                    cd.priorEnrollments = csvData[i];
-                    break;
-                case 30:
-                    cd.projectedEnrollments = csvData[i];
-                    break;
-                case 31:
-                    cd.waitCap = csvData[i];
-                    break;
-                case 32:
-                    cd.rmCapRequest = csvData[i];
-                    break;
-                case 33:
-                    cd.crossListings = csvData[i];
-                    break;
-                case 34:
-                    cd.crossListMaximum = csvData[i];
-                    break;
-                case 35:
-                    cd.crossListProjected = csvData[i];
-                    break;
-                case 36:
-                    cd.crossListWaitCap = csvData[i];
-                    break;
-                case 37:
-                    cd.crossListCapRequest = csvData[i];
-                    break;
-                case 38:
-                    cd.linkTo = csvData[i];
-                    break;
-                case 39:
-                    cd.comments = csvData[i];
-                    break;
-                case 40:
-                    cd.notes1 = csvData[i];
-                    break
-                case 41:
-                    cd.notes2 = csvData[i];
-                    console.log(cd);
-                    classData.push(cd);
-                    cd.clear();
-                    break;
-                default:
-                    console.log("error: wasn't able to parse csv data to classDescription");
-            };
-        };
-        console.log(classData);
-    });
-    console.log(classData);
-};
+        var cd = new ClassDescription();
+        var rowCount = 0;
+        var prevClassName;
+        for (var i = 0; i < csvData.length; i++) {
+            if (csvData[i][0] === '') {
+                cd.name = prevClassName;
+            }
+            else {
+                prevClassName = csvData[i][0];
+                continue;
+            }
+            cd.term = csvData[i][1];
+            cd.termCode = csvData[i][2];
+            cd.deptCode = csvData[i][3];
+            cd.subjCode = csvData[i][4];
+            cd.catalogNumber = csvData[i][5];
+            cd.course = csvData[i][6];
+            cd.sectionNumber = csvData[i][7];
+            cd.courseTitle = csvData[i][8];
+            cd.sectionType = csvData[i][9];
+            cd.topic = csvData[i][10];
+            cd.meetingPattern = csvData[i][11];
+            cd.meeting = csvData[i][12];
+            cd.instructor = csvData[i][13];
+            cd.room = csvData[i][14];
+            cd.status = csvData[i][15];
+            cd.session = csvData[i][16];
+            cd.campus = csvData[i][17];
+            cd.instMethod = csvData[i][18];
+            cd.integPattern = csvData[i][19];
+            cd.schedulePrint = csvData[i][20];
+            cd.consent = csvData[i][21];
+            cd.creditHrsMin = csvData[i][22];
+            cd.creditHrs = csvData[i][23];
+            cd.gradeMode = csvData[i][24];
+            cd.attributes = csvData[i][25];
+            cd.courseAttributes = csvData[i][26];
+            cd.roomAttributes = csvData[i][27];
+            cd.enrolled = csvData[i][28];
+            cd.maximumEnrollments = csvData[i][29];
+            cd.priorEnrollments = csvData[i][30];
+            cd.projectedEnrollments = csvData[i][31];
+            cd.waitCap = csvData[i][32];
+            cd.rmCapRequest = csvData[i][33];
+            cd.crossListings = csvData[i][34];
+            cd.crossListMaximum = csvData[i][35];
+            cd.crossListProjected = csvData[i][36];
+            cd.crossListWaitCap = csvData[i][37];
+            cd.crossListCapRequest = csvData[i][38];
+            cd.linkTo = csvData[i][39];
+            cd.comments = csvData[i][40];
+            cd.notes1 = csvData[i][41];
+            cd.notes2 = csvData[i][42];
+            console.log(cd);
+            classData.push(cd);
+            cd.clearDescription();
+            rowCount++;
+        } // end of for loop
+        console.log('Count: ' + rowCount);
+    }) // end of fs read
+} // end of readCSVData
 
 
 function testClassDescription() { 
@@ -212,12 +124,12 @@ function testClassDescription() {
     cd.displayAllDescriptions();
     cd.clearDescription();
     cd.displayAllDescriptions();
-};
+} // end of testClassDescription
 
 
 function main() {
-    // readCSVData();
-    testClassDescription();
-}
+    readCSVData();
+    // testClassDescription();
+} // end of main
 
 main();
