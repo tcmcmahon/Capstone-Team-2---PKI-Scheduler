@@ -1,6 +1,6 @@
-var fs = require("fs");
-var { parse } = require("csv-parse");
-var ClassDescription = require('./Class_Descriptions');
+import ClassDescription from './Class_Descriptions.js';
+import fs from 'fs';
+import { parse } from 'csv-parse';
 
 
 var csvData = [];
@@ -23,7 +23,7 @@ function readCSVData() {
     .on('end', function() {
         var cd = ClassDescription;
         for (var i = 0; i < csvData.length; i++) { 
-            sleep(5000000);
+            sleep(1000);
             tmp = i % 42;
             switch(tmp) { // TODO: fix this so that it will add the individual data to the classDescription object
                 case 0:
@@ -165,54 +165,53 @@ function readCSVData() {
 };
 
 
-function testClassDescription() { // FIXME: cd is not behaving as expected
-    var cd = ClassDescription;
-    cd.details.name = "test1";
-    cd.details.term = "test2";
-    cd.details.deptCode = "test3";
-    cd.details.subjCode = "test4";
-    cd.details.catalogNumber = "test5";
-    cd.details.course = "test6";
-    cd.details.sectionNumber = "test7";
-    cd.details.courseTitle = "test8";
-    cd.details.sectionType = "test9";
-    cd.details.topic = "test10";
-    cd.details.meetingPattern = "test11";
-    cd.details.meetings = "test12";
-    cd.details.instructor = "test13";
-    cd.details.room = "test14";
-    cd.details.status = "test15";
-    cd.details.session = "test16";
-    cd.details.campus = "test17";
-    cd.details.instMethod = "test18";
-    cd.details.integPattern = "test19";
-    cd.details.schedulePrint = "test20";
-    cd.details.consent = "test21";
-    cd.details.creditHrsMin = "test22";
-    cd.details.creditHrs = "test23";
-    cd.details.gradeMode = "test24";
-    cd.details.attributes = "test25";
-    cd.details.courseAttributes = "test26";
-    cd.details.roomAttributes = "test27";
-    cd.details.enrolled = "test28";
-    cd.details.maximumEnrollments = "test29";
-    cd.details.priorEnrollments = "test30";
-    cd.details.projectedEnrollments = "test31";
-    cd.details.waitCap = "test32";
-    cd.details.rmCapRequest = "test33";
-    cd.details.crossListings = "test34";
-    cd.details.crossListMaximum = "test35";
-    cd.details.crossListProjected = "test36";
-    cd.details.crossListWaitCap = "test37";
-    cd.details.crossListCapRequest = "test38";
-    cd.details.linkTo = "test39";
-    cd.details.comments = "test40";
-    cd.details.notes1 = "test41";
-    cd.details.notes2 = "test42";
-    console.log(cd.details);
-    sleep(5000);  
+function testClassDescription() { 
+    var cd = new ClassDescription();
+    cd.name = "test1";
+    cd.term = "test2";
+    cd.deptCode = "test3";
+    cd.subjCode = "test4";
+    cd.catalogNumber = "test5";
+    cd.course = "test6";
+    cd.sectionNumber = "test7";
+    cd.courseTitle = "test8";
+    cd.sectionType = "test9";
+    cd.topic = "test10";
+    cd.meetingPattern = "test11";
+    cd.meeting = "test12";
+    cd.instructor = "test13";
+    cd.room = "test14";
+    cd.status = "test15";
+    cd.session = "test16";
+    cd.campus = "test17";
+    cd.instMethod = "test18";
+    cd.integPattern = "test19";
+    cd.schedulePrint = "test20";
+    cd.consent = "test21";
+    cd.creditHrsMin = "test22";
+    cd.creditHrs = "test23";
+    cd.gradeMode = "test24";
+    cd.attributes = "test25";
+    cd.courseAttributes = "test26";
+    cd.roomAttributes = "test27";
+    cd.enrolled = "test28";
+    cd.maximumEnrollments = "test29";
+    cd.priorEnrollments = "test30";
+    cd.projectedEnrollments = "test31";
+    cd.waitCap = "test32";
+    cd.rmCapRequest = "test33";
+    cd.crossListings = "test34";
+    cd.crossListMaximum = "test35";
+    cd.crossListProjected = "test36";
+    cd.crossListWaitCap = "test37";
+    cd.crossListCapRequest = "test38";
+    cd.linkTo = "test39";
+    cd.comments = "test40";
+    cd.notes1 = "test41";
+    cd.notes2 = "test42";
+    cd.displayAllDescriptions();
     cd.clearDescription();
-    console.log(cd.details); 
+    cd.displayAllDescriptions();
 };
 
 
