@@ -2,10 +2,12 @@
 import ClassDescription from './Class_Descriptions.js';
 import fs from 'fs';
 import { parse } from 'csv-parse';
+import rooms from './uploads/rooms.json' assert {type: 'json'};
 
 
 /* global variables */
 var classData = []; // will hold instances of classDescription, will end up with the data for all of the classes
+var crossListedCoursesToCheck = []; // will temporarily hold classes that are cross listed and skip them if listed
 
 
 /* read data from the csv file */
@@ -21,54 +23,31 @@ function readCSVData() {
             if (row[0] === '') { // will create a new object for classData
                 // TODO: all of these are not needed, will need to reduce data
                 cd.name = prevClassName;
-                cd.term = row[1];
-                cd.termCode = row[2];
-                cd.deptCode = row[3];
-                cd.subjCode = row[4];
-                cd.catalogNumber = row[5];
-                cd.course = row[6];
                 cd.sectionNumber = row[7];
-                cd.courseTitle = row[8];
-                cd.sectionType = row[9];
-                cd.topic = row[10];
+                cd.sectionType = row[9]; // ASK : not all labs that are on the csv are listed in the website
                 cd.meetingPattern = row[11];
-                cd.meeting = row[12];
-                cd.instructor = row[13];
                 cd.room = row[14];
-                cd.status = row[15];
                 cd.session = row[16];
                 cd.campus = row[17];
-                cd.instMethod = row[18];
-                cd.integPattern = row[19];
-                cd.schedulePrint = row[20];
-                cd.consent = row[21];
-                cd.creditHrsMin = row[22];
-                cd.creditHrs = row[23];
-                cd.gradeMode = row[24];
-                cd.attributes = row[25];
-                cd.courseAttributes = row[26];
-                cd.roomAttributes = row[27];
-                cd.enrolled = row[28];
                 cd.maximumEnrollments = row[29];
-                cd.priorEnrollments = row[30];
-                cd.projectedEnrollments = row[31];
-                cd.waitCap = row[32];
-                cd.rmCapRequest = row[33];
                 cd.crossListings = row[34];
-                cd.crossListMaximum = row[35];
-                cd.crossListProjected = row[36];
-                cd.crossListWaitCap = row[37];
-                cd.crossListCapRequest = row[38];
-                cd.linkTo = row[39];
-                cd.comments = row[40];
-                cd.notes1 = row[41];
-                cd.notes2 = row[42];
+                cd.crossListMaximum = row[35]; // ASK : Is the crossListMaximum consist of the total number of people who can take the course from all cross listed courses
                 classData.push(cd);
                 // no need to delete cd since javascript already performs garbage collection
             }
             else { // will save the previous class name for the next row
                 prevClassName = row[0];
             } // end of if statement
+            var isRoom = false;
+            for (var room in rooms) {
+                if (String(cd.room).includes(room) || cd.room === null) {
+                    isRoom = true;
+                    break;
+                }
+            }
+            if (isRoom == false) {
+                console.log("Room (" + cd.room + ") not listed");
+            }
         })
         .on('end', function() {
             resolve(classData); // saves the data for classData
@@ -79,16 +58,25 @@ function readCSVData() {
 
 /* verify that the data is saved */
 function main2ElectricBoogaloo() {
-    console.log(classData[308]);
+    // console.log(classData[308]);
+    for (var room in rooms) {
+        console.log("Room: " + room);
+        console.log("Type: " + rooms[room].RoomType);
+        console.log("Info: " + rooms[room].Info);
+        console.log("Conf: " + rooms[room].Conferencing);
+        console.log("Conn: " + rooms[room].Connectivity);
+        console.log("Seat: " + rooms[room].Seats);
+        console.log("Comp: " + rooms[room].Computers + "\n");
+    }
 }
 
 
 /* main function, is async because fs.createReadStream() */
 async function main() {
     await readCSVData();
-    console.log(classData[0]); 
-    console.log(classData.length);
-    main2ElectricBoogaloo();
+    // console.log(classData[0]); 
+    // console.log(classData.length);
+    // main2ElectricBoogaloo();
 } // end of main
 
 
