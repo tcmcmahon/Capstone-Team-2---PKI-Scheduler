@@ -1,5 +1,5 @@
 /* import data */
-import ClassDescription from './Class_Descriptions.js';
+import {CourseDescription, ClassroomTimeSlot} from './Class_Objects.js';
 import fs from 'fs';
 import { parse } from 'csv-parse';
 // import rooms from './uploads/rooms.json' assert {type: 'json'};
@@ -23,21 +23,10 @@ function pushCrossListedCourses(crossListings) {
         if (crossListedCoursesToCheck.includes(courses[i])) {
             continue;
         }
+        // grab section number
         sectionNumber = (courses[i].slice(-3).includes('00')) ? courses[i].slice(-1) : courses[i].slice(-3);
         crossListedCoursesToCheck.push([courses[i].slice(0,-4),sectionNumber]); // [course name, section number]
     }
-}
-
-
-function checkIfCrossListed(courseName) {
-    // TODO: Add functionality here
-    /* 
-    // ASK : 
-        SCMT 4160 is cross listed with ISQA 4160-001
-        ISQA 4160 is cross listed with SCMT 4160 AND ISQA 8166-001
-        ISQA 8166 is cross listed with ISQA 4160
-    */ 
-    return false
 }
 
 
@@ -50,25 +39,19 @@ function readCSVData() {
             parse({from_line: 4}) // starts reading at line 4 with "AREN 1030 - DESIGN AND SIMULATION STUDIO I"
         ) 
         .on('data', function (row) { // iterates through each row in csv file
-            var cd = new ClassDescription(); // creates object to store class data
+            var cd = new CourseDescription(); // creates object to store class data
             if (row[18] === 'Distance Education') { } // ASK : are classes that are labeled Distance Education fully remote?
-            else if (checkIfCrossListed(row)) {
+            else if (cd.checkIfCrossListed(row)) {
                 // TODO: Add functionality here
             }
-            else if (row[0] === '') { // will create a new object for classData
-                cd.name = prevClassName;
-                cd.sectionNumber = row[7];
-                cd.isLab = (row[9] === "Laboratory") ? true : false;
-                cd.meetingPattern = row[11];
-                cd.session = row[16];
-                cd.campus = (row[17] == "UNO-IS") ? "IS&T" : "CoE";
-                if (row[34] === '') { // isn't cross listed
-                    cd.maximumEnrollments = row[29];
-                }
-                else { // is cross listed
-                    cd.maximumEnrollments = row[35]; // ASK : Is the crossListMaximum consist of the total number of people who can take the course from all cross listed courses
-                    pushCrossListedCourses(row[34]);
-                }
+            else if (row[0] === '') {
+                cd.setCourseName(prevClassName);
+                cd.setSectionNum(row[7]);
+                cd.setLab(row[9]);
+                cd.spliceTime(row[11]); //  ASK : what is the diff between meeting and meeting pattern in csv sheet
+                cd.setSession(row[16]);
+                cd.setCampus(row[17]);
+                cd.setClassSize(row[29], row[34], row[35]);
                 classData.push(cd);
             }
             else { // will save the previous class name for the next row
