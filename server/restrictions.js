@@ -31,6 +31,13 @@ function pushCrossListedCourses(crossListings) {
 
 function checkIfCrossListed(courseName) {
     // TODO: Add functionality here
+    /* 
+    // ASK : 
+        SCMT 4160 is cross listed with ISQA 4160-001
+        ISQA 4160 is cross listed with SCMT 4160 AND ISQA 8166-001
+        ISQA 8166 is cross listed with ISQA 4160
+    */ 
+    return false
 }
 
 
@@ -44,8 +51,11 @@ function readCSVData() {
         ) 
         .on('data', function (row) { // iterates through each row in csv file
             var cd = new ClassDescription(); // creates object to store class data
-            // if (row[18] === 'Distance Education') { } // ASK : are classes that are labeled Distance Education fully remote?
-            if (row[0] === '') { // will create a new object for classData
+            if (row[18] === 'Distance Education') { } // ASK : are classes that are labeled Distance Education fully remote?
+            else if (checkIfCrossListed(row)) {
+                // TODO: Add functionality here
+            }
+            else if (row[0] === '') { // will create a new object for classData
                 cd.name = prevClassName;
                 cd.sectionNumber = row[7];
                 cd.isLab = (row[9] === "Laboratory") ? true : false;
@@ -74,18 +84,15 @@ function readCSVData() {
 
 /* verify that the data is saved */
 function main2ElectricBoogaloo() {
-    // console.log(classData[74]);
-    console.log(crossListedCoursesToCheck);
-    console.log(crossListedCoursesToCheck.length);
-    console.log(classData.length);
+    console.log(classData[74]);
 }
 
 
 /* main function, is async because fs.createReadStream() */
 async function main() {
     await readCSVData();
-    // console.log(classData[0]); 
-    // console.log(classData.length);
+    console.log(classData[0]); 
+    console.log(classData.length);
     main2ElectricBoogaloo();
 } // end of main
 
