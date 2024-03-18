@@ -5,49 +5,48 @@ export class CourseDescription {
         this.name = null;                       // 0 - course code and title
         this.sectionNumber = null;              // 7 - section number of course
         this.isLab = null;                      // 9 - if lab or not lab
-        this.meetingDays = [];                  // 11a - will hold the meeting days
-        this.meetingTime = [];                  // 11b - will hold the meeting time
+        this.meetingDates = [];                      // 11 - will hold ClassroomTimeSlot object  
         this.room = null;                       // 14 - keep null, will assign later
         this.session = null;                    // 16 - if class is regular session or 6 weeks - May not be needed
         this.campus = null;                     // 17 - if class is CoE or IS
         this.maximumEnrollments = null;         // 29 - room cap
         this.crossListedWith = [];              // self created - will have all courses class is cross listed with
-        // this.term = null;                       // 1  - remove
-        // this.termCode = null;                   // 2  - remove
-        // this.deptCode = null;                   // 3  - remove
-        // this.subjCode = null;                   // 4  - remove
-        // this.catalogNumber = null;              // 5  - remove
-        // this.course = null;                     // 6  - remove
-        // this.courseTitle = null;                // 8  - remove
-        // this.topic = null;                      // 10 - remove
-        // this.meeting = null;                    // 12 - remove
-        // this.instructor = null;                 // 13 - remove
-        // this.status = null;                     // 15 - remove
-        // this.instMethod = null;                 // 18 - skip if distance education
-        // this.integPattern = null;               // 19 - remove
-        // this.schedulePrint = null;              // 20 - remove
-        // this.consent = null;                    // 21 - remove
-        // this.creditHrsMin = null;               // 22 - remove
-        // this.creditHrs = null;                  // 23 - remove
-        // this.gradeMode = null;                  // 24 - remove
-        // this.attributes = null;                 // 25 - remove
-        // this.courseAttributes = null;           // 26 - remove
-        // this.roomAttributes = null;             // 27 - remove
-        // this.enrolled = null;                   // 28 - remove
-        // this.priorEnrollments = null;           // 30 - remove
-        // this.projectedEnrollments = null;       // 31 - remove
-        // this.waitCap = null;                    // 32 - remove
-        // this.rmCapRequest = null;               // 33 - remove
-        // this.crossListings = null;              // 34 - remove
-        // this.crossListMaximum = null;           // 35 - remove / redundant
-        // this.crossListProjected = null;         // 36 - remove
-        // this.crossListWaitCap = null;           // 37 - remove
-        // this.crossListCapRequest = null;        // 38 - remove
-        // this.linkTo = null;                     // 39 - remove
-        // this.comments = null;                   // 40 - remove
-        // this.notes1 = null;                     // 41 - remove
-        // this.notes2 = null;                     // 42 - remove
-    }
+        // this.term = null;                       // 1  - removed
+        // this.termCode = null;                   // 2  - removed
+        // this.deptCode = null;                   // 3  - removed
+        // this.subjCode = null;                   // 4  - removed
+        // this.catalogNumber = null;              // 5  - removed
+        // this.course = null;                     // 6  - removed
+        // this.courseTitle = null;                // 8  - removed
+        // this.topic = null;                      // 10 - removed
+        // this.meeting = null;                    // 12 - removed
+        // this.instructor = null;                 // 13 - removed
+        // this.status = null;                     // 15 - removed
+        // this.instMethod = null;                 // 18 - removed skip if distance education
+        // this.integPattern = null;               // 19 - removed
+        // this.schedulePrint = null;              // 20 - removed
+        // this.consent = null;                    // 21 - removed
+        // this.creditHrsMin = null;               // 22 - removed
+        // this.creditHrs = null;                  // 23 - removed
+        // this.gradeMode = null;                  // 24 - removed
+        // this.attributes = null;                 // 25 - removed
+        // this.courseAttributes = null;           // 26 - removed
+        // this.roomAttributes = null;             // 27 - removed
+        // this.enrolled = null;                   // 28 - removed
+        // this.priorEnrollments = null;           // 30 - removed
+        // this.projectedEnrollments = null;       // 31 - removed
+        // this.waitCap = null;                    // 32 - removed
+        // this.rmCapRequest = null;               // 33 - removed
+        // this.crossListings = null;              // 34 - removed
+        // this.crossListMaximum = null;           // 35 - removed / redundant
+        // this.crossListProjected = null;         // 36 - removed
+        // this.crossListWaitCap = null;           // 37 - removed
+        // this.crossListCapRequest = null;        // 38 - removed
+        // this.linkTo = null;                     // 39 - removed
+        // this.comments = null;                   // 40 - removed
+        // this.notes1 = null;                     // 41 - removed
+        // this.notes2 = null;                     // 42 - removed
+    }   
     setCourseName(courseString) {
         this.name = courseString;
     }
@@ -57,22 +56,18 @@ export class CourseDescription {
     setLab(sectionString) {
         this.lab = (sectionString === "Laboratory") ? true : false;
     }
-    spliceTime(timeString) {
-        // TODO : Add functionality here
-        var timeDetails = {
-            day: null,
-            start: [-1, -1],
-            end  : [-1, -1]
-        }
-        var days;
-        var dayTimeSplit;
-        days = timeString.split("; ");
+    spliceTime(timeString) { // e.g. "MW 10:30am-11:45am; F 12:00pm-1:15pm"
+        var timeDaySplit;
+        var startEndSplit;
+        var timeSlot;
+        var days = timeString.split("; "); // ["MW 10:30am-11:45am", "F 12:00pm-1:15pm"]
         for (var day in days) {
-            dayTimeSplit = days[day].split(' '); // will split the days (MW or TH) between the time (9:00am-10:15am)
-            for (var char in dayTimeSplit[0]) {
-                // TODO : Finish this code up
-            }
+            timeDaySplit = days[day].split(' '); // ["MW", "10:30am-11:45am"] : ["F", "12:00pm-1:15pm"]
+            startEndSplit = timeDaySplit[1].split('-'); // ["10:30am", "11:45am"] : ["12:00pm", "1:15pm"]
+            timeSlot = new ClassroomTimeSlot(timeDaySplit[0], startEndSplit[0], startEndSplit[1]);
+            this.meetingDates.push(timeSlot);
         }
+        return this.meetingDates;
     }
     setSession(sessionString) {
         this.session = sessionString;
@@ -81,27 +76,39 @@ export class CourseDescription {
         this.campus = (campusString == "UNO-IS") ? "IS&T" : "CoE";
     }
     setClassSize(classSize, crossListedCourses, crossListedSize) {
-        if (crossListedCourses === '') { // isn't cross listed
-            cd.maximumEnrollments = classSize;
+        if (crossListedCourses !== '') {
+            this.maximumEnrollments = classSize;
+            return false;
         }
-        else { // is cross listed
-            cd.maximumEnrollments = crossListedSize; // ASK : Is the crossListMaximum consist of the total number of people who can take the course from all cross listed courses
-            // TODO : make sure this function here vvv works
-            this.pushCrossListedCourses(crossListedCourses);
+        else {
+            this.maximumEnrollments = crossListedSize;
+            this.crossListedWith = crossListedCourses.split(', ');
+            
         }
     }
     pushCrossListedCourses() {
         // TODO : migrate function from restrictions.js to here
     }
-    checkIfCrossListed() {
+    checkIfCrossListed(crossListedCourses, allCrossListings) {
         // TODO: Add functionality here
         /* 
             ASK : 
-            SCMT 4160 is cross listed with ISQA 4160-001
-            ISQA 4160 is cross listed with SCMT 4160 AND ISQA 8166-001
-            ISQA 8166 is cross listed with ISQA 4160
+                SCMT 4160 is cross listed with ISQA 4160-001
+                ISQA 4160 is cross listed with SCMT 4160 AND ISQA 8166-001
+                ISQA 8166 is cross listed with ISQA 4160
         */ 
         return false
+    }
+}
+
+
+/* linked list of classroom data */
+class ClassroomTimeSlot {
+    constructor(days=null, start=null, end=null, next=null) {
+        this.days = days
+        this.startTime = start;
+        this.endTime = end;
+        this.nextClass = next
     }
 }
 
@@ -110,15 +117,19 @@ export class CourseDescription {
     object that will hold CourseDescription objects, IN ORDER, of when they are in an 
     array to be able to easily read and determine if there are any time conflicts
 */
-export class ClassroomTimeSlot {
+export class ClassroomTimeData {
     constructor(roomNumber) {
         this.roomNumber = roomNumber;   // room number of classroom
-        this.monClasses = [];           // monday classes in order
-        this.tueClasses = [];           // tuesday classes in order
-        this.wedClasses = [];           // wednesday classes in order
-        this.thuClasses = [];           // thursday classes in order
-        this.friClasses = [];           // friday classes in order
+        this.monClasses = null;           // monday classes in order
+        this.tueClasses = null;           // tuesday classes in order
+        this.wedClasses = null;           // wednesday classes in order
+        this.thuClasses = null;           // thursday classes in order
+        this.friClasses = null;           // friday classes in order
+    }
+    checkTimeConflicts() {
+        var days = [this.monClasses, this.tueClasses, this.wedClasses, this.thuClasses, this.friClasses];
+        // TODO : make sure that the classes do not have any time conflicts
     }
 }
 
-export default {CourseDescription, ClassroomTimeSlot};
+export default {CourseDescription, ClassroomTimeData};

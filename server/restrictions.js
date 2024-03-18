@@ -1,5 +1,5 @@
 /* import data */
-import {CourseDescription, ClassroomTimeSlot} from './Class_Objects.js';
+import {CourseDescription} from './Class_Objects.js';
 import fs from 'fs';
 import { parse } from 'csv-parse';
 // import rooms from './uploads/rooms.json' assert {type: 'json'};
@@ -10,30 +10,11 @@ var classData = []; // will hold instances of classDescription, will end up with
 var crossListedCoursesToCheck = []; // will temporarily hold classes that are cross listed and skip them if listed
 
 
-/* split cross listed courses and add them to global array */
-function pushCrossListedCourses(crossListings) {
-    var courses;
-    var sectionNumber;
-    // remove either See or Also when listed
-    crossListings = (crossListings.includes("See")) ? crossListings.slice(4) : crossListings.slice(5);
-    // split if multiple cross listed courses
-    courses = crossListings.split(", ");
-    // go through each course and split
-    for (var i = 0; i < courses.length; i++) {
-        if (crossListedCoursesToCheck.includes(courses[i])) {
-            continue;
-        }
-        // grab section number
-        sectionNumber = (courses[i].slice(-3).includes('00')) ? courses[i].slice(-1) : courses[i].slice(-3);
-        crossListedCoursesToCheck.push([courses[i].slice(0,-4),sectionNumber]); // [course name, section number]
-    }
-}
-
-
 /* read data from the csv file */
 function readCSVData() {
     return new Promise((resolve) => {
         var prevClassName; // holds the previous class stated in csv file
+        var crossListedCourses; // will either be empty or hold values for cross listed courses
         fs.createReadStream('./server/uploads/test.csv')
         .pipe(
             parse({from_line: 4}) // starts reading at line 4 with "AREN 1030 - DESIGN AND SIMULATION STUDIO I"
@@ -41,9 +22,7 @@ function readCSVData() {
         .on('data', function (row) { // iterates through each row in csv file
             var cd = new CourseDescription(); // creates object to store class data
             if (row[18] === 'Distance Education') { } // ASK : are classes that are labeled Distance Education fully remote?
-            else if (cd.checkIfCrossListed(row)) {
-                // TODO: Add functionality here
-            }
+                                                      // ASK : will all Distance Education classes that are cross listed with other class also be cross lised?
             else if (row[0] === '') {
                 cd.setCourseName(prevClassName);
                 cd.setSectionNum(row[7]);
@@ -51,7 +30,9 @@ function readCSVData() {
                 cd.spliceTime(row[11]); //  ASK : what is the diff between meeting and meeting pattern in csv sheet
                 cd.setSession(row[16]);
                 cd.setCampus(row[17]);
-                cd.setClassSize(row[29], row[34], row[35]);
+                if (crossListedCourses = cd.setClassSize(row[29], row[34], row[35])) {
+                    crossListedCoursesToCheck.push(crossListedCourses);
+                }
                 classData.push(cd);
             }
             else { // will save the previous class name for the next row
