@@ -71,11 +71,19 @@ function main2ElectricBoogaloo() {
 
 /* Store parsed data in db */
 function storeParsedData(){
-    var query = "INSERT INTO Stage_Course_Sheet (Course) VALUES ?";
-    connect.query(query, classData[0].name, function(err, result){
-        if(err) throw err;
-        console.log(result.affectedRows);
-    });
+    var x = [];
+    for(var i = 0; i < classData.length; i++)
+    {
+        x[0] = classData[i].name;
+        x[1] = classData[i].sectionNumber;
+        x[2] = classData[i].session;
+        x[3] = classData[i].campus;
+        var query = "INSERT INTO Stage_Course_Sheet (Course_Header, Section_Num, Session, Campus) VALUES (?)";
+        connect.query(query, [x], function(err, result){
+            if(err) throw err;
+            console.log(result.affectedRows);
+        });
+    }
 }
 
 /* main function, is async because fs.createReadStream() */
