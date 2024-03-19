@@ -1,14 +1,12 @@
-const express = require('express');
-const cors = require('cors')
-const multer = require('multer');
-const path = require('path');
+import express from 'express';
+import cors from 'cors';
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+import { parse } from 'csv-parse';
 
 const app = express();
 const PORT = 3001;
-
-const fs = require("fs");
-const { parse } = require("csv-parse");
-
 // Enable CORS for all routes
 app.use(cors());
 

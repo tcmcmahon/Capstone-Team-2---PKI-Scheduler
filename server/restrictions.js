@@ -2,6 +2,24 @@
 import {CourseDescription} from './Class_Objects.js';
 import fs from 'fs';
 import { parse } from 'csv-parse';
+
+/* Require mysql package */
+import mysql from 'mysql2';
+
+/* Create connection to remote database */
+const connect = mysql.createConnection({
+    host: '137.48.186.40',
+    user: 'appuser',
+    password: 'nnrf1234',
+    database: 'scheduler'
+});
+
+/* Attempt connection, throw error if failed */
+connect.connect((err) => {
+    if (err) throw err;
+    console.log('Connected to the remote database!');
+});
+
 // import rooms from './uploads/rooms.json' assert {type: 'json'};
 
 
@@ -51,6 +69,14 @@ function main2ElectricBoogaloo() {
     console.log(classData[74]);
 }
 
+/* Store parsed data in db */
+function storeParsedData(){
+    var query = "INSERT INTO Stage_Course_Sheet (Course) VALUES ?";
+    connect.query(query, classData[0].name, function(err, result){
+        if(err) throw err;
+        console.log(result.affectedRows);
+    });
+}
 
 /* main function, is async because fs.createReadStream() */
 async function main() {
@@ -58,6 +84,9 @@ async function main() {
     console.log(classData[0]); 
     console.log(classData.length);
     main2ElectricBoogaloo();
+    storeParsedData();
+    var x = classData[0].name;
+    console.log(x);
 } // end of main
 
 
