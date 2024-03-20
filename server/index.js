@@ -1,12 +1,14 @@
 import express from 'express';
 import cors from 'cors';
 import multer from 'multer';
+import { fileURLToPath } from 'url';
 import path from 'path';
 import fs from 'fs';
 import { parse } from 'csv-parse';
 
 const app = express();
-const PORT = 3001;
+const PORT = 3000;
+
 // Enable CORS for all routes
 app.use(cors());
 
@@ -22,8 +24,10 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 // Serve the React app
-app.use(express.static(path.join(__dirname, 'client/build')));
+app.use(express.static(path.join(__dirname, '../client/build')));
 
 // Handle file upload
 app.post('/upload', upload.single('file'), (req, res) => {

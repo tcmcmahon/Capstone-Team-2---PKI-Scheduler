@@ -36,9 +36,9 @@
 
  ### RUNNING THE APPLICATION:
     1. Go to the command line/terminal and navigate to the where the unzipped app folder is; cd LOCATIONOFYOURFOLDER/Capstone-Team2-PKI-Scheduler.
-    2. Once in this directory, cd into the "client" folder, and run npm install. You will only need to do this once. After this is complete, run npm start. The app should open in your web browser. If not, ctrl + click on the displayed link.
+    2. Once in this directory, cd into the "client" folder, and run npm install. You will only need to do this once. After this is complete, run "npm run build", this will also need to only be done once.
     3. Open a second command line/terminal, and go into the app folder, and then into the "server" folder. Run npm install. You will only need to do this once. After this is done, run Node index.js. You should see "Server is running on port". 
-    4. Go back to the web app opened in your browser, and select choose file. Find a csv to upload from the opened file explorer window, and select open. Then click the upload button. In the server command line window, you should see a message of "file uploaded successfully", along with the csv data of the file displayed.
+    4. crtl + click the link the server is running on, or simply navigate to it in your browser and you should see the React Web page
 
 ### THAT'S IT!
     
