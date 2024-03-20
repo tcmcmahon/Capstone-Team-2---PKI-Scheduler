@@ -14,7 +14,7 @@ const connect = mysql.createConnection({
     database: 'scheduler'
 });
 
-/* Attempt connection, throw error if failed */
+/* Attempt connection, throw error if failed */ 
 connect.connect((err) => {
     if (err) throw err;
     console.log('Connected to the remote database!');
@@ -72,13 +72,30 @@ function main2ElectricBoogaloo() {
 /* Store parsed data in db */
 function storeParsedData(){
     var x = [];
+    var y = [];
+    var z = [];
     for(var i = 0; i < classData.length; i++)
     {
+        y = classData[i].meetingDates;
+        z[0] = (y[0].startTime).concat("-");
+        z[1] = (z[0]).concat(y[0].endTime);
+
         x[0] = classData[i].name;
         x[1] = classData[i].sectionNumber;
-        x[2] = classData[i].session;
-        x[3] = classData[i].campus;
-        var query = "INSERT INTO Stage_Course_Sheet (Course_Header, Section_Num, Session, Campus) VALUES (?)";
+        x[2] = y[0].days;
+        x[3] = z[1];
+        x[4] = classData[i].session;
+        x[5] = classData[i].campus;
+        if(classData[i].maximumEnrollments == '')
+        {
+            continue;
+        }
+        else
+        {
+            x[6] = classData[i].maximumEnrollments;
+        }
+
+        var query = "INSERT INTO Stage_Course_Sheet (Course_Header, Section_Num, Meeting_Pattern, Meetings, Session, Campus, Maximum_Enrollment) VALUES (?)";
         connect.query(query, [x], function(err, result){
             if(err) throw err;
             console.log(result.affectedRows);
@@ -93,8 +110,6 @@ async function main() {
     console.log(classData.length);
     main2ElectricBoogaloo();
     storeParsedData();
-    var x = classData[0].name;
-    console.log(x);
 } // end of main
 
 
