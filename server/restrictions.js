@@ -7,18 +7,18 @@ import { parse } from 'csv-parse';
 import mysql from 'mysql2';
 
 /* Create connection to remote database */
-const connect = mysql.createConnection({
+/*const connect = mysql.createConnection({
     host: '137.48.186.40',
     user: 'appuser',
     password: 'nnrf1234',
     database: 'scheduler'
-});
+});*/
 
 /* Attempt connection, throw error if failed */ 
-connect.connect((err) => {
+/*connect.connect((err) => {
     if (err) throw err;
     console.log('Connected to the remote database!');
-});
+});*/
 
 // import rooms from './uploads/rooms.json' assert {type: 'json'};
 
@@ -74,6 +74,18 @@ function storeParsedData(){
     var x = [];
     var y = [];
     var z = [];
+    var dates = ["2024-1-1","2024-1-2","2024-1-3","2024-1-4","2024-1-5"];
+    var monday = [];
+    var tuesday = [];
+    var wednesday = [];
+    var thursday = [];
+    var friday = [];
+    var m = 0;
+    var t = 0;
+    var w = 0;
+    var th = 0;
+    var f = 0;
+
     for(var i = 0; i < classData.length; i++)
     {
         y = classData[i].meetingDates;
@@ -94,13 +106,92 @@ function storeParsedData(){
         {
             x[6] = classData[i].maximumEnrollments;
         }
-
-        var query = "INSERT INTO Stage_Course_Sheet (Course_Header, Section_Num, Meeting_Pattern, Meetings, Session, Campus, Maximum_Enrollment) VALUES (?)";
+        if(x[2] == 'MW')
+        {
+           monday[m] = (x[0] + ", " + x[1] + ", " + dates[0] + "T").concat(y[0].startTime);
+           m++;
+           wednesday[w] = x[0] + ", " + x[1] + ", " + (dates[2] + "T").concat(y[0].startTime);
+           w++;
+  
+        }
+        if(x[2] == 'TR')
+        {
+           tuesday[t] = (x[0] + ", " + x[1] + ", " + dates[1] + "T").concat(y[0].startTime);
+           t++;
+           thursday[th] = (x[0] + ", " + x[1] + ", " + dates[3] + "T").concat(y[0].startTime);
+           th++;
+        }
+        if(x[2] == 'M')
+        {
+           monday[m] = (x[0] + ", " + x[1] + ", " + dates[0] + "T").concat(y[0].startTime);
+           m++;
+        }
+        if(x[2] == 'T')
+        {
+           tuesday[t] = (x[0] + ", " + x[1] + ", " + dates[1] + "T").concat(y[0].startTime);
+           t++;
+        }
+        if(x[2] == 'W')
+        {
+           wednesday[w] = (x[0] + ", " + x[1] + ", " + dates[2] + "T").concat(y[0].startTime);
+           w++;
+        }
+        if(x[2] == 'R')
+        {
+           thursday[th] = (x[0] + ", " + x[1] + ", " + dates[3] + "T").concat(y[0].startTime);
+           th++;
+        }
+        if(x[2] == 'F')
+        {
+            friday[f] = (x[0] + ", " + x[1] + ", " + dates[4] + "T").concat(y[0].startTime);
+            f++;
+        }
+        if(x[2] == 'WF')
+        {
+           wednesday[w] = (x[0] + ", " + x[1] + ", " + dates[2] + "T").concat(y[0].startTime);
+           w++;
+           friday[f] = (x[0] + ", " + x[1] + ", " + dates[4] + "T").concat(y[0].startTime);
+           f++;
+        }
+        if(x[2] == 'MWF')
+        {
+           monday[m] = (x[0] + ", " + x[1] + ", " + dates[0] + "T").concat(y[0].startTime);
+           m++;
+           wednesday[w] = (x[0] + ", " + x[1] + ", " + dates[2] + "T").concat(y[0].startTime);
+           w++;
+           friday[f] = (x[0] + ", " + x[1] + ", " + dates[4] + "T").concat(y[0].startTime);
+           f++;
+        }
+        if(x[2] == 'MTWRF')
+        {
+            monday[m] = (x[0] + ", " + x[1] + ", " + dates[0] + "T").concat(y[0].startTime);
+            m++;
+            tuesday[t] = (x[0] + ", " + x[1] + ", " + dates[1] + "T").concat(y[0].startTime);
+            t++;
+            wednesday[w] = (x[0] + ", " + x[1] + ", " + dates[2] + "T").concat(y[0].startTime);
+            w++;
+            thursday[th] = (x[0] + ", " + x[1] + ", " + dates[3] + "T").concat(y[0].startTime);
+            th++;
+            friday[f] = (x[0] + ", " + x[1] + ", " + dates[4] + "T").concat(y[0].startTime);
+            f++;
+        }
+        /*var query = "INSERT INTO Stage_Course_Sheet (Course_Header, Section_Num, Meeting_Pattern, Meetings, Session, Campus, Maximum_Enrollment) VALUES (?)";
         connect.query(query, [x], function(err, result){
             if(err) throw err;
             console.log(result.affectedRows);
-        });
+        });*/
+        
     }
+    console.log("Monday: ");
+    console.log(monday);
+    console.log("Tuesday: ");
+    console.log(tuesday);
+    console.log("Wednesday: ");
+    console.log(wednesday);
+    console.log("Thursday: ");
+    console.log(thursday);
+    console.log("Friday: ");
+    console.log(friday);
 }
 
 /* main function, is async because fs.createReadStream() */
