@@ -3,15 +3,34 @@ import Paper from '@mui/material/Paper';
 import { ViewState } from '@devexpress/dx-react-scheduler';
 import {
   Scheduler,
-  DayView,
+  WeekView,
   Appointments,
 } from '@devexpress/dx-react-scheduler-material-ui';
 
-const currentDate = '2024-03-21';
+const currentDate = '2024-01-01';
 const schedulerData = [
-  { startDate: '2024-03-21T09:45', endDate: '2024-03-21T11:00', title: 'CSCI 4450 Intro to A.I.' },
-  { startDate: '2024-03-21T12:00', endDate: '2024-03-21T13:30', title: 'CSCI 4970 Capstone' },
-  { startDate: '2024-03-21T15:00', endDate: '2024-03-21T17:40', title: 'CYBR 4360 Foundations of Cyber' }
+    { startDate: '2024-01-05T12:00', endDate: '2024-01-05T14:30', title: 'AREN 8800 GRADUATE SEMINAR IN ARCHITECTURAL ENGINEERING AND CONSTRUCTION' },
+    { startDate: '2024-01-01T13:30', endDate: '2024-01-01T14:45', title: 'CIST 2500 INTRODUCTION TO APPLIED STATISTICS FOR IS&T' },
+    { startDate: '2024-01-03T13:30', endDate: '2024-01-03T14:45', title: 'CIST 2500 INTRODUCTION TO APPLIED STATISTICS FOR IS&T' },
+    { startDate: '2024-01-01T12:00', endDate: '2024-01-01T13:15', title: 'CIVE 434 SOIL MECHANICS II' },
+    { startDate: '2024-01-03T12:00', endDate: '2024-01-03T13:15', title: 'CIVE 434 SOIL MECHANICS II' },
+    { startDate: '2024-01-02T10:30', endDate: '2024-01-02T11:45', title: 'CIVE 459 RELIABILITY OF STRUCTURES' },
+    { startDate: '2024-01-04T10:30', endDate: '2024-01-04T11:45', title: 'CIVE 459 RELIABILITY OF STRUCTURES' },
+    { startDate: '2024-01-01T10:30', endDate: '2024-01-01T11:45', title: 'CIVE 463 TRAFFIC ENGINEERING' },
+    { startDate: '2024-01-03T10:30', endDate: '2024-01-03T11:45', title: 'CIVE 463 TRAFFIC ENGINEERING' },
+    { startDate: '2024-01-02T12:00', endDate: '2024-01-02T13:15', title: 'CIVE 472 PAVEMENT DESIGN AND EVALUATION' },
+    { startDate: '2024-01-04T12:00', endDate: '2024-01-04T13:15', title: 'CIVE 472 PAVEMENT DESIGN AND EVALUATION' },
+    { startDate: '2024-01-02T09:00', endDate: '2024-01-02T10:15', title: 'CIVE 491 SPECIAL TOPICS IN CIVIL ENGINEERING' },
+    { startDate: '2024-01-04T09:00', endDate: '2024-01-04T10:15', title: 'CIVE 491 SPECIAL TOPICS IN CIVIL ENGINEERING' },
+    { startDate: '2024-01-01T15:00', endDate: '2024-01-01T16:15', title: 'CIVE 829 BIOLOGICAL WASTE TREATMENT' },
+    { startDate: '2024-01-03T15:00', endDate: '2024-01-03T16:15', title: 'CIVE 829 BIOLOGICAL WASTE TREATMENT' },
+    { startDate: '2024-01-02T13:30', endDate: '2024-01-02T14:45', title: 'CIVE 891 SPECIAL TOPICS IN CIVIL ENGINEERING' },
+    { startDate: '2024-01-04T13:30', endDate: '2024-01-04T14:45', title: 'CIVE 891 SPECIAL TOPICS IN CIVIL ENGINEERING' },
+    { startDate: '2024-01-05T09:00', endDate: '2024-01-05T10:00', title: 'CIVE 990M CIVIL ENGINEERING SEMINAR IN GEOTECHNICAL AND MATERIALS ENGINEERING' },
+    { startDate: '2024-01-04T18:00', endDate: '2024-01-04T20:40', title: 'CNST 411 PROJECT ADMINISTRATION' },
+    { startDate: '2024-01-05T11:00', endDate: '2024-01-05T11:50', title: 'ENVE 9900 SEMINAR IN ENVIRONMENTAL ENGINEERING' },
+    { startDate: '2024-01-03T18:00', endDate: '2024-01-03T20:40', title: 'ISQA 4200 INFORMATION AND DATA QUALITY MANAGEMENT' },
+    { startDate: '2024-01-01T18:00', endDate: '2024-01-01T20:40', title: 'ISQA 8340APPLIED REGRESSION ANALYSIS' }
 ];
 
 export default () => (
@@ -19,14 +38,15 @@ export default () => (
     <Scheduler
       data={schedulerData}
     >
-      <ViewState
+    <ViewState
         currentDate={currentDate}
-      />
-      <DayView
+    />
+    <WeekView
         startDayHour={8}
         endDayHour={20}
-      />
-      <Appointments />
+        excludedDays={[0,6]}
+    />
+    <Appointments />
     </Scheduler>
   </Paper>
 );
