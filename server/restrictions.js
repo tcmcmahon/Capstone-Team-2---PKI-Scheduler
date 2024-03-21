@@ -7,18 +7,18 @@ import { parse } from 'csv-parse';
 import mysql from 'mysql2';
 
 /* Create connection to remote database */
-/*const connect = mysql.createConnection({
+const connect = mysql.createConnection({
     host: '137.48.186.40',
     user: 'appuser',
     password: 'nnrf1234',
     database: 'scheduler'
-});*/
+});
 
 /* Attempt connection, throw error if failed */ 
-/*connect.connect((err) => {
+connect.connect((err) => {
     if (err) throw err;
     console.log('Connected to the remote database!');
-});*/
+});
 
 // import rooms from './uploads/rooms.json' assert {type: 'json'};
 
@@ -73,125 +73,32 @@ function main2ElectricBoogaloo() {
 function storeParsedData(){
     var x = [];
     var y = [];
-    var z = [];
-    var dates = ["2024-1-1","2024-1-2","2024-1-3","2024-1-4","2024-1-5"];
-    var monday = [];
-    var tuesday = [];
-    var wednesday = [];
-    var thursday = [];
-    var friday = [];
-    var m = 0;
-    var t = 0;
-    var w = 0;
-    var th = 0;
-    var f = 0;
 
     for(var i = 0; i < classData.length; i++)
     {
         y = classData[i].meetingDates;
-        z[0] = (y[0].startTime).concat("-");
-        z[1] = (z[0]).concat(y[0].endTime);
-
         x[0] = classData[i].name;
         x[1] = classData[i].sectionNumber;
         x[2] = y[0].days;
-        x[3] = z[1];
-        x[4] = classData[i].session;
-        x[5] = classData[i].campus;
+        x[3] = y[0].startTime; 
+        x[4] = y[0].endTime;
+        x[5] = classData[i].session;
+        x[6] = classData[i].campus;
         if(classData[i].maximumEnrollments == '')
         {
             continue;
         }
         else
         {
-            x[6] = classData[i].maximumEnrollments;
+            x[7] = classData[i].maximumEnrollments;
         }
-        if(x[2] == 'MW')
-        {
-           monday[m] = (x[0] + ", " + x[1] + ", " + dates[0] + "T").concat(y[0].startTime);
-           m++;
-           wednesday[w] = x[0] + ", " + x[1] + ", " + (dates[2] + "T").concat(y[0].startTime);
-           w++;
-  
-        }
-        if(x[2] == 'TR')
-        {
-           tuesday[t] = (x[0] + ", " + x[1] + ", " + dates[1] + "T").concat(y[0].startTime);
-           t++;
-           thursday[th] = (x[0] + ", " + x[1] + ", " + dates[3] + "T").concat(y[0].startTime);
-           th++;
-        }
-        if(x[2] == 'M')
-        {
-           monday[m] = (x[0] + ", " + x[1] + ", " + dates[0] + "T").concat(y[0].startTime);
-           m++;
-        }
-        if(x[2] == 'T')
-        {
-           tuesday[t] = (x[0] + ", " + x[1] + ", " + dates[1] + "T").concat(y[0].startTime);
-           t++;
-        }
-        if(x[2] == 'W')
-        {
-           wednesday[w] = (x[0] + ", " + x[1] + ", " + dates[2] + "T").concat(y[0].startTime);
-           w++;
-        }
-        if(x[2] == 'R')
-        {
-           thursday[th] = (x[0] + ", " + x[1] + ", " + dates[3] + "T").concat(y[0].startTime);
-           th++;
-        }
-        if(x[2] == 'F')
-        {
-            friday[f] = (x[0] + ", " + x[1] + ", " + dates[4] + "T").concat(y[0].startTime);
-            f++;
-        }
-        if(x[2] == 'WF')
-        {
-           wednesday[w] = (x[0] + ", " + x[1] + ", " + dates[2] + "T").concat(y[0].startTime);
-           w++;
-           friday[f] = (x[0] + ", " + x[1] + ", " + dates[4] + "T").concat(y[0].startTime);
-           f++;
-        }
-        if(x[2] == 'MWF')
-        {
-           monday[m] = (x[0] + ", " + x[1] + ", " + dates[0] + "T").concat(y[0].startTime);
-           m++;
-           wednesday[w] = (x[0] + ", " + x[1] + ", " + dates[2] + "T").concat(y[0].startTime);
-           w++;
-           friday[f] = (x[0] + ", " + x[1] + ", " + dates[4] + "T").concat(y[0].startTime);
-           f++;
-        }
-        if(x[2] == 'MTWRF')
-        {
-            monday[m] = (x[0] + ", " + x[1] + ", " + dates[0] + "T").concat(y[0].startTime);
-            m++;
-            tuesday[t] = (x[0] + ", " + x[1] + ", " + dates[1] + "T").concat(y[0].startTime);
-            t++;
-            wednesday[w] = (x[0] + ", " + x[1] + ", " + dates[2] + "T").concat(y[0].startTime);
-            w++;
-            thursday[th] = (x[0] + ", " + x[1] + ", " + dates[3] + "T").concat(y[0].startTime);
-            th++;
-            friday[f] = (x[0] + ", " + x[1] + ", " + dates[4] + "T").concat(y[0].startTime);
-            f++;
-        }
-        /*var query = "INSERT INTO Stage_Course_Sheet (Course_Header, Section_Num, Meeting_Pattern, Meetings, Session, Campus, Maximum_Enrollment) VALUES (?)";
+        var query = "INSERT INTO Stage_Course_Sheet (Course_Header, Section_Num, Meeting_Pattern, DT_Start, DT_End, Session, Campus, Maximum_Enrollment) VALUES (?)";
         connect.query(query, [x], function(err, result){
             if(err) throw err;
             console.log(result.affectedRows);
-        });*/
+        });
         
     }
-    console.log("Monday: ");
-    console.log(monday);
-    console.log("Tuesday: ");
-    console.log(tuesday);
-    console.log("Wednesday: ");
-    console.log(wednesday);
-    console.log("Thursday: ");
-    console.log(thursday);
-    console.log("Friday: ");
-    console.log(friday);
 }
 
 /* main function, is async because fs.createReadStream() */
