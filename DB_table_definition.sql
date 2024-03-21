@@ -41,7 +41,8 @@ CREATE TABLE Stage_Course_Sheet(
   Link_To VARCHAR(50),
   Comments VARCHAR(256),
   Notes_1 VARCHAR(256),
-  Notes_2 VARCHAR(256)
+  Notes_2 VARCHAR(256),
+  Date_Time VARCHAR(20)
 );
 
 CREATE TABLE RoomsList(
