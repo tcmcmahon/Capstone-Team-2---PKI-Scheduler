@@ -1,13 +1,27 @@
-const express = require('express');
-const cors = require('cors')
-const multer = require('multer');
-const path = require('path');
+// const express = require('express');
+import express from 'express';
+// const cors = require('cors')
+import cors from 'cors';
+// const multer = require('multer');
+import multer from 'multer';
+// const path = require('path');
+import path from 'path';
+// const readCSVData = require('./restrictions');
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+
+import {mainRestrictions} from './restrictions.js';
 
 const app = express();
 const PORT = 3001;
 
-const fs = require("fs");
-const { parse } = require("csv-parse");
+// const fs = require("fs");
+import fs from 'fs';
+// const { parse } = require("csv-parse");
+import { parse } from 'csv-parse';
 
 // Enable CORS for all routes
 app.use(cors());
@@ -34,7 +48,8 @@ app.post('/upload', upload.single('file'), (req, res) => {
   }
 
   console.log('Uploaded file:', req.file.originalname);
-  printCSVtoCLI("./uploads/" + req.file.filename)
+  // printCSVtoCLI("./uploads/" + req.file.filename)
+  mainRestrictions("./uploads/" + req.file.filename);
   res.send('File uploaded successfully.');
 });
 

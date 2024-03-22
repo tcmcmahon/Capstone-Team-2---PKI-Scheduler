@@ -1,8 +1,7 @@
 /* import data */
 import {CourseDescription} from './Class_Objects.js';
-import fs from 'fs';
+import fs, { read } from 'fs';
 import { parse } from 'csv-parse';
-// import rooms from './uploads/rooms.json' assert {type: 'json'};
 
 
 /* global variables */
@@ -11,28 +10,27 @@ var crossListedCoursesToCheck = []; // will temporarily hold classes that are cr
 
 
 /* read data from the csv file */
-function readCSVData() {
+function readCSVData(file_path) {
     return new Promise((resolve) => {
         var prevClassName; // holds the previous class stated in csv file
-        var crossListedCourses; // will either be empty or hold values for cross listed courses
-        fs.createReadStream('./server/uploads/test.csv')
+        fs.createReadStream(file_path)
         .pipe(
             parse({from_line: 4}) // starts reading at line 4 with "AREN 1030 - DESIGN AND SIMULATION STUDIO I"
         ) 
         .on('data', function (row) { // iterates through each row in csv file
             var cd = new CourseDescription(); // creates object to store class data
-            if (row[18] === 'Distance Education') { } // ASK : are classes that are labeled Distance Education fully remote?
-                                                      // ASK : will all Distance Education classes that are cross listed with other class also be cross lised?
+            // TODO : mark of special classrooms
+            if (row[34] !== '' && cd.checkIfCrossListed([row[6], row[7]], row[34], crossListedCoursesToCheck)) { 
+                console.log(prevClassName + " has already been listed as a cross listed course\n");
+            }
             else if (row[0] === '') {
                 cd.setCourseName(prevClassName);
                 cd.setSectionNum(row[7]);
                 cd.setLab(row[9]);
-                cd.spliceTime(row[11]); //  ASK : what is the diff between meeting and meeting pattern in csv sheet
+                cd.spliceTime(row[11]);
                 cd.setSession(row[16]);
                 cd.setCampus(row[17]);
-                if (crossListedCourses = cd.setClassSize(row[29], row[34], row[35])) {
-                    crossListedCoursesToCheck.push(crossListedCourses);
-                }
+                cd.setClassSize(row[29], row[35])
                 classData.push(cd);
             }
             else { // will save the previous class name for the next row
@@ -48,19 +46,22 @@ function readCSVData() {
 
 /* verify that the data is saved */
 function main2ElectricBoogaloo() {
-    console.log(classData[74]);
+    console.log(classData[200]);
 }
 
 
 /* main function, is async because fs.createReadStream() */
-async function main() {
-    await readCSVData();
+export async function mainRestrictions(path) {
+    await readCSVData(path);
     console.log(classData[0]); 
-    console.log(classData.length);
     main2ElectricBoogaloo();
+    console.log(classData.length);
 } // end of main
 
 
 /* launch main */
-main();
+var test_path = './server/uploads/test.csv';
+// main(test_path);
 // EOF
+
+export default {mainRestrictions};
