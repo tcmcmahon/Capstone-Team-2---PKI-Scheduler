@@ -33,7 +33,7 @@ function readCSVData() {
     return new Promise((resolve) => {
         var prevClassName; // holds the previous class stated in csv file
         var crossListedCourses; // will either be empty or hold values for cross listed courses
-        fs.createReadStream('./server/uploads/test.csv')
+        fs.createReadStream('./uploads/test.csv')
         .pipe(
             parse({from_line: 4}) // starts reading at line 4 with "AREN 1030 - DESIGN AND SIMULATION STUDIO I"
         ) 
@@ -68,37 +68,97 @@ function readCSVData() {
 function main2ElectricBoogaloo() {
     console.log(classData[74]);
 }
+let myobj = [];
 
 /* Store parsed data in db */
 function storeParsedData(){
     var x = [];
     var y = [];
+    var z = [];
+    
+
+    var dates = ["2024-1-1", "2024-1-2", "2024-1-3", "2024-1-4", "2024-1-5"];
 
     for(var i = 0; i < classData.length; i++)
     {
         y = classData[i].meetingDates;
+        
         x[0] = classData[i].name;
         x[1] = classData[i].sectionNumber;
         x[2] = y[0].days;
-        x[3] = y[0].startTime; 
-        x[4] = y[0].endTime;
-        x[5] = classData[i].session;
-        x[6] = classData[i].campus;
+
+        x[3] = classData[i].session;
+        x[4] = classData[i].campus;
         if(classData[i].maximumEnrollments == '')
         {
             continue;
         }
         else
         {
-            x[7] = classData[i].maximumEnrollments;
+            x[5] = classData[i].maximumEnrollments;
         }
-        var query = "INSERT INTO Stage_Course_Sheet (Course_Header, Section_Num, Meeting_Pattern, DT_Start, DT_End, Session, Campus, Maximum_Enrollment) VALUES (?)";
+        if(x[2] == 'MW')
+        {
+            myobj.push({startDate: (dates[0] + "T" + y[0].startTime), endDate: (dates[0] + "T" + y[0].endTime), title: (x[0] + ", Section " + x[1])});
+            myobj.push({startDate: (dates[2] + "T" + y[0].startTime), endDate: (dates[2] + "T" + y[0].endTime), title: (x[0] + ", Section " + x[1])});
+            
+        }
+        else if(x[2] == 'TR')
+        {
+            myobj.push({startDate: (dates[1] + "T" + y[0].startTime), endDate: (dates[1] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
+            myobj.push({startDate: (dates[3] + "T" + y[0].startTime), endDate: (dates[3] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
+        }
+        else if(x[2] == 'TR')
+        {
+            myobj.push({startDate: (dates[1] + "T" + y[0].startTime), endDate: (dates[1] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
+            myobj.push({startDate: (dates[3] + "T" + y[0].startTime), endDate: (dates[3] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
+        }
+        else if(x[2] == 'WF')
+        {
+            myobj.push({startDate: (dates[2] + "T" + y[0].startTime), endDate: (dates[2] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
+            myobj.push({startDate: (dates[4] + "T" + y[0].startTime), endDate: (dates[4] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
+        }
+        else if(x[2] == 'MWF')
+        {
+            myobj.push({startDate: (dates[0] + "T" + y[0].startTime), endDate: (dates[0] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
+            myobj.push({startDate: (dates[2] + "T" + y[0].startTime), endDate: (dates[2] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
+            myobj.push({startDate: (dates[4] + "T" + y[0].startTime), endDate: (dates[4] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
+        }
+        else if(x[2] == 'MTWRF')
+        {
+            myobj.push({startDate: (dates[0] + "T" + y[0].startTime), endDate: (dates[0] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
+            myobj.push({startDate: (dates[1] + "T" + y[0].startTime), endDate: (dates[1] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
+            myobj.push({startDate: (dates[2] + "T" + y[0].startTime), endDate: (dates[2] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
+            myobj.push({startDate: (dates[3] + "T" + y[0].startTime), endDate: (dates[3] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
+            myobj.push({startDate: (dates[4] + "T" + y[0].startTime), endDate: (dates[4] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
+        }
+        else if(x[2] == 'M')
+        {
+            myobj.push({startDate: (dates[0] + "T" + y[0].startTime), endDate: (dates[0] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
+        }
+        else if(x[2] == 'T')
+        {
+            myobj.push({startDate: (dates[1] + "T" + y[0].startTime), endDate: (dates[1] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
+        }
+        else if(x[2] == 'W')
+        {
+            myobj.push({startDate: (dates[2] + "T" + y[0].startTime), endDate: (dates[2] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
+        }
+        else if(x[2] == 'R')
+        {
+            myobj.push({startDate: (dates[3] + "T" + y[0].startTime), endDate: (dates[3] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
+        }
+        else if(x[2] == 'F')
+        {
+            myobj.push({startDate: (dates[4] + "T" + y[0].startTime), endDate: (dates[4] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
+        }
+        
+        var query = "INSERT INTO Stage_Course_Sheet (Course_Header, Section_Num, Meeting_Pattern, Session, Campus, Maximum_Enrollment) VALUES (?)";
         connect.query(query, [x], function(err, result){
             if(err) throw err;
             console.log(result.affectedRows);
         });
-        
-    }
+    }    
 }
 
 /* main function, is async because fs.createReadStream() */

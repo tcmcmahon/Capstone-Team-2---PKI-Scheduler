@@ -33,20 +33,14 @@ const schedulerData = [
     { startDate: '2024-01-01T18:00', endDate: '2024-01-01T20:40', title: 'ISQA 8340APPLIED REGRESSION ANALYSIS' }
 ];
 
-export default () => (
+export default function Calendar(){
+  return(
   <Paper>
-    <Scheduler
-      data={schedulerData}
-    >
-    <ViewState
-        currentDate={currentDate}
-    />
-    <WeekView
-        startDayHour={8}
-        endDayHour={20}
-        excludedDays={[0,6]}
-    />
+    <Scheduler data={schedulerData}>
+    <ViewState currentDate={currentDate} />
+    <WeekView startDayHour={8} endDayHour={20} excludedDays={[0,6]} />
     <Appointments />
     </Scheduler>
   </Paper>
 );
+}
