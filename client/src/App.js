@@ -1,7 +1,7 @@
-import React, { useState, Component } from 'react';
+import React, { useState } from 'react';
 import img from './O-UNO_Type_Color_White.png';
 import img2 from './photo-1606761568499-6d2451b23c66.avif';
-import { Link, Route, Routes, Router } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Switch  from 'react-switch';
 import Calendar from './Calendar';
 
