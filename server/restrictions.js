@@ -2,23 +2,34 @@
 import {CourseDescription} from './Class_Objects.js';
 import fs from 'fs';
 import { parse } from 'csv-parse';
-
+import express from 'express';
+import cors from 'cors';
 /* Require mysql package */
 import mysql from 'mysql2';
 
+function sendData(){
+const ex = express();
+ex.use(express.json());
+ex.use(cors());
+ex.get("/Data", (req, res) => {
+res.json(myobj);
+});
+
+ex.listen(3001, () => console.log("Server is up")); 
+}
 /* Create connection to remote database */
-const connect = mysql.createConnection({
+/*const connect = mysql.createConnection({
     host: '137.48.186.40',
     user: 'appuser',
     password: 'nnrf1234',
     database: 'scheduler'
-});
+});*/
 
 /* Attempt connection, throw error if failed */ 
-connect.connect((err) => {
+/*connect.connect((err) => {
     if (err) throw err;
     console.log('Connected to the remote database!');
-});
+});*/
 
 // import rooms from './uploads/rooms.json' assert {type: 'json'};
 
@@ -77,7 +88,7 @@ function storeParsedData(){
     var z = [];
     
 
-    var dates = ["2024-1-1", "2024-1-2", "2024-1-3", "2024-1-4", "2024-1-5"];
+    var dates = ["2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04", "2024-01-05"];
 
     for(var i = 0; i < classData.length; i++)
     {
@@ -153,12 +164,12 @@ function storeParsedData(){
             myobj.push({startDate: (dates[4] + "T" + y[0].startTime), endDate: (dates[4] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
         }
         
-        var query = "INSERT INTO Stage_Course_Sheet (Course_Header, Section_Num, Meeting_Pattern, Session, Campus, Maximum_Enrollment) VALUES (?)";
+        /*var query = "INSERT INTO Stage_Course_Sheet (Course_Header, Section_Num, Meeting_Pattern, Session, Campus, Maximum_Enrollment) VALUES (?)";
         connect.query(query, [x], function(err, result){
             if(err) throw err;
             console.log(result.affectedRows);
-        });
-    }    
+        });*/
+    }   
 }
 
 /* main function, is async because fs.createReadStream() */
@@ -168,6 +179,7 @@ async function main() {
     console.log(classData.length);
     main2ElectricBoogaloo();
     storeParsedData();
+    sendData();
 } // end of main
 
 

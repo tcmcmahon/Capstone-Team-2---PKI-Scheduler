@@ -14,6 +14,10 @@ const router = createBrowserRouter([
   {
     path: "/Calendar",
     element: <Calendar/>
+  },
+  {
+    path: "/Calendar",
+    element: <Calendar/>
   }
 ]);
 
