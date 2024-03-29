@@ -69,7 +69,7 @@
             "CoE": true
         },
         "Conferencing": false,
-        "Seats": 0
+        "Seats": 24
     },
     "160": {
         "RoomType": "Zoom Ready",
