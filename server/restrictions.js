@@ -31,12 +31,16 @@ ex.listen(3001, () => console.log("Server is up"));
     if (err) throw err;
     console.log('Connected to the remote database!');
 });*/
-var final = [];
+
+/*Structure for all classes with room, first pass through*/
+var nonFinal = [];
 
 function algoAssign()
 {   let k = 0;
     let u = [];
     let o = [];
+
+    /*Assign classes a room, first pass through*/
     for(let i = 0; i < classData.length; i++)
     {
         let y = [];
@@ -47,44 +51,57 @@ function algoAssign()
         if(k == 39)
         {
             k = 0;
-            final[i] = ({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, time: u});  
+            nonFinal[i] = ({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, time: u});  
         }
         else
         {
-            final[i] = ({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, time: u});
+            nonFinal[i] = ({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, time: u});
         }
         k++;
-        /*if(k > 40 && final[i-1].room == "391A" && final[i].time == final[i-1].time)
+        /*if(k > 40 && nonFinal[i-1].room == "391A" && nonFinal[i].time == nonFinal[i-1].time)
         {
             k = 0;
-            final[i] = ({room: Object.keys(rooms)[k+1], class: classData[i].name + " Section " + classData[i].sectionNumber, time: u});
+            nonFinal[i] = ({room: Object.keys(rooms)[k+1], class: classData[i].name + " Section " + classData[i].sectionNumber, time: u});
         }*/
         /*o.push(u);*/
         }   
         /*o = [... new Set(o)];
         console.log(o);*/
+
+        /*Check for duplicate timeslots and assign to array l*/
         let l = [];
-        for(let j = 0; j < final.length; j++)
+        for(let j = 0; j < nonFinal.length; j++)
         {
             let p = 1;
-            for(let g = 0; g <= final.length && (j + p) < 295; g++)
+            for(let g = 0; g <= nonFinal.length && (j + p) < 295; g++)
             {
-                if(final[j].room == final[j+p].room && final[j].time == final[j+p].time)
+                if(nonFinal[j].room == nonFinal[j+p].room && nonFinal[j].time == nonFinal[j+p].time)
                 {
-                    l.push(final[j]);
+                    if(nonFinal[j].class.includes("CONE") || nonFinal[j].class.includes("AREN"))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        l.push(nonFinal[j]);
+                    }
                 }
                 p++;
             }
         }
+        /*Get unique duplicate timeslots*/
+        l = [... new Set(l)];
+
+        /*Get rooms that are available*/
         let q = [];
         let f = 0;
         for(let p = 0; p < Object.keys(rooms).length; p++)
         {
-            for(let h = 0; h < final.length; h++)
+            for(let h = 0; h < nonFinal.length; h++)
             {
-                if(final[h].room == Object.keys(rooms)[p] && final[h].room == l[f].room && final[h].time != l[f].time)
+                if(nonFinal[h].room == Object.keys(rooms)[p] && nonFinal[h].room == l[f].room && nonFinal[h].time != l[f].time)
                 {
-                    q.push(final[h]);
+                    q.push(nonFinal[h].room);
                     if(f > 80)
                     {
                         break;
@@ -93,7 +110,67 @@ function algoAssign()
                 }
             }
         }
-        console.log(q);
+        
+        /*Check if rooms are same, and if so move to next room up*/
+        let m = 0;
+        for(let b = 0; b < l.length && b + 1 < l.length; b++)
+        {
+            let x = 1;
+            if(m == 19)
+            {
+                m = 0;
+            }
+            for(let z = 0; z < l.length && m < 19 && m + 1 <= 19 && b + x < 52; z++)
+            {
+                if(x == 52)
+                {
+                    x = 0;
+                }
+                else
+                {
+                    if(l[b].room == l[b+x].room)
+                    {
+                        l[b].room = q[m+1];
+                    }
+                    else
+                    {
+                        l[b].room = q[m];
+                    }
+                }
+                x++;
+            }
+            m++;
+        }
+        
+        /*If room and time are the same replace with new room from previous loop*/
+        let d = 0;
+        for(let n = 0; n < nonFinal.length; n++)
+        {
+            if(d == 52)
+            {
+                d = 0;
+            }
+            if(nonFinal[n].room == l[d].room && nonFinal[n].time == l[d].time)
+            {
+                nonFinal[n] = l[d];
+            }
+            d++;
+            if((!(nonFinal[n].class.includes("CONE")) || !(nonFinal[n].class.includes("AREN"))) && nonFinal[n].room == "149")
+            {
+                console.log(nonFinal[n]);
+            }
+        }
+        /*Output all classes by room*/
+        /*for(let s = 0; s < Object.keys(rooms).length; s++)
+        {
+            for(let a = 0; a < nonFinal.length; a++)
+            {
+                if(nonFinal[a].room == Object.keys(rooms)[s])
+                {
+                    console.log(nonFinal[a]);
+                }
+            }
+        }*/
     }
 
 /* global variables */
