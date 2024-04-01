@@ -2,25 +2,125 @@
 import {CourseDescription} from './Class_Objects.js';
 import fs from 'fs';
 import { parse } from 'csv-parse';
-
+import express from 'express';
+import cors from 'cors';
 /* Require mysql package */
 import mysql from 'mysql2';
+import rooms from './uploads/rooms.json' assert {type: 'json'};
 
+/*function sendData(){
+const ex = express();
+ex.use(express.json());
+ex.use(cors());
+ex.get("/Data", (req, res) => {
+res.json(myobj);
+});
+
+ex.listen(3001, () => console.log("Server is up")); 
+}*/
 /* Create connection to remote database */
-const connect = mysql.createConnection({
+/*const connect = mysql.createConnection({
     host: '137.48.186.40',
     user: 'appuser',
     password: 'nnrf1234',
     database: 'scheduler'
-});
+});*/
 
 /* Attempt connection, throw error if failed */ 
-connect.connect((err) => {
+/*connect.connect((err) => {
     if (err) throw err;
     console.log('Connected to the remote database!');
-});
+});*/
+var final = [];
 
-// import rooms from './uploads/rooms.json' assert {type: 'json'};
+function algoAssign()
+{   let k = 0;
+    let u = [];
+    let o = [];
+    for(let i = 0; i < classData.length; i++)
+    {
+        let y = [];
+
+        y = classData[i].meetingDates;
+        u = y[0].startTime + "-" + y[0].endTime;
+        
+        if(k == 39)
+        {
+            k = 0;
+            final[i] = ({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, time: u});  
+        }
+        else
+        {
+            final[i] = ({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, time: u});
+        }
+        k++;
+        /*if(k > 40 && final[i-1].room == "391A" && final[i].time == final[i-1].time)
+        {
+            k = 0;
+            final[i] = ({room: Object.keys(rooms)[k+1], class: classData[i].name + " Section " + classData[i].sectionNumber, time: u});
+        }*/
+        /*o.push(u);*/
+        }   
+        /*o = [... new Set(o)];
+        console.log(o);*/
+        let l = [];
+        for(let j = 0; j < final.length; j++)
+        {
+            let p = 1;
+            for(let g = 0; g <= final.length && (j + p) < 295; g++)
+            {
+                if(final[j].room == final[j+p].room && final[j].time == final[j+p].time)
+                {
+                    l.push(final[j]);
+                }
+                p++;
+            }
+        }
+        let q = [];
+        for(let p = 0; p < Object.keys(rooms).length; p++)
+        {
+            for(let h = 0; h < final.length; h++)
+            {
+                if(final[h].room == Object.keys(rooms)[p])
+                {
+                    q.push(final[h]);
+                }
+            }
+        }
+    }
+
+function reAssign()
+{
+    let o = [];
+    let i = 0;
+    while(i < 40)
+    {
+        if(i == 39)
+        {
+            break;
+        }
+        else
+        {
+            o.push(Object.keys(rooms)[i]);
+            i++;
+        }
+    }  
+    let t = 0;
+    let u = 0;
+    for(let j = 0; j < classData.length; j++)
+    {
+        if(final[j].room == o[t])
+        {
+            console.log(final[j]);
+            j++;
+        }
+        else
+        {
+            t++;
+        }
+    }
+}
+
 
 
 /* global variables */
@@ -63,7 +163,6 @@ function readCSVData() {
     }); // end of return
 } // end of readCSVData
 
-
 /* verify that the data is saved */
 function main2ElectricBoogaloo() {
     console.log(classData[74]);
@@ -77,7 +176,7 @@ function storeParsedData(){
     var z = [];
     
 
-    var dates = ["2024-1-1", "2024-1-2", "2024-1-3", "2024-1-4", "2024-1-5"];
+    var dates = ["2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04", "2024-01-05"];
 
     for(var i = 0; i < classData.length; i++)
     {
@@ -153,21 +252,21 @@ function storeParsedData(){
             myobj.push({startDate: (dates[4] + "T" + y[0].startTime), endDate: (dates[4] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
         }
         
-        var query = "INSERT INTO Stage_Course_Sheet (Course_Header, Section_Num, Meeting_Pattern, Session, Campus, Maximum_Enrollment) VALUES (?)";
+        /*var query = "INSERT INTO Stage_Course_Sheet (Course_Header, Section_Num, Meeting_Pattern, Session, Campus, Maximum_Enrollment) VALUES (?)";
         connect.query(query, [x], function(err, result){
             if(err) throw err;
             console.log(result.affectedRows);
-        });
-    }    
+        });*/
+    }   
 }
 
 /* main function, is async because fs.createReadStream() */
 async function main() {
     await readCSVData();
-    console.log(classData[0]); 
-    console.log(classData.length);
-    main2ElectricBoogaloo();
+    /*main2ElectricBoogaloo();*/
     storeParsedData();
+    algoAssign();
+    /*sendData();*/
 } // end of main
 
 
