@@ -36,57 +36,50 @@ ex.listen(3001, () => console.log("Server is up"));
 var nonFinal = [];
 
 function algoAssign()
-{   let k = 0;
-    let u = [];
+{   let k = 0;//room counter
+    let u = [];//startTimes-endTimes
     let o = [];
 
     /*Assign classes a room, first pass through*/
     for(let i = 0; i < classData.length; i++)
     {
-        let y = [];
+        let y = [];//stores meeting info
 
-        y = classData[i].meetingDates;
-        u = y[0].startTime + "-" + y[0].endTime;
+        y = classData[i].meetingDates;//store meeting info
+        u = y[0].startTime + "-" + y[0].endTime;//store startTimes-endTimes
         
-        if(k == 39)
+        if(k == 39)//if room number is greater than 39 reset to 0
         {
             k = 0;
+            //push room with info
             nonFinal[i] = ({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, time: u});  
         }
         else
         {
+            //push room with info
             nonFinal[i] = ({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, time: u});
         }
-        k++;
-        /*if(k > 40 && nonFinal[i-1].room == "391A" && nonFinal[i].time == nonFinal[i-1].time)
-        {
-            k = 0;
-            nonFinal[i] = ({room: Object.keys(rooms)[k+1], class: classData[i].name + " Section " + classData[i].sectionNumber, time: u});
-        }*/
-        /*o.push(u);*/
+        k++;//increment room counter
         }   
-        /*o = [... new Set(o)];
-        console.log(o);*/
-
         /*Check for duplicate timeslots and assign to array l*/
         let l = [];
         for(let j = 0; j < nonFinal.length; j++)
         {
-            let p = 1;
+            let p = 1;//counter for next class in each pair of classes 
             for(let g = 0; g <= nonFinal.length && (j + p) < 295; g++)
             {
-                if(nonFinal[j].room == nonFinal[j+p].room && nonFinal[j].time == nonFinal[j+p].time)
+                if(nonFinal[j].room == nonFinal[j+p].room && nonFinal[j].time == nonFinal[j+p].time)//if room/time and next room/time are the same
                 {
-                    if(nonFinal[j].class.includes("CONE") || nonFinal[j].class.includes("AREN"))
+                    if(nonFinal[j].class.includes("CONE") || nonFinal[j].class.includes("AREN"))//if class name contains unnassignable class
                     {
                         continue;
                     }
                     else
                     {
-                        l.push(nonFinal[j]);
+                        l.push(nonFinal[j]);//push room to array l, will store duplicate timeslots
                     }
                 }
-                p++;
+                p++;//increment counter for next class
             }
         }
         /*Get unique duplicate timeslots*/
@@ -94,56 +87,57 @@ function algoAssign()
 
         /*Get rooms that are available*/
         let q = [];
-        let f = 0;
-        for(let p = 0; p < Object.keys(rooms).length; p++)
+        let f = 0;//counter for classes with duplicate timeslots
+        for(let p = 0; p < Object.keys(rooms).length; p++)//loop for all rooms
         {
-            for(let h = 0; h < nonFinal.length; h++)
+            for(let h = 0; h < nonFinal.length; h++)//loop for all first class assignments
             {
-                if(nonFinal[h].room == Object.keys(rooms)[p] && nonFinal[h].room == l[f].room && nonFinal[h].time != l[f].time)
+                if(nonFinal[h].room == Object.keys(rooms)[p] && nonFinal[h].room == l[f].room && nonFinal[h].time != l[f].time)//if class room is valid and class room is in list of duplicates and time is not 
                 {
-                    q.push(nonFinal[h].room);
-                    if(f > 80)
+                    q.push(nonFinal[h].room);//push class to array q
+                    if(f > 80)//if we are above the length of the duplicates array
                     {
                         break;
                     }
-                    f++;
+                    f++;//increment duplicate timeslot counter
                 }
             }
         }
         
         /*Check if rooms are same, and if so move to next room up*/
-        let m = 0;
-        for(let b = 0; b < l.length && b + 1 < l.length; b++)
+        let m = 0;//counter for available classes
+        for(let b = 0; b < l.length && b + 1 < l.length; b++)//if b is less than number of duplicates and b + 1 is also
         {
-            let x = 1;
-            if(m == 19)
+            let x = 1;//counter for next class
+            if(m == 19)//if we are at the end of available rooms
             {
                 m = 0;
             }
-            for(let z = 0; z < l.length && m < 19 && m + 1 <= 19 && b + x < 52; z++)
+            for(let z = 0; z < l.length && m < 19 && m + 1 <= 19 && b + x < 52; z++)//while we have more rooms that need to be assigned
             {
-                if(x == 52)
+                if(x == 52)//reset next class counter
                 {
                     x = 0;
                 }
                 else
                 {
-                    if(l[b].room == l[b+x].room)
+                    if(l[b].room == l[b+x].room)//if room is the same as the next room, assign to the next room in the list of available rooms
                     {
                         l[b].room = q[m+1];
                     }
-                    else
+                    else//else assign current room in list of rooms
                     {
                         l[b].room = q[m];
                     }
                 }
-                x++;
+                x++;//increment next class counter
             }
-            m++;
+            m++;//increment available room counter
         }
         
         /*If room and time are the same replace with new room from previous loop*/
         let d = 0;
+        //loop and re assign to the first array with the new values
         for(let n = 0; n < nonFinal.length; n++)
         {
             if(d == 52)
@@ -221,59 +215,53 @@ let myobj = [];
 
 /* Store parsed data in db */
 function storeParsedData(){
-    var x = [];
-    var y = [];
-    var z = [];
-    
+    var x = [];//holds all values to be stored in database
+    var y = [];//holds meeting time information
 
-    var dates = ["2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04", "2024-01-05"];
-
+    var dates = ["2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04", "2024-01-05"];//Dates for calendar data
+    //loops through and assigns data from classData object into array x to be stored
     for(var i = 0; i < classData.length; i++)
     {
-        y = classData[i].meetingDates;
+        y = classData[i].meetingDates;//meeting information
         
-        x[0] = classData[i].name;
-        x[1] = classData[i].sectionNumber;
-        x[2] = y[0].days;
+        x[0] = classData[i].name;//class name
+        x[1] = classData[i].sectionNumber;//class section number
+        x[2] = y[0].days;//days of class i.e. MW
 
-        x[3] = classData[i].session;
-        x[4] = classData[i].campus;
-        if(classData[i].maximumEnrollments == '')
+        x[3] = classData[i].session;//class session
+        x[4] = classData[i].campus;//class campus
+        if(classData[i].maximumEnrollments == '')//if no maximum enrollment skip
         {
             continue;
         }
         else
         {
-            x[5] = classData[i].maximumEnrollments;
+            x[5] = classData[i].maximumEnrollments;//else maximum enrollment
         }
-        if(x[2] == 'MW')
+        //check for what class days and assign startDate, endDate, and title in myobj to be used in calendar
+        if(x[2] == 'MW')//if days are Monday Wednesday
         {
             myobj.push({startDate: (dates[0] + "T" + y[0].startTime), endDate: (dates[0] + "T" + y[0].endTime), title: (x[0] + ", Section " + x[1])});
             myobj.push({startDate: (dates[2] + "T" + y[0].startTime), endDate: (dates[2] + "T" + y[0].endTime), title: (x[0] + ", Section " + x[1])});
             
         }
-        else if(x[2] == 'TR')
+        else if(x[2] == 'TR')//if days are Tuesday Thursday
         {
             myobj.push({startDate: (dates[1] + "T" + y[0].startTime), endDate: (dates[1] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
             myobj.push({startDate: (dates[3] + "T" + y[0].startTime), endDate: (dates[3] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
         }
-        else if(x[2] == 'TR')
-        {
-            myobj.push({startDate: (dates[1] + "T" + y[0].startTime), endDate: (dates[1] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
-            myobj.push({startDate: (dates[3] + "T" + y[0].startTime), endDate: (dates[3] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
-        }
-        else if(x[2] == 'WF')
+        else if(x[2] == 'WF')//if days are Wednesday Friday
         {
             myobj.push({startDate: (dates[2] + "T" + y[0].startTime), endDate: (dates[2] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
             myobj.push({startDate: (dates[4] + "T" + y[0].startTime), endDate: (dates[4] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
         }
-        else if(x[2] == 'MWF')
+        else if(x[2] == 'MWF')//if days are Monday Wednesday Friday
         {
             myobj.push({startDate: (dates[0] + "T" + y[0].startTime), endDate: (dates[0] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
             myobj.push({startDate: (dates[2] + "T" + y[0].startTime), endDate: (dates[2] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
             myobj.push({startDate: (dates[4] + "T" + y[0].startTime), endDate: (dates[4] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
         }
-        else if(x[2] == 'MTWRF')
+        else if(x[2] == 'MTWRF')//if days are everyday
         {
             myobj.push({startDate: (dates[0] + "T" + y[0].startTime), endDate: (dates[0] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
             myobj.push({startDate: (dates[1] + "T" + y[0].startTime), endDate: (dates[1] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
@@ -281,27 +269,27 @@ function storeParsedData(){
             myobj.push({startDate: (dates[3] + "T" + y[0].startTime), endDate: (dates[3] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
             myobj.push({startDate: (dates[4] + "T" + y[0].startTime), endDate: (dates[4] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
         }
-        else if(x[2] == 'M')
+        else if(x[2] == 'M')//if days are Monday
         {
             myobj.push({startDate: (dates[0] + "T" + y[0].startTime), endDate: (dates[0] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
         }
-        else if(x[2] == 'T')
+        else if(x[2] == 'T')//if days are Tuesday
         {
             myobj.push({startDate: (dates[1] + "T" + y[0].startTime), endDate: (dates[1] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
         }
-        else if(x[2] == 'W')
+        else if(x[2] == 'W')//if days are Wednesday
         {
             myobj.push({startDate: (dates[2] + "T" + y[0].startTime), endDate: (dates[2] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
         }
-        else if(x[2] == 'R')
+        else if(x[2] == 'R')//if days are Thursday
         {
             myobj.push({startDate: (dates[3] + "T" + y[0].startTime), endDate: (dates[3] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
         }
-        else if(x[2] == 'F')
+        else if(x[2] == 'F')//if days are Friday
         {
             myobj.push({startDate: (dates[4] + "T" + y[0].startTime), endDate: (dates[4] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
         }
-        
+        //Store data in db with INSERT INTO sql query
         /*var query = "INSERT INTO Stage_Course_Sheet (Course_Header, Section_Num, Meeting_Pattern, Session, Campus, Maximum_Enrollment) VALUES (?)";
         connect.query(query, [x], function(err, result){
             if(err) throw err;
