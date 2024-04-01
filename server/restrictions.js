@@ -96,40 +96,6 @@ function algoAssign()
         console.log(q);
     }
 
-function reAssign()
-{
-    let o = [];
-    let i = 0;
-    while(i < 40)
-    {
-        if(i == 39)
-        {
-            break;
-        }
-        else
-        {
-            o.push(Object.keys(rooms)[i]);
-            i++;
-        }
-    }  
-    let t = 0;
-    let u = 0;
-    for(let j = 0; j < classData.length; j++)
-    {
-        if(final[j].room == o[t])
-        {
-            console.log(final[j]);
-            j++;
-        }
-        else
-        {
-            t++;
-        }
-    }
-}
-
-
-
 /* global variables */
 var classData = []; // will hold instances of classDescription, will end up with the data for all of the classes
 var crossListedCoursesToCheck = []; // will temporarily hold classes that are cross listed and skip them if listed
