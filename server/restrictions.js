@@ -77,16 +77,23 @@ function algoAssign()
             }
         }
         let q = [];
+        let f = 0;
         for(let p = 0; p < Object.keys(rooms).length; p++)
         {
             for(let h = 0; h < final.length; h++)
             {
-                if(final[h].room == Object.keys(rooms)[p])
+                if(final[h].room == Object.keys(rooms)[p] && final[h].room == l[f].room && final[h].time != l[f].time)
                 {
                     q.push(final[h]);
+                    if(f > 80)
+                    {
+                        break;
+                    }
+                    f++;
                 }
             }
         }
+        console.log(q);
     }
 
 function reAssign()
