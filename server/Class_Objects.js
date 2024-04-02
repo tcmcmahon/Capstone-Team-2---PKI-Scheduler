@@ -88,8 +88,10 @@ class ClassroomTimeSlot {
 export class ClassroomTimeData {
     constructor(roomNumber) {
         this.roomNumber = roomNumber;   // room number of classroom
-        this.colleges = [null, null];   // {bool, bool} {IS&T, CoE}
-        this.roomSize = -1;     
+        this.colleges = {'CoE': null,
+                         'IS&T': null};   // {bool, bool} {IS&T, CoE}
+        this.roomSize = -1;
+        this.isLab = null;     
         this.monClasses = null;           // monday classes in order
         this.tueClasses = null;           // tuesday classes in order
         this.wedClasses = null;           // wednesday classes in order

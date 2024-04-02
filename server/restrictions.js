@@ -65,9 +65,10 @@ function createRoomData() {
     for (const key in rooms){
         var room = new ClassroomTimeData();
         room.roomNumber = key;
-        room.colleges[0] = rooms[key].Info['IS&T'];
-        room.colleges[1] = rooms[key].Info['CoE'];
+        room.colleges['CoE'] = rooms[key].Info['CoE'];
+        room.colleges['IS&T'] = rooms[key].Info['IS&T'];
         room.roomSize = rooms[key].Seats;
+        room.isLab = rooms[key].RoomType === "Lab" ? true : false;
         roomsList.push(room);
     }
 }
@@ -96,12 +97,85 @@ function howManyClassesPerDay() {
 }
 
 
+/* Will compare two meeting dates, return types:
+    -1 if date1 is earlier
+    0  if during the same time 
+    1  if date2 is earlier
+*/
+function compareMeetingDates(date1, date2) { 
+    var parsedDate1 = {'startHour': null,
+                        'startMin': null,
+                        'endHour': null,
+                        'endMin': null};
+    var parsedDate2 = {'startHour': null,
+                        'startMin': null,
+                        'endHour': null,
+                        'endMin': null};
+    // splice the start hours
+    var date1split = date1.startTime.slice(0, -2).split(":");
+    var date2split = date2.startTime.slice(0, -2).split(":");
+    // set start hours
+    parsedDate1.startHour = date1.startTime.includes("pm") && parseInt(date1split[0]) !== 12 
+                            ? parseInt(date1split[0]) + 12 : parseInt(date1split[0]);
+    parsedDate2.startHour = date2.startTime.includes("pm") && parseInt(date2split[0]) !== 12 
+                            ? parseInt(date2split[0]) + 12 : parseInt(date2split[0]);
+    // set start minutes 
+    parsedDate1.startMin = isNaN(parseInt(date1split[1])) ? 0 : parseInt(date1split[1]);
+    parsedDate2.startMin = isNaN(parseInt(date2split[1])) ? 0 : parseInt(date2split[1]);
+    // splice the end hours
+    date1split = date1.endTime.slice(0, -2).split(":");
+    date2split = date2.endTime.slice(0, -2).split(":");
+    // set end hours
+    parsedDate1.endHour = date1.endTime.includes("pm") && parseInt(date1split[0]) !== 12 
+                            ? parseInt(date1split[0]) + 12 : parseInt(date1split[0]);
+    parsedDate2.endHour = date2.endTime.includes("pm") && parseInt(date2split[0]) !== 12 
+                            ? parseInt(date2split[0]) + 12 : parseInt(date2split[0]);
+    // set start minutes 
+    parsedDate1.endMin = isNaN(parseInt(date1split[1])) ? 0 : parseInt(date1split[1]);
+    parsedDate2.endMin = isNaN(parseInt(date2split[1])) ? 0 : parseInt(date2split[1]);
+    // set total time (in minutes)
+    console.log(parsedDate1);
+    console.log(parsedDate2);
+    // during the same time
+    if (parsedDate2.startHour <= parsedDate1.startHour && parsedDate1.startHour < parsedDate2.endHour ||
+        parsedDate1.startHour <= parsedDate2.startHour && parsedDate2.startHour < parsedDate1.endHour) { return 0 }
+    // date1 is earlier
+    else if (parsedDate1.endHour*60 + parsedDate1.endMin <= parsedDate2.startHour*60 + parsedDate2.startMin) { return -1 }
+    // date2 is earlier
+    else if (parsedDate2.endHour*60 + parsedDate2.endMin <= parsedDate1.startHour*60 + parsedDate1.startMin) { return 1 }
+    else { return "ERROR: could handle date comparison" }
+}
+
+
 /* assign the actual rooms */
 function assignRooms() {
-    for (var _class in classData) {
-        // TODO: check if class in unassignableClasses
-        for (var room in rooms) {
-            continue;
+    for (var _class of classData) {
+        var assignedRoom = false // boolean value to tell if class has already been assigned
+        var numClasses = 0; // number of classes we have looped through
+        var numMeetingDates = _class.meetingDates.length; // some classes have multiple different meeting dates
+        // loop through each of the classes meeting dates
+        for (meetingDate of _class.meetingDates) { // typically one so this extra loop will not increase the time complexity to O(n^3) more like O(n^2 + k)
+            // loop through each classroom
+            while (!assignedRoom) {
+                // check if we have looped through all available rooms
+                if (numClasses === roomsList.length) {
+                    console.log("Couldn't find a classroom for " + _class.name);
+                    assignedRoom = true;
+                }
+                // check if correct campus
+                if (!roomsList[k].colleges[_class.campus]) { continue }
+                // check if both are lab or not lab
+                if (_class.lab !== roomsList[k].isLab) { continue }
+                else if (_class.lab) {
+                    // is lab
+                }
+                else {
+                    // is regular class
+                }
+                // Check if current class is assignable
+                var days = _class.meetingDates
+                numClasses++;
+            }
         }
     }
 }
@@ -112,6 +186,9 @@ export async function mainRestrictions(path) {
     await readCSVData(path);
     createRoomData();
     howManyClassesPerDay();
+    console.log(roomsList[0]);
+    console.log(classData[0]);
+    // assignRooms();
 } // end of main
 
 
