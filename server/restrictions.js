@@ -33,17 +33,17 @@ ex.listen(3001, () => console.log("Server is up"));
 });*/
 
 // ORIGINAL AUTHOR OF CODE WITHIN THIS METHOD: Jacob Finley    
-function getClasses(day)
+function getClasses()
 {    
     var hash = {};
-    var meeting = day; // 'M' or 'T' or 'W' or 'R' or 'F' or a combination
+    var day = 'TR'; // 'M' or 'T' or 'W' or 'R' or 'F' or a combination
     var total_classes = 0;
     for (var _class in classData) 
     {
         var sesList = classData[_class].meetingDates
         for (var ses in sesList) 
         {
-            if (!sesList[ses].days.includes(meeting)) 
+            if (!sesList[ses].days.includes(day)) 
             {
                 continue;
             }
@@ -268,7 +268,7 @@ async function main() {
     await readCSVData();
     /*main2ElectricBoogaloo();*/
     storeParsedData();
-    getClasses('W');
+    // getClasses();
     algoAssign();
     /*sendData();*/
 } // end of main
