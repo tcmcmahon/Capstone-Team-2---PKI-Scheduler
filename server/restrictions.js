@@ -102,7 +102,7 @@ function algoAssign()
                 {
                     continue;
                 }
-                if(k == 39)//If room counter is equal to the last room, reset and keep going
+                if(k == 30)//If room counter is equal to the last room, reset and keep going
                 {
                     //Reset room counter to 0
                     k = 0;
@@ -113,9 +113,146 @@ function algoAssign()
                 else
                 {   
                     //Push class with information
-                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'MW', time: u});
+                    nonFinal.push({room: Object.keys(rooms)[k+2], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'MW', time: u});
+                    // k++;//increment room counter
+                }  
+            } 
+        }
+        for(let j = 0; j < trTimes.length; j++)
+        {
+            if(u == trTimes[j] && o == 'TR')
+            {
+                if(classData[i].sectionNumber.includes("8"))
+                {
+                    continue;
+                }
+                if(k == 30)//If room counter is equal to the last room, reset and keep going
+                {
+                    //Reset room counter to 0
+                    k = 0;
+                    //Push class with information
+                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'TR', time: u});
+                    k++;//increment room counter
+                }
+                else
+                {   
+                    //Push class with information
+                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'TR', time: u});
+                    k++;//increment room counter
+                }   
+            } 
+        }
+
+        for(let j = 0; j < fTimes.length; j++)
+        {
+            if(u == fTimes[j] && o == 'F')
+            {
+                if(classData[i].sectionNumber.includes("8"))
+                {
+                    continue;
+                }
+                else
+                {   
+                    //Push class with information
+                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'F', time: u});
                     k++;//increment room counter
                 }  
+            } 
+        }
+        for(let j = 0; j < mTimes.length; j++)
+        {
+            if(u == mTimes[j] && o == 'M')
+            {
+                if(classData[i].sectionNumber.includes("8"))
+                {
+                    continue;
+                }
+                else
+                {   
+                    //Push class with information
+                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'M', time: u});
+                    k++;//increment room counter
+                }  
+            } 
+        }
+        for(let j = 0; j < tTimes.length; j++)
+        {
+            if(u == tTimes[j] && o == 'T')
+            {
+                if(classData[i].sectionNumber.includes("8"))
+                {
+                    continue;
+                }
+                else
+                {   
+                    //Push class with information
+                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'T', time: u});
+                    k++;//increment room counter
+                }  
+            } 
+        }
+        for(let j = 0; j < rTimes.length; j++)
+        {
+            if(u == rTimes[j] && o == 'R')
+            {
+                if(classData[i].sectionNumber.includes("8"))
+                {
+                    continue;
+                }
+                else
+                {   
+                    //Push class with information
+                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'R', time: u});
+                    k++;//increment room counter
+                }  
+            } 
+        }
+        for(let j = 0; j < wfTimes.length; j++)
+        {
+            if(u == wfTimes[j] && o == 'WF')
+            {
+                if(classData[i].sectionNumber.includes("8"))
+                {
+                    continue;
+                }
+                else
+                {   
+                    //Push class with information
+                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'WF', time: u});
+                    k++;//increment room counter
+                }  
+            } 
+        }
+        for(let j = 0; j < mtwrfTimes.length; j++)
+        {
+            if(u == mtwrfTimes[j] && o == 'MTWRF')
+            {
+                if(classData[i].sectionNumber.includes("8"))
+                {
+                    continue;
+                }
+                else
+                {   
+                    //Push class with information
+                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'MTWRF', time: u});
+                    k++;//increment room counter
+                }  
+            } 
+        }
+        for(let j = 0; j <= wTimes.length; j++)
+        {
+            if(u == wTimes[j] && o == 'W')
+            {
+                if(classData[i].sectionNumber.includes("8"))
+                {
+                    continue;
+                }
+                if(j == 1 && nonFinal[j].room == nonFinal[j-1].room)
+                {
+                    nonFinal[j].room == Object.keys(rooms)[k+1];
+                }
+                    //Push class with information
+                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'W', time: u});
             } 
         }
     }
@@ -124,13 +261,14 @@ function algoAssign()
     {
         for(let e = 0; e < nonFinal.length; e++)
         {
-            if(nonFinal[e].room == Object.keys(rooms)[i])//if class room number is the current room in the loop, output the class
+            if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "TR")//if class room number is the current room in the loop, output the class
             {
                 console.log(nonFinal[e]);
             }
         }
     }
 }
+
 
 /* global variables */
 var classData = []; // will hold instances of classDescription, will end up with the data for all of the classes

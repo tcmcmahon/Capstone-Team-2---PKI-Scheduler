@@ -1,938 +1,242 @@
 {
     "108": {
         "RoomType": "Zoom Ready",
-        "Displays": {
-            "Type": "TV",
-            "Number": 3,
-            "Size": 80 
-        },
         "Info": {
             "IS&T": true,
             "CoE": true
         },
-        "Conferencing": true,
-        "Connectivity": {
-            "HDMI": true,
-            "Micro HDMI": false,
-            "Mini HDMI": false,
-            "USB-C": false,
-            "DisplayPort": false,
-            "Mini DisplayPort": true,
-            "VGA": true,
-            "lapel mic": false,
-            "Thunderbolt": false,
-            "Lightning": false
-        },
-        "Seats": 12,
-        "Computers": 1
+        "Seats": 12
     },
     "145": {
         "RoomType": "Lab",
-        "Displays": {
-            "Type": "N/A",
-            "Number": "N/A",
-            "Size": "N/A"
-        },
         "Info": {
             "IS&T": true,
             "CoE": true
         },
-        "Conferencing": false,
-        "Connectivity": {
-            "Extra-Power-Outlets": true
-        },
-        "Seats": 18,
-        "Computers": 9
+        "Seats": 18
     },
     "149": {
         "RoomType": "Lab",
-        "Displays": {
-            "Type": "N/A",
-            "Number": "N/A",
-            "Size": "N/A"
-        },
         "Info": {
             "IS&T": true,
             "CoE": true
         },
-        "Conferencing": false,
-        "Connectivity": {
-            "Extra-Power-Outlets": false
-        },
-        "Seats": 10,
-        "Computers": 10
+        "Seats": 10
     },
     "150": {
         "RoomType": "Zoom Ready",
-        "Displays": {
-            "Type": "TV",
-            "Number": 2,
-            "Size": 80 
-        },
         "Info": {
             "IS&T": true,
             "CoE": true
         },
-        "Conferencing": true,
-        "Connectivity": {
-            "HDMI": true,
-            "Micro HDMI": false,
-            "Mini HDMI": false,
-            "USB-C": false,
-            "DisplayPort": false,
-            "Mini DisplayPort": false,
-            "VGA": false,
-            "lapel mic": false,
-            "Thunderbolt": false,
-            "Lightning": false
-        },
-        "Seats": 16,
-        "Computers": 1
+        "Seats": 16
     },
     "151": {
         "RoomType": "Lab",
-        "Displays": {
-            "Type": "N/A",
-            "Number": "N/A",
-            "Size": "N/A"
-        },
         "Info": {
             "IS&T": true,
             "CoE": true
         },
-        "Conferencing": false,
-        "Connectivity": {
-            "Extra-Power-Outlets": true
-        },
-        "Seats": 18,
-        "Computers": 9
+        "Seats": 18
     },
     "153": {
         "RoomType": "Zoom Ready",
-        "Displays": {
-            "Type": "Projector",
-            "Number": 2,
-            "Size": "N/A" 
-        },
         "Info": {
             "IS&T": true,
             "CoE": true
         },
-        "Conferencing": false,
-        "Connectivity": {
-            "HDMI": true,
-            "Micro HDMI": false,
-            "Mini HDMI": false,
-            "USB-C": false,
-            "DisplayPort": false,
-            "Mini DisplayPort": true,
-            "VGA": false,
-            "lapel mic": false,
-            "Thunderbolt": false,
-            "Lightning": false
-        },
-        "Seats": 42,
-        "Computers": 1
-    },
-    "154A": {
-        "RoomType": "Collaboration",
-        "Displays": {
-            "Type": "TV",
-            "Number": 1,
-            "Size": 50
-        },
-        "Info": {
-            "IS&T": true,
-            "CoE": true
-        },
-        "Connectivity": {
-            "HDMI": true,
-            "VGA": true
-        },
-        "Seats": 8,
-        "Computers": "N/A"
-    },
-    "154B": {
-        "RoomType": "Collaboration",
-        "Displays": {
-            "Type": "TV",
-            "Number": 1,
-            "Size": 50
-        },
-        "Info": {
-            "IS&T": true,
-            "CoE": true
-        },
-        "Connectivity": {
-            "HDMI": true,
-            "VGA": true
-        },
-        "Seats": 8,
-        "Computers": "N/A"
-    },
-    "154C": {
-        "RoomType": "Collaboration",
-        "Displays": {
-            "Type": "TV",
-            "Number": 1,
-            "Size": 50
-        },
-        "Info": {
-            "IS&T": true,
-            "CoE": true
-        },
-        "Connectivity": {
-            "HDMI": true,
-            "VGA": true
-        },
-        "Seats": 8,
-        "Computers": "N/A"
-    },
-    "154D": {
-        "RoomType": "Collaboration",
-        "Displays": {
-            "Type": "TV",
-            "Number": 1,
-            "Size": 50
-        },
-        "Info": {
-            "IS&T": true,
-            "CoE": true
-        },
-        "Connectivity": {
-            "HDMI": true,
-            "VGA": true
-        },
-        "Seats": 8,
-        "Computers": "N/A"
-    },
-    "154E": {
-        "RoomType": "Collaboration",
-        "Displays": {
-            "Type": "TV",
-            "Number": 1,
-            "Size": 50
-        },
-        "Info": {
-            "IS&T": true,
-            "CoE": true
-        },
-        "Connectivity": {
-            "HDMI": true,
-            "VGA": true
-        },
-        "Seats": 8,
-        "Computers": "N/A"
-    },
-    "154F": {
-        "RoomType": "Collaboration",
-        "Displays": {
-            "Type": "TV",
-            "Number": 1,
-            "Size": 50
-        },
-        "Info": {
-            "IS&T": true,
-            "CoE": true
-        },
-        "Connectivity": {
-            "HDMI": true,
-            "VGA": true
-        },
-        "Seats": 8,
-        "Computers": "N/A"
+        "Seats": 42
     },
     "155": {
         "RoomType": "Zoom Ready",
-        "Displays": {
-            "Type": "Projector",
-            "Number": 1,
-            "Size": "N/A" 
-        },
         "Info": {
             "IS&T": true,
             "CoE": true
         },
-        "Conferencing": false,
-        "Connectivity": {
-            "HDMI": true,
-            "Micro HDMI": false,
-            "Mini HDMI": false,
-            "USB-C": false,
-            "DisplayPort": false,
-            "Mini DisplayPort": false,
-            "VGA": false,
-            "lapel mic": true,
-            "Thunderbolt": false,
-            "Lightning": false
-        },
-        "Seats": 40,
-        "Computers": 1
+        "Seats": 40
     },
     "157": {
         "RoomType": "Zoom Ready",
-        "Displays": {
-            "Type": "Projector",
-            "Number": 1,
-            "Size": "N/A" 
-        },
         "Info": {
             "IS&T": true,
             "CoE": true
         },
-        "Conferencing": false,
-        "Connectivity": {
-            "HDMI": true,
-            "Micro HDMI": false,
-            "Mini HDMI": false,
-            "USB-C": false,
-            "DisplayPort": false,
-            "Mini DisplayPort": false,
-            "VGA": false,
-            "lapel mic": false,
-            "Thunderbolt": false,
-            "Lightning": false
-        },
-        "Seats": 0,
-        "Computers": 0
-    },
-    "158": {
-        "RoomType": "Lab",
-        "Displays": {
-            "Type": "N/A",
-            "Number": "N/A",
-            "Size": "N/A"
-        },
-        "Info": {
-            "IS&T": true,
-            "CoE": true
-        },
-        "Conferencing": false,
-        "Connectivity": {
-            "Extra-Power-Outlets": false
-        },
-        "Seats": 100,
-        "Computers": 15
+        "Seats": 24
     },
     "160": {
         "RoomType": "Zoom Ready",
-        "Displays": {
-            "Type": "Projector/TVs",
-            "Number": 4,
-            "Size": 70 
-        },
         "Info": {
             "IS&T": true,
             "CoE": true
         },
-        "Conferencing": false,
-        "Connectivity": {
-            "HDMI": true,
-            "Micro HDMI": false,
-            "Mini HDMI": false,
-            "USB-C": false,
-            "DisplayPort": false,
-            "Mini DisplayPort": true,
-            "VGA": true,
-            "lapel mic": true,
-            "Thunderbolt": false,
-            "Lightning": false
-        },
-        "Seats": 42,
-        "Computers": 1
+        "Seats": 42
     },
     "161": {
         "RoomType": "Zoom Ready",
-        "Displays": {
-            "Type": "Projector/TVs",
-            "Number": 3,
-            "Size": "N/A"
-        },
         "Info": {
             "IS&T": true,
             "CoE": true
         },
-        "Conferencing": false,
-        "Connectivity": {
-            "HDMI": true,
-            "Micro HDMI": false,
-            "Mini HDMI": false,
-            "USB-C": false,
-            "DisplayPort": false,
-            "Mini DisplayPort": false,
-            "VGA": false,
-            "lapel mic": true,
-            "Thunderbolt": false,
-            "Lightning": false
-        },
-        "Seats": 30,
-        "Computers": 1
+        "Seats": 30
     },
     "164": {
         "RoomType": "Zoom Ready",
-        "Displays": {
-            "Type": "Projector/TVs",
-            "Number": 4,
-            "Size": 70
-        },
         "Info": {
             "IS&T": true,
             "CoE": true
         },
-        "Conferencing": false,
-        "Connectivity": {
-            "HDMI": true,
-            "Micro HDMI": false,
-            "Mini HDMI": false,
-            "USB-C": false,
-            "DisplayPort": false,
-            "Mini DisplayPort": true,
-            "VGA": true,
-            "lapel mic": true,
-            "Thunderbolt": false,
-            "Lightning": false
-        },
-        "Seats": 56,
-        "Computers": 1
+        "Seats": 56
     },
     "249": {
         "RoomType": "Lab",
-        "Displays": {
-            "Type": "N/A",
-            "Number": "N/A",
-            "Size": "N/A"
-        },
         "Info": {
             "IS&T": true,
             "CoE": true
         },
-        "Conferencing": false,
-        "Connectivity": {
-            "Extra-Power-Outlets": false
-        },
-        "Seats": 5,
-        "Computers": 5
+        "Seats": 5
     },
     "250": {
         "RoomType": "Zoom Ready",
-        "Displays": {
-            "Type": "TV",
-            "Number": 2,
-            "Size": 80 
-        },
         "Info": {
             "IS&T": true,
             "CoE": true
         },
-        "Conferencing": true,
-        "Connectivity": {
-            "HDMI": true,
-            "Micro HDMI": false,
-            "Mini HDMI": false,
-            "USB-C": false,
-            "DisplayPort": false,
-            "Mini DisplayPort": false,
-            "VGA": false,
-            "lapel mic": false,
-            "Thunderbolt": false,
-            "Lightning": false
-        },
-        "Seats": 16,
-        "Computers": 1
+        "Seats": 16
     },
     "252": {
         "RoomType": "Zoom Ready",
-        "Displays": {
-            "Type": "Projector",
-            "Number": 2,
-            "Size": "N/A"
-        },
         "Info": {
             "IS&T": true,
             "CoE": true
         },
-        "Conferencing": false,
-        "Connectivity": {
-            "HDMI": true,
-            "Micro HDMI": false,
-            "Mini HDMI": false,
-            "USB-C": false,
-            "DisplayPort": false,
-            "Mini DisplayPort": false,
-            "VGA": false,
-            "lapel mic": true,
-            "Thunderbolt": false,
-            "Lightning": false
-        },
-        "Seats": 58,
-        "Computers": 1
+        "Seats": 58
     },
     "256": {
         "RoomType": "Zoom Ready",
-        "Displays": {
-            "Type": "Projector",
-            "Number": 1,
-            "Size": "N/A"
-        },
         "Info": {
             "IS&T": true,
             "CoE": true
         },
-        "Conferencing": false,
-        "Connectivity": {
-            "HDMI": true,
-            "Micro HDMI": false,
-            "Mini HDMI": false,
-            "USB-C": true,
-            "DisplayPort": false,
-            "Mini DisplayPort": false,
-            "VGA": false,
-            "lapel mic": false,
-            "Thunderbolt": false,
-            "Lightning": false
-        },
-        "Seats": 40,
-        "Computers": 1
+        "Seats": 40
     },
     "259": {
         "RoomType": "Zoom Ready",
-        "Displays": {
-            "Type": "Projector",
-            "Number": 1,
-            "Size": "N/A"
-        },
         "Info": {
             "IS&T": true,
             "CoE": true
         },
-        "Conferencing": false,
-        "Connectivity": {
-            "HDMI": true,
-            "Micro HDMI": false,
-            "Mini HDMI": false,
-            "USB-C": false,
-            "DisplayPort": false,
-            "Mini DisplayPort": true,
-            "VGA": false,
-            "lapel mic": false,
-            "Thunderbolt": false,
-            "Lightning": false
-        },
-        "Seats": 16,
-        "Computers": 1
+        "Seats": 16
     },
     "260": {
         "RoomType": "Zoom Ready",
-        "Displays": {
-            "Type": "Projector",
-            "Number": 1,
-            "Size": "N/A"
-        },
         "Info": {
             "IS&T": true,
             "CoE": true
         },
-        "Conferencing": false,
-        "Connectivity": {
-            "HDMI": true,
-            "Micro HDMI": false,
-            "Mini HDMI": false,
-            "USB-C": true,
-            "DisplayPort": false,
-            "Mini DisplayPort": false,
-            "VGA": false,
-            "lapel mic": false,
-            "Thunderbolt": false,
-            "Lightning": false
-        },
-        "Seats": 60,
-        "Computers": 60
+        "Seats": 60
     },
     "261": {
         "RoomType": "Zoom Ready",
-        "Displays": {
-            "Type": "Projector",
-            "Number": 1,
-            "Size": "N/A"
-        },
         "Info": {
             "IS&T": true,
             "CoE": true
         },
-        "Conferencing": false,
-        "Connectivity": {
-            "HDMI": true,
-            "Micro HDMI": false,
-            "Mini HDMI": false,
-            "USB-C": true,
-            "DisplayPort": false,
-            "Mini DisplayPort": false,
-            "VGA": false,
-            "lapel mic": false,
-            "Thunderbolt": false,
-            "Lightning": false
-        },
-        "Seats": 24,
-        "Computers": 1
+        "Seats": 24
     },
     "263": {
         "RoomType": "Zoom Ready",
-        "Displays": {
-            "Type": "Projector",
-            "Number": 2,
-            "Size": "N/A"
-        },
         "Info": {
             "IS&T": true,
             "CoE": true
         },
-        "Conferencing": false,
-        "Connectivity": {
-            "HDMI": true,
-            "Micro HDMI": false,
-            "Mini HDMI": false,
-            "USB-C": false,
-            "DisplayPort": false,
-            "Mini DisplayPort": false,
-            "VGA": false,
-            "lapel mic": true,
-            "Thunderbolt": false,
-            "Lightning": false
-        },
-        "Seats": 50,
-        "Computers": 1
+        "Seats": 50
     },
     "269": {
         "RoomType": "Zoom Ready",
-        "Displays": {
-            "Type": "Projector",
-            "Number": 1,
-            "Size": "N/A" 
-        },
         "Info": {
             "IS&T": true,
             "CoE": false
         },
-        "Conferencing": false,
-        "Connectivity": {
-            "HDMI": true,
-            "Micro HDMI": false,
-            "Mini HDMI": false,
-            "USB-C": true,
-            "DisplayPort": false,
-            "Mini DisplayPort": false,
-            "VGA": false,
-            "lapel mic": false,
-            "Thunderbolt": false,
-            "Lightning": false
-        },
-        "Seats": 30,
-        "Computers": 1
+        "Seats": 30
     },
     "270": {
         "RoomType": "Zoom Ready",
-        "Displays": {
-            "Type": "Projector",
-            "Number": 16,
-            "Size": "N/A" 
-        },
         "Info": {
             "IS&T": true,
             "CoE": true
         },
-        "Conferencing": false,
-        "Connectivity": {
-            "HDMI": true,
-            "Micro HDMI": false,
-            "Mini HDMI": false,
-            "USB-C": false,
-            "DisplayPort": false,
-            "Mini DisplayPort": false,
-            "VGA": false,
-            "lapel mic": false,
-            "Thunderbolt": false,
-            "Lightning": false
-        },
-        "Seats": 16,
-        "Computers": 1
+        "Seats": 16
     },
     "274": {
         "RoomType": "Zoom Ready",
-        "Displays": {
-            "Type": "Projector",
-            "Number": 1,
-            "Size": "N/A"
-        },
         "Info": {
             "IS&T": true,
             "CoE": true
         },
-        "Conferencing": false,
-        "Connectivity": {
-            "HDMI": true,
-            "Micro HDMI": false,
-            "Mini HDMI": false,
-            "USB-C": true,
-            "DisplayPort": false,
-            "Mini DisplayPort": false,
-            "VGA": false,
-            "lapel mic": false,
-            "Thunderbolt": false,
-            "Lightning": false
-        },
-        "Seats": 32,
-        "Computers": 1
+        "Seats": 32
     },
     "276": {
         "RoomType": "Zoom Ready",
-        "Displays": {
-            "Type": "Projector",
-            "Number": 1,
-            "Size": "N/A" 
-        },
         "Info": {
             "IS&T": true,
             "CoE": false
         },
-        "Conferencing": false,
-        "Connectivity": {
-            "HDMI": true,
-            "Micro HDMI": false,
-            "Mini HDMI": false,
-            "USB-C": true,
-            "DisplayPort": false,
-            "Mini DisplayPort": false,
-            "VGA": false,
-            "lapel mic": false,
-            "Thunderbolt": false,
-            "Lightning": false
-        },
-        "Seats": 40,
-        "Computers": 35
+        "Seats": 40
     },
     "278": {
         "RoomType": "Zoom Ready",
-        "Displays": {
-            "Type": "Projector",
-            "Number": 1,
-            "Size": "N/A"
-        },
         "Info": {
             "IS&T": true,
             "CoE": false
         },
-        "Conferencing": false,
-        "Connectivity": {
-            "HDMI": true,
-            "Micro HDMI": false,
-            "Mini HDMI": false,
-            "USB-C": true,
-            "DisplayPort": false,
-            "Mini DisplayPort": false,
-            "VGA": false,
-            "lapel mic": false,
-            "Thunderbolt": false,
-            "Lightning": false
-        },
-        "Seats": 40,
-        "Computers": 35
+        "Seats": 40
     },
     "279": {
         "RoomType": "Zoom Ready",
-        "Displays": {
-            "Type": "Projector",
-            "Number": 3,
-            "Size": "N/A"
-        },
         "Info": {
             "IS&T": true,
             "CoE": false
         },
-        "Conferencing": true,
-        "Connectivity": {
-            "HDMI": true,
-            "Micro HDMI": true,
-            "Mini HDMI": true,
-            "USB-C": true,
-            "DisplayPort": true,
-            "Mini DisplayPort": true,
-            "VGA": false,
-            "lapel mic": false,
-            "Thunderbolt": true,
-            "Lightning": true
-        },
-        "Seats": 30,
-        "Computers": 1
-    },
-    "311": {
-        "RoomType": "",
-        "Displays": {
-            "Type": "",
-            "Number": 0,
-            "Size": 0 
-        },
-        "Info": {
-            "IS&T": false,
-            "CoE": false
-        },
-        "Conferencing": false,
-        "Connectivity": {
-            "HDMI": false,
-            "Micro HDMI": false,
-            "Mini HDMI": false,
-            "USB-C": false,
-            "DisplayPort": false,
-            "Mini DisplayPort": false,
-            "VGA": false,
-            "lapel mic": false,
-            "Thunderbolt": false,
-            "Lightning": false
-        },
-        "Seats": 0,
-        "Computers": 0
-    },
-    "340": {
-        "RoomType": "",
-        "Displays": {
-            "Type": "",
-            "Number": 0,
-            "Size": 0 
-        },
-        "Info": {
-            "IS&T": false,
-            "CoE": false
-        },
-        "Conferencing": false,
-        "Connectivity": {
-            "HDMI": false,
-            "Micro HDMI": false,
-            "Mini HDMI": false,
-            "USB-C": false,
-            "DisplayPort": false,
-            "Mini DisplayPort": false,
-            "VGA": false,
-            "lapel mic": false,
-            "Thunderbolt": false,
-            "Lightning": false
-        },
-        "Seats": 0,
-        "Computers": 0
+        "Seats": 30
     },
     "350": {
         "RoomType": "Zoom Ready",
-        "Displays": {
-            "Type": "Projector/TVs",
-            "Number": 2,
-            "Size": 80
-        },
         "Info": {
             "IS&T": true,
             "CoE": true
         },
-        "Conferencing": true,
-        "Connectivity": {
-            "HDMI": true,
-            "Micro HDMI": false,
-            "Mini HDMI": false,
-            "USB-C": false,
-            "DisplayPort": false,
-            "Mini DisplayPort": false,
-            "VGA": true,
-            "lapel mic": false,
-            "Thunderbolt": false,
-            "Lightning": false
-        },
-        "Seats": 16,
-        "Computers": 1
+        "Seats": 16
     },
     "352": {
         "RoomType": "Lab",
-        "Displays": {
-            "Type": "N/A",
-            "Number": "N/A",
-            "Size": "N/A"
-        },
         "Info": {
             "IS&T": true,
             "CoE": true
         },
-        "Conferencing": false,
-        "Connectivity": {
-            "Extra-Power-Outlets": false
-        },
-        "Seats": 6,
-        "Computers": 6
+        "Seats": 6
     },
     "361": {
         "RoomType": "Zoom Ready",
-        "Displays": {
-            "Type": "Projector/TVs",
-            "Number": 1,
-            "Size": 86 
-        },
         "Info": {
             "IS&T": true,
             "CoE": false
         },
-        "Conferencing": false,
-        "Connectivity": {
-            "HDMI": true,
-            "Micro HDMI": false,
-            "Mini HDMI": false,
-            "USB-C": true,
-            "DisplayPort": false,
-            "Mini DisplayPort": false,
-            "VGA": false,
-            "lapel mic": false,
-            "Thunderbolt": false,
-            "Lightning": false
-        },
-        "Seats": 40,
-        "Computers": 40
+        "Seats": 40
     },
     "368": {
         "RoomType": "Lab",
-        "Displays": {
-            "Type": "N/A",
-            "Number": "N/A",
-            "Size": "N/A"
-        },
         "Info": {
             "IS&T": true,
             "CoE": true
         },
-        "Conferencing": false,
-        "Connectivity": {
-            "Extra-Power-Outlets": false
-        },
-        "Seats": 7,
-        "Computers": 7
+        "Seats": 7
     },
     "391A": {
         "RoomType": "Zoom Ready",
-        "Displays": {
-            "Type": "TV",
-            "Number": 1,
-            "Size": 55
-        },
         "Info": {
             "IS&T": true,
             "CoE": false
         },
-        "Conferencing": true,
-        "Connectivity": {
-            "HDMI": true,
-            "Micro HDMI": false,
-            "Mini HDMI": false,
-            "USB-C": false,
-            "DisplayPort": false,
-            "Mini DisplayPort": false,
-            "VGA": false,
-            "lapel mic": false,
-            "Thunderbolt": false,
-            "Lightning": false
-        },
-        "Seats": 10,
-        "Computers": 1
+        "Seats": 10
     }
 }
