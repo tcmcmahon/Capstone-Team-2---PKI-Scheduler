@@ -1,12 +1,30 @@
 /* import data */
-import {CourseDescription} from './Class_Objects.js';
+import {CourseDescription, ClassroomTimeData} from './Class_Objects.js';
 import fs, { read } from 'fs';
 import { parse } from 'csv-parse';
+import rooms from "./uploads/rooms.json" assert {type: "json"};
+import { constants } from 'os';
 
 
 /* global variables */
 var classData = []; // will hold instances of classDescription, will end up with the data for all of the classes
 var crossListedCoursesToCheck = []; // will temporarily hold classes that are cross listed and skip them if listed
+const unassignableClasses =  ["AREN 3030 - AE DESIGN AND SIMULATION STUDIO III",
+                            "CIVE 334 - INTRODUCTION TO GEOTECHNICAL ENGINEERING",
+                            "CIVE 378 - MATERIALS OF CONSTRUCTION",
+                            "AREN 3220 - ELECTRICAL SYSTEMS FOR BUILDINGS I",
+                            "AREN 4250 - LIGHTING DESIGN",
+                            "AREN 4940 - SPECIAL TOPICS IN ARCHITECTURAL ENGINEERING IV",
+                            "AREN 8220 - ELECTRICAL SYSTEMS FOR BUILDINGS II",
+                            "AREN 1030 - DESIGN AND SIMULATION STUDIO I",
+                            "AREN 4040 - BUILDING ENVELOPES",
+                            "CIVE 102 - GEOMATICS FOR CIVIL ENGINEERING",
+                            "CNST 112 - CONSTRUCTION COMMUNICATIONS",
+                            "CNST 225 - INTRODUCTION TO BUILDING INFORMATION MODELING "];
+const meetOnS = ["ECEN 891 - SPECIAL TOPICS IN ELECTRIC AND COMPUTER ENGINEERING IV",
+                "ECEN 491 - SPECIAL TOPICS IN ELECTRIC AND COMPUTER ENGINEERING IV"]
+var roomsList = [];
+var classDayFrequencies = {'M': {},'T': {},'W': {},'R': {},'F': {},'S': {}}
 
 
 /* read data from the csv file */
@@ -19,10 +37,8 @@ function readCSVData(file_path) {
         ) 
         .on('data', function (row) { // iterates through each row in csv file
             var cd = new CourseDescription(); // creates object to store class data
-            // TODO : mark of special classrooms
-            if (row[34] !== '' && cd.checkIfCrossListed([row[6], row[7]], row[34], crossListedCoursesToCheck)) { 
-                console.log(prevClassName + " has already been listed as a cross listed course\n");
-            }
+            if (row[34] !== '' && cd.checkIfCrossListed([row[6], row[7]], row[34], crossListedCoursesToCheck)) { /* cross listed */ }
+            else if (row[0] === '' && unassignableClasses.includes(prevClassName)) { }
             else if (row[0] === '') {
                 cd.setCourseName(prevClassName);
                 cd.setSectionNum(row[7]);
@@ -44,24 +60,64 @@ function readCSVData(file_path) {
 } // end of readCSVData
 
 
-/* verify that the data is saved */
-function main2ElectricBoogaloo() {
-    console.log(classData[200]);
+/* primes the room data */
+function createRoomData() {
+    for (const key in rooms){
+        var room = new ClassroomTimeData();
+        room.roomNumber = key;
+        room.colleges[0] = rooms[key].Info['IS&T'];
+        room.colleges[1] = rooms[key].Info['CoE'];
+        room.roomSize = rooms[key].Seats;
+        roomsList.push(room);
+    }
+}
+
+
+/* Primarily for testing number of assignable classrooms per given day */
+function howManyClassesPerDay() {
+    var total_count = 0;
+    // loop through each class
+    for (var _class of classData) {
+        // loop through each of the meeting dates
+        for (var ses of _class.meetingDates) {
+            // loop through each day of the meeting dates
+            var days = ses.days.split("");
+            for (var day of days) {
+                if (ses.startTime in classDayFrequencies[day]) {
+                    classDayFrequencies[day][ses.startTime]++;
+                }
+                else {
+                    classDayFrequencies[day][ses.startTime] = 1;
+                }
+            }
+        }
+        total_count++;
+    }
+}
+
+
+/* assign the actual rooms */
+function assignRooms() {
+    for (var _class in classData) {
+        // TODO: check if class in unassignableClasses
+        for (var room in rooms) {
+            continue;
+        }
+    }
 }
 
 
 /* main function, is async because fs.createReadStream() */
 export async function mainRestrictions(path) {
     await readCSVData(path);
-    console.log(classData[0]); 
-    main2ElectricBoogaloo();
-    console.log(classData.length);
+    createRoomData();
+    howManyClassesPerDay();
 } // end of main
 
 
 /* launch main */
 var test_path = './server/uploads/test.csv';
-// main(test_path);
-// EOF
+mainRestrictions(test_path);
+
 
 export default {mainRestrictions};
