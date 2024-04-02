@@ -32,13 +32,11 @@ ex.listen(3001, () => console.log("Server is up"));
     console.log('Connected to the remote database!');
 });*/
 
-/*Structure for all classes with room, first pass through*/
-var nonFinal = [];
-
-function algoAssign()
+// ORIGINAL AUTHOR OF CODE WITHIN THIS METHOD: Jacob Finley    
+function getClasses()
 {    
     var hash = {};
-    var day = 'MW'; // 'M' or 'T' or 'W' or 'R' or 'F' or a combination
+    var day = 'TR'; // 'M' or 'T' or 'W' or 'R' or 'F' or a combination
     var total_classes = 0;
     for (var _class in classData) 
     {
@@ -49,7 +47,7 @@ function algoAssign()
             {
                 continue;
             }
-            
+
             // var splicedTime = ${sesList[ses].startTime}-${sesList[ses].endTime};
             var splicedTime = "" + sesList[ses].startTime + "";
             if (splicedTime in hash) 
@@ -203,7 +201,7 @@ async function main() {
     await readCSVData();
     /*main2ElectricBoogaloo();*/
     storeParsedData();
-    algoAssign();
+    getClasses();
     /*sendData();*/
 } // end of main
 
