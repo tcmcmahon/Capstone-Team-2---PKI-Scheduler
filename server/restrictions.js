@@ -90,7 +90,7 @@ function algoAssign()
         let y = [];//stores meeting info
 
         y = classData[i].meetingDates;//store meeting info
-        u = y[0].startTime;//store startTimes-endTimes
+        u = y[0].startTime;//store startTimes
         o = y[0].days;//store days
 
         //For all times in mwTimes array, assign a room that has the days MW
