@@ -72,6 +72,7 @@ function getClasses()
     console.log(total_classes);
 }
 
+// Array of unassignable classes
 const unassignableClasses =  ["AREN 3030 - AE DESIGN AND SIMULATION STUDIO III",
                             "CIVE 334 - INTRODUCTION TO GEOTECHNICAL ENGINEERING",
                             "CIVE 378 - MATERIALS OF CONSTRUCTION",
