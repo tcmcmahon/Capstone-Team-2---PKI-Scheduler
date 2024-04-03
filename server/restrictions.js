@@ -415,19 +415,85 @@ function algoAssign()
             } 
         }
     }
+    var mw = [];
+    var tr = [];
+    var wf = [];
+    var mtwrf = [];
+    var m = [];
+    var t = [];
+    var w = [];
+    var r = [];
+    var f = [];
 
     // For all room numbers, output rooms assigned in order of room numbers
     for(let i = 0; i < Object.keys(rooms).length; i++)
     {
         for(let e = 0; e < nonFinal.length; e++)
         {
-            if(nonFinal[e].room == Object.keys(rooms)[i])
+            if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "MW")
             {
-                console.log(nonFinal[e]);
+                mw.push(nonFinal[e]);
+            }
+            if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "TR")
+            {
+                tr.push(nonFinal[e]);
+            }
+            if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "WF")
+            {
+                wf.push(nonFinal[e]);
+            }
+            if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "MTWRF")
+            {
+                mtwrf.push(nonFinal[e]);
+            }
+            if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "M")
+            {
+                m.push(nonFinal[e]);
+            }
+            if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "T")
+            {
+                t.push(nonFinal[e]);
+            }
+            if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "W")
+            {
+                w.push(nonFinal[e]);
+            }
+            if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "R")
+            {
+                r.push(nonFinal[e]);
+            }
+            if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "F")
+            {
+                f.push(nonFinal[e]);
             }
         }
-        console.log("\n");
     }
+    console.log("\nMonday/Wednesday: ");
+    console.log(mw);
+    console.log("\n");
+    console.log("Tuesday/Thursday: ");
+    console.log(tr);
+    console.log("\n");
+    console.log("Wednesday/Friday: ");
+    console.log(wf);
+    console.log("\n");
+    console.log("Monday/Tuesday/Wednesday/Thursday/Friday: ");
+    console.log(mtwrf);
+    console.log("\n");
+    console.log("Monday: ");
+    console.log(m);
+    console.log("\n");
+    console.log("Tuesday: ");
+    console.log(t);
+    console.log("\n");
+    console.log("Wednesday: ");
+    console.log(w);
+    console.log("\n");
+    console.log("Thursday: ");
+    console.log(r);
+    console.log("\n");
+    console.log("Friday: ");
+    console.log(f);
 }
 
 /* global variables */
