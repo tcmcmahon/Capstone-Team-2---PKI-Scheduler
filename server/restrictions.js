@@ -1,10 +1,9 @@
-/* import data */
+/* import modules */
 import {CourseDescription} from './Class_Objects.js';
 import fs from 'fs';
 import { parse } from 'csv-parse';
 import express from 'express';
 import cors from 'cors';
-/* Require mysql package */
 import mysql from 'mysql2';
 import rooms from './uploads/rooms.json' assert {type: 'json'};
 
@@ -15,13 +14,13 @@ ex.use(express.json());
 ex.use(cors());
 ex.get("/Data", (req, res) => {
 res.json(myobj);
-});
+});*/
 
-//Listen on port 3001 for GET requests
-ex.listen(3001, () => console.log("Server is up")); 
+// Listen on port 3001 for GET requests
+/*ex.listen(3001, () => console.log("Server is up")); 
 }*/
 
-/* Create connection to remote database */
+// Create connection to remote database
 /*const connect = mysql.createConnection({
     host: '137.48.186.40',
     user: 'appuser',
@@ -29,7 +28,7 @@ ex.listen(3001, () => console.log("Server is up"));
     database: 'scheduler'
 });*/
 
-/* Attempt connection, throw error if failed */ 
+// Attempt connection, throw error if failed
 /*connect.connect((err) => {
     if (err) throw err;
     console.log('Connected to the remote database!');
