@@ -1,4 +1,4 @@
-/* import modules */
+// import modules 
 import {CourseDescription} from './Class_Objects.js';
 import fs from 'fs';
 import { parse } from 'csv-parse';
@@ -8,31 +8,36 @@ import mysql from 'mysql2';
 import rooms from './uploads/rooms.json' assert {type: 'json'};
 
 //Set up express/cors, create path for GET requests and send data
-/*function sendData(){
+//function sendData(){
 const ex = express();
 ex.use(express.json());
 ex.use(cors());
 ex.get("/Data", (req, res) => {
 res.json(myobj);
-});*/
+});
+
+ex.get("/Algo", (req, res) => {
+    res.json(nonFinal);
+    });
+
+ex.listen(3001, () => console.log("Server is up")); 
 
 // Listen on port 3001 for GET requests
-/*ex.listen(3001, () => console.log("Server is up")); 
-}*/
+//ex.listen(3001, () => console.log("Server is up")); 
 
 // Create connection to remote database
-/*const connect = mysql.createConnection({
-    host: '137.48.186.40',
-    user: 'appuser',
-    password: 'nnrf1234',
-    database: 'scheduler'
-});*/
+//const connect = mysql.createConnection({
+//     host: '137.48.186.40',
+//     user: 'appuser',
+//     password: 'nnrf1234',
+//     database: 'scheduler'
+// });
 
 // Attempt connection, throw error if failed
-/*connect.connect((err) => {
-    if (err) throw err;
-    console.log('Connected to the remote database!');
-});*/
+//connect.connect((err) => {
+//     if (err) throw err;
+//     console.log('Connected to the remote database!');
+// });
 
 // ORIGINAL AUTHOR OF CODE WITHIN THIS METHOD: Jacob Finley, Hash of frequency of classes on each day    
 function getClasses()
@@ -153,7 +158,7 @@ const wTimes = ["8am"];
 const rTimes = ["7pm"];
 const fTimes = ["2pm", "9:30am", "8:30am", "10:30am", "11am", "12:15pm", "12:45pm", "2:45pm", "3:20pm"];
 
-/*Structure for all classes with room, first pass through*/
+//Structure for all classes with room, first pass through
 var nonFinal = [];
 
 //Assign all classes to a class room, and then sort to avoid time conflicts
@@ -555,33 +560,33 @@ function algoAssign()
         }
     }
     //Output all classes on each day
-    console.log("\nMonday/Wednesday: ");
-    console.log(mw);
-    console.log("\nTuesday/Thursday: ");
-    console.log(tr);
-    console.log("\nWednesday/Friday: ");
-    console.log(wf);
-    console.log("\nMonday/Tuesday/Wednesday/Thursday/Friday: ");
-    console.log(mtwrf);
-    console.log("\nMonday: ");
-    console.log(m);
-    console.log("\nTuesday: ");
-    console.log(t);
-    console.log("\nWednesday: ");
-    console.log(w);
-    console.log("\nThursday: ");
-    console.log(r);
-    console.log("\nFriday: ");
-    console.log(f);
-    console.log("\nSaturday/Sunday: ");
-    console.log(s);
+    // console.log("\nMonday/Wednesday: ");
+    // console.log(mw);
+    // console.log("\nTuesday/Thursday: ");
+    // console.log(tr);
+    // console.log("\nWednesday/Friday: ");
+    // console.log(wf);
+    // console.log("\nMonday/Tuesday/Wednesday/Thursday/Friday: ");
+    // console.log(mtwrf);
+    // console.log("\nMonday: ");
+    // console.log(m);
+    // console.log("\nTuesday: ");
+    // console.log(t);
+    // console.log("\nWednesday: ");
+    // console.log(w);
+    // console.log("\nThursday: ");
+    // console.log(r);
+    // console.log("\nFriday: ");
+    // console.log(f);
+    // console.log("\nSaturday/Sunday: ");
+    // console.log(s);
 }
 
-/* global variables */
+// global variables 
 var classData = []; // will hold instances of classDescription, will end up with the data for all of the classes
 var crossListedCoursesToCheck = []; // will temporarily hold classes that are cross listed and skip them if listed
 
-/* read data from the csv file */
+// read data from the csv file 
 function readCSVData() {
     return new Promise((resolve) => {
         var prevClassName; // holds the previous class stated in csv file
@@ -616,13 +621,13 @@ function readCSVData() {
     }); // end of return
 } // end of readCSVData
 
-/* verify that the data is saved */
+// verify that the data is saved 
 function main2ElectricBoogaloo() {
     console.log(classData[74]);
 }
 let myobj = [];
 
-/* Store parsed data in db and store calendar formatted data in myobj*/
+// Store parsed data in db and store calendar formatted data in myobj
 function storeParsedData(){
     var x = [];//holds all values to be stored in database
     var y = [];//holds meeting time information
@@ -709,24 +714,24 @@ function storeParsedData(){
             myobj.push({startDate: (dates[4] + "T" + y[0].startTime), endDate: (dates[4] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
         }
         //Store data in db with INSERT INTO sql query
-        /*var query = "INSERT INTO Stage_Course_Sheet (Course_Header, Section_Num, Meeting_Pattern, Session, Campus, Maximum_Enrollment) VALUES (?)";
-        connect.query(query, [x], function(err, result){
-            if(err) throw err;
-            console.log(result.affectedRows);
-        });*/
+        //var query = "INSERT INTO Stage_Course_Sheet (Course_Header, Section_Num, Meeting_Pattern, Session, Campus, Maximum_Enrollment) VALUES (?)";
+        // connect.query(query, [x], function(err, result){
+        //     if(err) throw err;
+        //     console.log(result.affectedRows);
+        // });
     }   
 }
 
-/* main function, is async because fs.createReadStream() */
+// main function, is async because fs.createReadStream() 
 async function main() {
     await readCSVData();
-    /*main2ElectricBoogaloo();*/
+    //main2ElectricBoogaloo();
     storeParsedData();
     // getClasses();
     algoAssign();
-    /*sendData();*/
+    //sendData();
 } // end of main
 
-/* launch main */
+// launch main 
 main();
 // EOF

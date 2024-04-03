@@ -10,6 +10,7 @@ export default function Navbar() {
             <ul>
                 <CustomLink to="/upload">Upload</CustomLink>
                 <CustomLink to="/calendar">Calendar</CustomLink>
+                <CustomLink to="/algorithm">Algorithm Results</CustomLink>
             </ul>
         </nav>
     )

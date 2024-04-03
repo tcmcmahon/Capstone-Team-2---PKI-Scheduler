@@ -2,6 +2,7 @@ import Navbar from "./Navbar"
 import Home from "./pages/Home"
 import Upload from "./pages/Upload"
 import Calendar from "./pages/Calendar"
+import AlgoResult from "./pages/AlgoResult"
 import { Route, Routes } from "react-router-dom"
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/upload" element={<Upload />} />
                     <Route path="/calendar" element={<Calendar />} />
+                    <Route path="/algorithm" element={<AlgoResult />} />
                 </Routes>
             </div>
         </>
