@@ -177,11 +177,11 @@ function algoAssign()
         {
             if(u == mwTimes[j] && o == 'MW')
             {
-                if(classData[i].sectionNumber.includes("8"))
+                if(classData[i].sectionNumber.includes("8"))//If section has 8 it is Lincoln so skip
                 {
                     continue;
                 }
-                if(unassignableClasses.includes(classData[i]))
+                if(unassignableClasses.includes(classData[i]))//If class is an unassignable class, skip
                 {
                     continue;
                 }
@@ -219,11 +219,11 @@ function algoAssign()
         {
             if(u == trTimes[j] && o == 'TR')
             {
-                if(classData[i].sectionNumber.includes("8"))
+                if(classData[i].sectionNumber.includes("8"))//If section has 8 it is Lincoln so skip
                 {
                     continue;
                 }
-                if(unassignableClasses.includes(classData[i]))
+                if(unassignableClasses.includes(classData[i]))//If class is an unassignable class, skip
                 {
                     continue;
                 }
@@ -261,11 +261,11 @@ function algoAssign()
         {
             if(u == wfTimes[j] && o == 'WF')
             {
-                if(classData[i].sectionNumber.includes("8"))
+                if(classData[i].sectionNumber.includes("8"))//If section has 8 it is Lincoln so skip
                 {
                     continue;
                 }
-                if(unassignableClasses.includes(classData[i]))
+                if(unassignableClasses.includes(classData[i]))//If class is an unassignable class, skip
                 {
                     continue;
                 }
@@ -293,11 +293,11 @@ function algoAssign()
         {
             if(u == mtwrfTimes[j] && o == 'MTWRF')
             {
-                if(classData[i].sectionNumber.includes("8"))
+                if(classData[i].sectionNumber.includes("8"))//If section has 8 it is Lincoln so skip
                 {
                     continue;
                 }
-                if(unassignableClasses.includes(classData[i]))
+                if(unassignableClasses.includes(classData[i]))//If class is an unassignable class, skip
                 {
                     continue;
                 }
@@ -325,11 +325,11 @@ function algoAssign()
         {
             if(u == mTimes[j] && o == 'M')
             {
-                if(classData[i].sectionNumber.includes("8"))
+                if(classData[i].sectionNumber.includes("8"))//If section has 8 it is Lincoln so skip
                 {
                     continue;
                 }
-                if(unassignableClasses.includes(classData[i]))
+                if(unassignableClasses.includes(classData[i]))//If class is an unassignable class, skip
                 {
                     continue;
                 }
@@ -357,11 +357,11 @@ function algoAssign()
         {
             if(u == tTimes[j] && o == 'T')
             {
-                if(classData[i].sectionNumber.includes("8"))
+                if(classData[i].sectionNumber.includes("8"))//If section has 8 it is Lincoln so skip
                 {
                     continue;
                 }
-                if(unassignableClasses.includes(classData[i]))
+                if(unassignableClasses.includes(classData[i]))//If class is an unassignable class, skip
                 {
                     continue;
                 }
@@ -389,11 +389,11 @@ function algoAssign()
         {
             if(u == wTimes[j] && o == 'W')
             {
-                if(classData[i].sectionNumber.includes("8"))
+                if(classData[i].sectionNumber.includes("8"))//If section has 8 it is Lincoln so skip
                 {
                     continue;
                 }
-                if(unassignableClasses.includes(classData[i]))
+                if(unassignableClasses.includes(classData[i]))//If class is an unassignable class, skip
                 {
                     continue;
                 }
@@ -421,11 +421,11 @@ function algoAssign()
         {
             if(u == rTimes[j] && o == 'R')
             {
-                if(classData[i].sectionNumber.includes("8"))
+                if(classData[i].sectionNumber.includes("8"))//If section has 8 it is Lincoln so skip
                 {
                     continue;
                 }
-                if(unassignableClasses.includes(classData[i]))
+                if(unassignableClasses.includes(classData[i]))//If class is an unassignable class, skip
                 {
                     continue;
                 }
@@ -453,11 +453,11 @@ function algoAssign()
         {
             if(u == fTimes[j] && o == 'F')
             {
-                if(classData[i].sectionNumber.includes("8"))
+                if(classData[i].sectionNumber.includes("8"))//If section has 8 it is Lincoln so skip
                 {
                     continue;
                 }
-                if(unassignableClasses.includes(classData[i]))
+                if(unassignableClasses.includes(classData[i]))//If class is an unassignable class, skip
                 {
                     continue;
                 }
@@ -482,7 +482,7 @@ function algoAssign()
         //For all times in fTimes array, assign a room that has the days MW
         if(o == 'S')
         {
-            if(classData[i].sectionNumber.includes("8"))
+            if(classData[i].sectionNumber.includes("8"))//If section has 8 it is Lincoln so skip
             {
                 continue;
             }
