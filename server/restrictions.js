@@ -7,9 +7,8 @@ import cors from 'cors';
 /* Require mysql package */
 import mysql from 'mysql2';
 import rooms from './uploads/rooms.json' assert {type: 'json'};
-import { PriorityQueue } from './Class_Objects.js';
-import _ from "lodash";
 
+//Set up express/cors, create path for GET requests and send data
 /*function sendData(){
 const ex = express();
 ex.use(express.json());
@@ -18,8 +17,10 @@ ex.get("/Data", (req, res) => {
 res.json(myobj);
 });
 
+//Listen on port 3001 for GET requests
 ex.listen(3001, () => console.log("Server is up")); 
 }*/
+
 /* Create connection to remote database */
 /*const connect = mysql.createConnection({
     host: '137.48.186.40',
@@ -34,7 +35,7 @@ ex.listen(3001, () => console.log("Server is up"));
     console.log('Connected to the remote database!');
 });*/
 
-// ORIGINAL AUTHOR OF CODE WITHIN THIS METHOD: Jacob Finley    
+// ORIGINAL AUTHOR OF CODE WITHIN THIS METHOD: Jacob Finley, Hash of frequency of classes on each day    
 function getClasses()
 {    
     var hash = {};
@@ -67,61 +68,63 @@ function getClasses()
     console.log(total_classes);
 }
 
+//Sort Tuesday/Thursday classes to resolve time conflicts
 function sortTR()
 {
-    let z = Object.keys(rooms);
-    let h = 0;
+    let z = Object.keys(rooms);//All rooms
+    let h = 0;//Room index counter
 
-    for(let i = 0; i < Object.keys(rooms).length; i++)
+    for(let i = 0; i < Object.keys(rooms).length; i++)//For all rooms
     {
-        let t = [];
-        for(let e = 0; e < nonFinal.length && e+1 < nonFinal.length; e++)
+        let t = [];//time array to check for duplicate times
+        for(let e = 0; e < nonFinal.length && e+1 < nonFinal.length; e++)//for all classes in nonFinal array
         {
-            if(h >= 30)
-                {
-                    h = 0;
-                }
-            if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "TR")
+            if(h >= 30)//If we are at last room reset to 0 and keep going
             {
-                if(t.includes(nonFinal[e].time))
+                h = 0;
+            }
+            if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "TR")//If current class, room and day of TR
+            {
+                if(t.includes(nonFinal[e].time))//If time array already has the same time entry
                 {
-                    nonFinal[e].room = z[h+12];
+                    nonFinal[e].room = z[h+12];//Reassign the class to a room 12 rooms up
                 }
-                else if(!(t.includes(nonFinal[e].time)))
+                else if(!(t.includes(nonFinal[e].time)))//else if time array doesn't have the time entry
                 {
-                    t.push(nonFinal[e].time);
+                    t.push(nonFinal[e].time);//Add the time entry to the array
                 }
-                h++;
+                h++;//increment room index counter
             }
         }
     }
 }
 
+//Sort Monday/Wednesday classes to resolve time conflicts
 function sortMW()
 {
-    let z = Object.keys(rooms);
-    let h = 0;
+    let z = Object.keys(rooms);//All rooms
+    let h = 0;//Room index counter
 
-    for(let i = 0; i < Object.keys(rooms).length; i++)
+    for(let i = 0; i < Object.keys(rooms).length; i++)//For all rooms
     {
-        let t = [];
-        for(let e = 0; e < nonFinal.length && e+1 < nonFinal.length; e++)
+        let t = [];//Time array
+        for(let e = 0; e < nonFinal.length && e+1 < nonFinal.length; e++)//For all classes in nonFinal array
         {
-            if(h >= 30)
-                {
-                    h = 0;
-                }
-            if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "MW")
+            if(h >= 30)//If we are at the last room, reset to 0 and continue
             {
-                if(t.includes(nonFinal[e].time))
+                h = 0;
+            }
+            if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "MW")//If current class, room and day of MW 
+            {
+                if(t.includes(nonFinal[e].time))//If time array has the time entry already
                 {
-                    nonFinal[e].room = z[h+12];
+                    nonFinal[e].room = z[h+12];//Reassign class to room 12 rooms up
                 }
-                else if(!(t.includes(nonFinal[e].time)))
+                else if(!(t.includes(nonFinal[e].time)))//else if time is not in array
                 {
-                    t.push(nonFinal[e].time);
+                    t.push(nonFinal[e].time);//add time to array
                 }
-                h++;
+                h++;//increment room index counter
             }
         }
     }
@@ -141,6 +144,7 @@ const fTimes = ["2pm", "9:30am", "8:30am", "10:30am", "11am", "12:15pm", "12:45p
 /*Structure for all classes with room, first pass through*/
 var nonFinal = [];
 
+//Assign all classes to a class room, and then sort to avoid time conflicts
 function algoAssign()
 {   let k = 0;//room counter
     let u = [];//startTimes-endTimes
@@ -154,7 +158,7 @@ function algoAssign()
         y = classData[i].meetingDates;//store meeting info
         u = y[0].startTime;//store startTimes
         o = y[0].days;//store days
-
+        
         //For all times in mwTimes array, assign a room that has the days MW
         for(let j = 0; j < mwTimes.length; j++)
         {
@@ -181,6 +185,7 @@ function algoAssign()
             } 
         }
     }
+    //Sort Monday/Wednesday classes
     sortMW();
 
     //ASSIGN TR CLASSES
@@ -218,6 +223,7 @@ function algoAssign()
             } 
         }
     }
+    //Sort Tuesday/Thursday classes
     sortTR();
 
     //ASSIGN WF CLASSES
@@ -415,6 +421,32 @@ function algoAssign()
             } 
         }
     }
+    
+    //ASSIGN S CLASSES
+    for(let i = 0; i < classData.length; i++)
+    {
+        let y = [];//stores meeting info
+
+        y = classData[i].meetingDates;//store meeting info
+        o = y[0].days;//store days
+
+        //For all times in fTimes array, assign a room that has the days MW
+        if(o == 'S')
+        {
+            if(classData[i].sectionNumber.includes("8"))
+            {
+                continue;
+            }
+            else
+            {   
+                //Push class with information
+                nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'S', time: u});
+                k++;//increment room counter
+            }  
+        } 
+    }
+
+    //Arrays for rooms on each day
     var mw = [];
     var tr = [];
     var wf = [];
@@ -424,12 +456,14 @@ function algoAssign()
     var w = [];
     var r = [];
     var f = [];
+    var s = [];
 
-    // For all room numbers, output rooms assigned in order of room numbers
-    for(let i = 0; i < Object.keys(rooms).length; i++)
+    // For all room numbers, output rooms assigned for each day in order of room numbers
+    for(let i = 0; i < Object.keys(rooms).length; i++)//For all rooms
     {
-        for(let e = 0; e < nonFinal.length; e++)
+        for(let e = 0; e < nonFinal.length; e++)//For all classes in nonFinal
         {
+            //If current class is assigned to current room number and is on certain day, push to respective array.
             if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "MW")
             {
                 mw.push(nonFinal[e]);
@@ -466,8 +500,13 @@ function algoAssign()
             {
                 f.push(nonFinal[e]);
             }
+            if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "S")
+            {
+                s.push(nonFinal[e]);
+            }   
         }
     }
+    //Output all classes on each day
     console.log("\nMonday/Wednesday: ");
     console.log(mw);
     console.log("\n");
@@ -494,12 +533,14 @@ function algoAssign()
     console.log("\n");
     console.log("Friday: ");
     console.log(f);
+    console.log("\n");
+    console.log("Saturday/Sunday: ");
+    console.log(s);
 }
 
 /* global variables */
 var classData = []; // will hold instances of classDescription, will end up with the data for all of the classes
 var crossListedCoursesToCheck = []; // will temporarily hold classes that are cross listed and skip them if listed
-
 
 /* read data from the csv file */
 function readCSVData() {
@@ -644,10 +685,8 @@ async function main() {
     storeParsedData();
     // getClasses();
     algoAssign();
-    // queueing();
     /*sendData();*/
 } // end of main
-
 
 /* launch main */
 main();
