@@ -68,6 +68,19 @@ function getClasses()
     console.log(total_classes);
 }
 
+const unassignableClasses =  ["AREN 3030 - AE DESIGN AND SIMULATION STUDIO III",
+                            "CIVE 334 - INTRODUCTION TO GEOTECHNICAL ENGINEERING",
+                            "CIVE 378 - MATERIALS OF CONSTRUCTION",
+                            "AREN 3220 - ELECTRICAL SYSTEMS FOR BUILDINGS I",
+                            "AREN 4250 - LIGHTING DESIGN",
+                            "AREN 4940 - SPECIAL TOPICS IN ARCHITECTURAL ENGINEERING IV",
+                            "AREN 8220 - ELECTRICAL SYSTEMS FOR BUILDINGS II",
+                            "AREN 1030 - DESIGN AND SIMULATION STUDIO I",
+                            "AREN 4040 - BUILDING ENVELOPES",
+                            "CIVE 102 - GEOMATICS FOR CIVIL ENGINEERING",
+                            "CNST 112 - CONSTRUCTION COMMUNICATIONS",
+                            "CNST 225 - INTRODUCTION TO BUILDING INFORMATION MODELING "];
+
 //Sort Tuesday/Thursday classes to resolve time conflicts
 function sortTR()
 {
@@ -168,6 +181,10 @@ function algoAssign()
                 {
                     continue;
                 }
+                if(unassignableClasses.includes(classData[i]))
+                {
+                    continue;
+                }
                 if(k == 30)//If room counter is equal to the last room, reset and keep going
                 {
                     //Reset room counter to 0
@@ -203,6 +220,10 @@ function algoAssign()
             if(u == trTimes[j] && o == 'TR')
             {
                 if(classData[i].sectionNumber.includes("8"))
+                {
+                    continue;
+                }
+                if(unassignableClasses.includes(classData[i]))
                 {
                     continue;
                 }
@@ -244,6 +265,10 @@ function algoAssign()
                 {
                     continue;
                 }
+                if(unassignableClasses.includes(classData[i]))
+                {
+                    continue;
+                }
                 else
                 {   
                     //Push class with information
@@ -269,6 +294,10 @@ function algoAssign()
             if(u == mtwrfTimes[j] && o == 'MTWRF')
             {
                 if(classData[i].sectionNumber.includes("8"))
+                {
+                    continue;
+                }
+                if(unassignableClasses.includes(classData[i]))
                 {
                     continue;
                 }
@@ -300,6 +329,10 @@ function algoAssign()
                 {
                     continue;
                 }
+                if(unassignableClasses.includes(classData[i]))
+                {
+                    continue;
+                }
                 else
                 {   
                     //Push class with information
@@ -325,6 +358,10 @@ function algoAssign()
             if(u == tTimes[j] && o == 'T')
             {
                 if(classData[i].sectionNumber.includes("8"))
+                {
+                    continue;
+                }
+                if(unassignableClasses.includes(classData[i]))
                 {
                     continue;
                 }
@@ -356,6 +393,10 @@ function algoAssign()
                 {
                     continue;
                 }
+                if(unassignableClasses.includes(classData[i]))
+                {
+                    continue;
+                }
                 else
                 {   
                     //Push class with information
@@ -384,6 +425,10 @@ function algoAssign()
                 {
                     continue;
                 }
+                if(unassignableClasses.includes(classData[i]))
+                {
+                    continue;
+                }
                 else
                 {   
                     //Push class with information
@@ -409,6 +454,10 @@ function algoAssign()
             if(u == fTimes[j] && o == 'F')
             {
                 if(classData[i].sectionNumber.includes("8"))
+                {
+                    continue;
+                }
+                if(unassignableClasses.includes(classData[i]))
                 {
                     continue;
                 }
@@ -509,32 +558,23 @@ function algoAssign()
     //Output all classes on each day
     console.log("\nMonday/Wednesday: ");
     console.log(mw);
-    console.log("\n");
-    console.log("Tuesday/Thursday: ");
+    console.log("\nTuesday/Thursday: ");
     console.log(tr);
-    console.log("\n");
-    console.log("Wednesday/Friday: ");
+    console.log("\nWednesday/Friday: ");
     console.log(wf);
-    console.log("\n");
-    console.log("Monday/Tuesday/Wednesday/Thursday/Friday: ");
+    console.log("\nMonday/Tuesday/Wednesday/Thursday/Friday: ");
     console.log(mtwrf);
-    console.log("\n");
-    console.log("Monday: ");
+    console.log("\nMonday: ");
     console.log(m);
-    console.log("\n");
-    console.log("Tuesday: ");
+    console.log("\nTuesday: ");
     console.log(t);
-    console.log("\n");
-    console.log("Wednesday: ");
+    console.log("\nWednesday: ");
     console.log(w);
-    console.log("\n");
-    console.log("Thursday: ");
+    console.log("\nThursday: ");
     console.log(r);
-    console.log("\n");
-    console.log("Friday: ");
+    console.log("\nFriday: ");
     console.log(f);
-    console.log("\n");
-    console.log("Saturday/Sunday: ");
+    console.log("\nSaturday/Sunday: ");
     console.log(s);
 }
 
