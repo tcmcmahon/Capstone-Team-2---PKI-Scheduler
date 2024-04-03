@@ -1,9 +1,8 @@
 /* import data */
-import {CourseDescription, ClassroomTimeData} from './Class_Objects.js';
+import {CourseDescription, ClassroomTimeData, PriorityQueue} from './Class_Objects.js';
 import fs, { read } from 'fs';
 import { parse } from 'csv-parse';
 import rooms from "./uploads/rooms.json" assert {type: "json"};
-import { constants } from 'os';
 
 
 /* global variables */
@@ -152,32 +151,39 @@ function assignRooms() {
     for (var _class of classData) {
         var assignedRoom = false // boolean value to tell if class has already been assigned
         var numClasses = 0; // number of classes we have looped through
-        var numMeetingDates = _class.meetingDates.length; // some classes have multiple different meeting dates
         // loop through each of the classes meeting dates
         for (meetingDate of _class.meetingDates) { // typically one so this extra loop will not increase the time complexity to O(n^3) more like O(n^2 + k)
+            var days = meetingDate.days.split("");
             // loop through each classroom
             while (!assignedRoom) {
                 // check if we have looped through all available rooms
                 if (numClasses === roomsList.length) {
                     console.log("Couldn't find a classroom for " + _class.name);
-                    assignedRoom = true;
+                    break;
                 }
                 // check if correct campus
-                if (!roomsList[k].colleges[_class.campus]) { continue }
+                if (!roomsList[numClasses].colleges[_class.campus]) { continue }
                 // check if both are lab or not lab
                 if (_class.lab !== roomsList[k].isLab) { continue }
-                else if (_class.lab) {
-                    // is lab
-                }
-                else {
-                    // is regular class
-                }
+                // loop through the rooms schedule to see if there is an available time slot for all of the c
+                //      classes scheduled days
+
                 // Check if current class is assignable
-                var days = _class.meetingDates
                 numClasses++;
             }
         }
     }
+}
+
+
+function testQueue() {
+    var Q = new PriorityQueue();
+    Q.enqueue(classData[0]);
+    Q.enqueue(classData[143]);
+    Q.enqueue(classData[180]);
+    Q.enqueue(classData[2]);
+    Q.enqueue(classData[3]);
+    Q.displayContents();
 }
 
 
@@ -186,8 +192,7 @@ export async function mainRestrictions(path) {
     await readCSVData(path);
     createRoomData();
     howManyClassesPerDay();
-    console.log(roomsList[0]);
-    console.log(classData[0]);
+    testQueue();
     // assignRooms();
 } // end of main
 

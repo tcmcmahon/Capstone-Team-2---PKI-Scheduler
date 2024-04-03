@@ -104,4 +104,58 @@ export class ClassroomTimeData {
     }
 }
 
-export default {CourseDescription, ClassroomTimeData};
+
+export class PriorityQueue {
+    constructor() {
+        this.queue = [];
+    }
+    enqueue(_class) {
+        // make an amount of instances of _class that only have one meetingDate
+        // classes with a higher priority will be near the beginning and ones of smallest priority will be towards the end
+        var _classList = [];
+        for (var i in _class.meetingDates) {
+            _classList.push(structuredClone(_class));
+            _classList[i].meetingDates = _class.meetingDates[i];
+        }
+        // classes may have multiple different meeting times, this will loop through each
+        //      although very rare still needs to be accounted for
+        for (var _classInstance of _classList) {
+            var numDays = _classInstance.meetingDates.days.length
+            // loops through each class in the queue
+            if (this.queue.lenth === 0) {
+                this.queue.push(_classInstance);
+            }
+            else if (numDays === 1) {
+                this.queue.push(_classInstance);
+            }
+            else {
+                var i = 0;
+                var assigned = false;
+                // loop through each class in queue
+                while (!assigned && i < this.queue.length) {
+                    if (numDays < this.queue[i].meetingDates.days.length) { continue }
+                    else {
+                        this.queue.splice(i, 0, _classInstance);
+                        assigned = true;
+                    }
+                    i++;
+                }
+                if (!assigned) {
+                    this.queue.push(_classInstance);
+                }
+            }
+        }
+    }
+    dequeue() {
+        return this.queue.shift();
+    }
+    displayContents() {
+        for (var i in this.queue) {
+            console.log(i)
+            console.log(this.queue[i]);
+            console.log("\n");
+        }
+    }
+}
+
+export default {CourseDescription, ClassroomTimeData, PriorityQueue};
