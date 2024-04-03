@@ -178,12 +178,11 @@ function assignRooms() {
 
 function testQueue() {
     var Q = new PriorityQueue();
-    Q.enqueue(classData[0]);
-    Q.enqueue(classData[143]);
-    Q.enqueue(classData[180]);
-    Q.enqueue(classData[2]);
-    Q.enqueue(classData[3]);
+    for (var i = 0; i < classData.length; i++) {
+        Q.enqueue(classData[i]);
+    }
     Q.displayContents();
+    return Q.queue.length;
 }
 
 
@@ -192,7 +191,8 @@ export async function mainRestrictions(path) {
     await readCSVData(path);
     createRoomData();
     howManyClassesPerDay();
-    testQueue();
+    console.log(testQueue());
+    console.log(classData.length);
     // assignRooms();
 } // end of main
 

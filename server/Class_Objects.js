@@ -105,6 +105,16 @@ export class ClassroomTimeData {
 }
 
 
+// function sleep(milliseconds) {
+//     var start = new Date().getTime();
+//     for (var i = 0; i < 1e7; i++) {
+//         if ((new Date().getTime() - start) > milliseconds){
+//         break;
+//         }
+//     }
+// }
+
+
 export class PriorityQueue {
     constructor() {
         this.queue = [];
@@ -133,8 +143,7 @@ export class PriorityQueue {
                 var assigned = false;
                 // loop through each class in queue
                 while (!assigned && i < this.queue.length) {
-                    if (numDays < this.queue[i].meetingDates.days.length) { continue }
-                    else {
+                    if (numDays >= this.queue[i].meetingDates.days.length) {
                         this.queue.splice(i, 0, _classInstance);
                         assigned = true;
                     }
@@ -154,6 +163,7 @@ export class PriorityQueue {
             console.log(i)
             console.log(this.queue[i]);
             console.log("\n");
+            // sleep(10000);
         }
     }
 }
