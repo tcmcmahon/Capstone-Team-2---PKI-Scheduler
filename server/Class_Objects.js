@@ -24,13 +24,16 @@ export class CourseDescription {
     spliceTime(timeString) { // e.g. "MW 10:30am-11:45am; F 12:00pm-1:15pm"
         var timeDaySplit;
         var startEndSplit;
-        var timeSlot;
+        var timeSlot = {days: null, start: null, end: null};
         var days = timeString.split("; "); // ["MW 10:30am-11:45am", "F 12:00pm-1:15pm"]
         for (var day in days) {
+            var tmp_timeSlot = structuredClone(timeSlot);
             timeDaySplit = days[day].split(' '); // ["MW", "10:30am-11:45am"] : ["F", "12:00pm-1:15pm"]
             startEndSplit = timeDaySplit[1].split('-'); // ["10:30am", "11:45am"] : ["12:00pm", "1:15pm"]
-            timeSlot = new ClassroomTimeSlot(timeDaySplit[0], startEndSplit[0], startEndSplit[1]);
-            this.meetingDates.push(timeSlot);
+            tmp_timeSlot.days = timeDaySplit[0];
+            tmp_timeSlot.start = startEndSplit[0];
+            tmp_timeSlot.end = startEndSplit[1];
+            this.meetingDates.push(tmp_timeSlot);
         }
         return this.meetingDates;
     }
@@ -71,11 +74,9 @@ export class CourseDescription {
 
 
 /* linked list of classroom data */
-class ClassroomTimeSlot {
-    constructor(days=null, start=null, end=null, next=null) {
-        this.days = days
-        this.startTime = start;
-        this.endTime = end;
+export class ClassroomTimeSlot {
+    constructor(_class, next=null) {
+        this._class = _class;
         this.nextClass = next;
     }
 }
@@ -97,6 +98,7 @@ export class ClassroomTimeData {
         this.wedClasses = null;           // wednesday classes in order
         this.thuClasses = null;           // thursday classes in order
         this.friClasses = null;           // friday classes in order
+        this.s_sClasses - null;           // s classes in order
     }
     checkTimeConflicts() {
         var days = [this.monClasses, this.tueClasses, this.wedClasses, this.thuClasses, this.friClasses];
@@ -120,18 +122,13 @@ export class PriorityQueue {
         this.queue = [];
     }
     enqueue(_class) {
-        // make an amount of instances of _class that only have one meetingDate
-        // classes with a higher priority will be near the beginning and ones of smallest priority will be towards the end
         var _classList = [];
         for (var i in _class.meetingDates) {
             _classList.push(structuredClone(_class));
             _classList[i].meetingDates = _class.meetingDates[i];
         }
-        // classes may have multiple different meeting times, this will loop through each
-        //      although very rare still needs to be accounted for
         for (var _classInstance of _classList) {
-            var numDays = _classInstance.meetingDates.days.length
-            // loops through each class in the queue
+            var numDays = _classInstance.meetingDates.days.length;
             if (this.queue.lenth === 0) {
                 this.queue.push(_classInstance);
             }
@@ -141,7 +138,6 @@ export class PriorityQueue {
             else {
                 var i = 0;
                 var assigned = false;
-                // loop through each class in queue
                 while (!assigned && i < this.queue.length) {
                     if (numDays >= this.queue[i].meetingDates.days.length) {
                         this.queue.splice(i, 0, _classInstance);
@@ -168,4 +164,4 @@ export class PriorityQueue {
     }
 }
 
-export default {CourseDescription, ClassroomTimeData, PriorityQueue};
+export default {CourseDescription, ClassroomTimeData, PriorityQueue, ClassroomTimeSlot};

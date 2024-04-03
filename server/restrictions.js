@@ -1,5 +1,5 @@
 /* import data */
-import {CourseDescription, ClassroomTimeData, PriorityQueue} from './Class_Objects.js';
+import {CourseDescription, ClassroomTimeData, PriorityQueue, ClassroomTimeSlot} from './Class_Objects.js';
 import fs, { read } from 'fs';
 import { parse } from 'csv-parse';
 import rooms from "./uploads/rooms.json" assert {type: "json"};
@@ -149,25 +149,21 @@ function canBeAssigned(_class, room) {
     var time_diff;
     var exit = false;
     var room_clone = structuredClone(room); // used in case room is unassignable
-    var a = { // a -> available
-        'M': !days.includes('M'),   // true if class is not on M, false if class is on M
-        'T': !days.includes('T'),   // true if class is not on T, false if class is on T
-        'W': !days.includes('W'),   // true if class is not on W, false if class is on W
-        'R': !days.includes('R'),   // true if class is not on R, false if class is on R
-        'F': !days.includes('F'),   // true if class is not on F, false if class is on F
-        'S': !days.includes('S')    // true if class is not on S, false if class is on S
-    }
     for (var day in days && !exit) {
         if (day === 'M') {
-            if (room.monClasses === null) { room.monClasses = _class }
+            if (room.monClasses === null) { room.monClasses = new ClassroomTimeSlot(_class) }
             else {
-                curr_class = room.monClasses
-                while (time_diff = compareMeetingDates(_class.meetingDates, curr_class.meetingDates)) {
-                    prev_class = curr_class
-                    curr_class = curr_class.meetingDates.nextClass
+                curr_class = room.monClasses;
+                while ((curr_class !== null) && (time_diff = compareMeetingDates(_class.meetingDates, curr_class.meetingDates) === 1)) {
+                    prev_class = curr_class;
+                    curr_class = curr_class.nextClass;
                 }
-                if (prev_class === 1 && curr_class === 1) {
-                    // assign room
+                if (curr_class === null) {
+                    curr_class.next = new ClassroomTimeSlot(_class);
+                }
+                else if (time_diff === -1) {
+                    prev_class.next = new ClassroomTimeSlot(_class);
+                    prev_class.next.next = curr_class;
                 }
                 else {
                     exit = true;
@@ -176,22 +172,112 @@ function canBeAssigned(_class, room) {
             }
         }
         else if (day === 'T') {
-            continue;
+            if (room.tueClasses === null) { room.tueClasses = new ClassroomTimeSlot(_class) }
+            else {
+                curr_class = room.tueClasses;
+                while ((curr_class !== null) && (time_diff = compareMeetingDates(_class.meetingDates, curr_class.meetingDates) === 1)) {
+                    prev_class = curr_class;
+                    curr_class = curr_class.nextClass;
+                }
+                if (curr_class === null) {
+                    curr_class.next = new ClassroomTimeSlot(_class);
+                }
+                else if (time_diff === -1) {
+                    prev_class.next = new ClassroomTimeSlot(_class);
+                    prev_class.next.next = curr_class;
+                }
+                else {
+                    exit = true;
+                    break;
+                }
+            }
         }
         else if (day === 'W') {
-            continue;
+            if (room.wedClasses === null) { room.wedClasses = new ClassroomTimeSlot(_class) }
+            else {
+                curr_class = room.wedClasses;
+                while ((curr_class !== null) && (time_diff = compareMeetingDates(_class.meetingDates, curr_class.meetingDates) === 1)) {
+                    prev_class = curr_class;
+                    curr_class = curr_class.nextClass;
+                }
+                if (curr_class === null) {
+                    curr_class.next = new ClassroomTimeSlot(_class);
+                }
+                else if (time_diff === -1) {
+                    prev_class.next = new ClassroomTimeSlot(_class);
+                    prev_class.next.next = curr_class;
+                }
+                else {
+                    exit = true;
+                    break;
+                }
+            }
         }
         else if (day === 'R') {
-            continue;
+            if (room.thuClasses === null) { room.thuClasses = new ClassroomTimeSlot(_class) }
+            else {
+                curr_class = room.thuClasses;
+                while ((curr_class !== null) && (time_diff = compareMeetingDates(_class.meetingDates, curr_class.meetingDates) === 1)) {
+                    prev_class = curr_class;
+                    curr_class = curr_class.nextClass;
+                }
+                if (curr_class === null) {
+                    curr_class.next = new ClassroomTimeSlot(_class);
+                }
+                else if (time_diff === -1) {
+                    prev_class.next = new ClassroomTimeSlot(_class);
+                    prev_class.next.next = curr_class;
+                }
+                else {
+                    exit = true;
+                    break;
+                }
+            }
         }
         else if (day === 'F') {
-            continue;
+            if (room.friClasses === null) { room.friClasses = new ClassroomTimeSlot(_class) }
+            else {
+                curr_class = room.friClasses;
+                while ((curr_class !== null) && (time_diff = compareMeetingDates(_class.meetingDates, curr_class.meetingDates) === 1)) {
+                    prev_class = curr_class;
+                    curr_class = curr_class.nextClass;
+                }
+                if (curr_class === null) {
+                    curr_class.next = new ClassroomTimeSlot(_class);
+                }
+                else if (time_diff === -1) {
+                    prev_class.next = new ClassroomTimeSlot(_class);
+                    prev_class.next.next = curr_class;
+                }
+                else {
+                    exit = true;
+                    break;
+                }
+            }
         }
         else if (day === 'S') {
-            continue;
+            if (room.s_sClasses === null) { room.s_sClasses = new ClassroomTimeSlot(_class) }
+            else {
+                curr_class = room.s_sClasses;
+                while ((curr_class !== null) && (time_diff = compareMeetingDates(_class.meetingDates, curr_class.meetingDates) === 1)) {
+                    prev_class = curr_class;
+                    curr_class = curr_class.nextClass;
+                }
+                if (curr_class === null) {
+                    curr_class.next = new ClassroomTimeSlot(_class);
+                }
+                else if (time_diff === -1) {
+                    prev_class.next = new ClassroomTimeSlot(_class);
+                    prev_class.next.next = curr_class;
+                }
+                else {
+                    exit = true;
+                    break;
+                }
+            }
         }
     }
-    if (a['M'] && a['T'] && a['W'] && a['R'] && a['F'] && a['S']) {
+    if (!exit) {
         return true;
     }
     else {
@@ -204,9 +290,10 @@ function canBeAssigned(_class, room) {
 /* assign the actual rooms */
 function assignRooms() {
     // add courses to queue first
+    var days;
     const Q = new PriorityQueue();
     for (var i in classData) {
-        Q.enqueue(classData[i]);
+        Q.enqueue(classData[i], classDayFrequencies, classData.length);
     }
     var _class;
     while (_class = Q.dequeue()) {
@@ -235,7 +322,7 @@ export async function mainRestrictions(path) {
     await readCSVData(path);
     createRoomData();
     howManyClassesPerDay();
-    console.log(classData[143]);
+    console.log(classData[0]);
     console.log(roomsList[0]);
     // assignRooms();
 } // end of main
