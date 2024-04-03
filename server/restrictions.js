@@ -132,9 +132,6 @@ function compareMeetingDates(date1, date2) {
     // set start minutes 
     parsedDate1.endMin = isNaN(parseInt(date1split[1])) ? 0 : parseInt(date1split[1]);
     parsedDate2.endMin = isNaN(parseInt(date2split[1])) ? 0 : parseInt(date2split[1]);
-    // set total time (in minutes)
-    console.log(parsedDate1);
-    console.log(parsedDate2);
     // during the same time
     if (parsedDate2.startHour <= parsedDate1.startHour && parsedDate1.startHour < parsedDate2.endHour ||
         parsedDate1.startHour <= parsedDate2.startHour && parsedDate2.startHour < parsedDate1.endHour) { return 0 }
@@ -146,43 +143,90 @@ function compareMeetingDates(date1, date2) {
 }
 
 
-/* assign the actual rooms */
-function assignRooms() {
-    for (var _class of classData) {
-        var assignedRoom = false // boolean value to tell if class has already been assigned
-        var numClasses = 0; // number of classes we have looped through
-        // loop through each of the classes meeting dates
-        for (meetingDate of _class.meetingDates) { // typically one so this extra loop will not increase the time complexity to O(n^3) more like O(n^2 + k)
-            var days = meetingDate.days.split("");
-            // loop through each classroom
-            while (!assignedRoom) {
-                // check if we have looped through all available rooms
-                if (numClasses === roomsList.length) {
-                    console.log("Couldn't find a classroom for " + _class.name);
+function canBeAssigned(_class, room) {
+    var days = _class.meetingDates.days.split("");
+    var curr_class, prev_class = null;
+    var time_diff;
+    var exit = false;
+    var room_clone = structuredClone(room); // used in case room is unassignable
+    var a = { // a -> available
+        'M': !days.includes('M'),   // true if class is not on M, false if class is on M
+        'T': !days.includes('T'),   // true if class is not on T, false if class is on T
+        'W': !days.includes('W'),   // true if class is not on W, false if class is on W
+        'R': !days.includes('R'),   // true if class is not on R, false if class is on R
+        'F': !days.includes('F'),   // true if class is not on F, false if class is on F
+        'S': !days.includes('S')    // true if class is not on S, false if class is on S
+    }
+    for (var day in days && !exit) {
+        if (day === 'M') {
+            if (room.monClasses === null) { room.monClasses = _class }
+            else {
+                curr_class = room.monClasses
+                while (time_diff = compareMeetingDates(_class.meetingDates, curr_class.meetingDates)) {
+                    prev_class = curr_class
+                    curr_class = curr_class.meetingDates.nextClass
+                }
+                if (prev_class === 1 && curr_class === 1) {
+                    // assign room
+                }
+                else {
+                    exit = true;
                     break;
                 }
-                // check if correct campus
-                if (!roomsList[numClasses].colleges[_class.campus]) { continue }
-                // check if both are lab or not lab
-                if (_class.lab !== roomsList[k].isLab) { continue }
-                // loop through the rooms schedule to see if there is an available time slot for all of the c
-                //      classes scheduled days
-
-                // Check if current class is assignable
-                numClasses++;
             }
         }
+        else if (day === 'T') {
+            continue;
+        }
+        else if (day === 'W') {
+            continue;
+        }
+        else if (day === 'R') {
+            continue;
+        }
+        else if (day === 'F') {
+            continue;
+        }
+        else if (day === 'S') {
+            continue;
+        }
+    }
+    if (a['M'] && a['T'] && a['W'] && a['R'] && a['F'] && a['S']) {
+        return true;
+    }
+    else {
+        room = room_clone;
+        return false;
     }
 }
 
 
-function testQueue() {
-    var Q = new PriorityQueue();
-    for (var i = 0; i < classData.length; i++) {
+/* assign the actual rooms */
+function assignRooms() {
+    // add courses to queue first
+    const Q = new PriorityQueue();
+    for (var i in classData) {
         Q.enqueue(classData[i]);
     }
-    Q.displayContents();
-    return Q.queue.length;
+    var _class;
+    while (_class = Q.dequeue()) {
+        var assignedRoom = false // boolean value to tell if class has already been assigned
+        var numClasses = 0; // number of classes we have looped through
+        while (!assignedRoom) {
+            if (numClasses === roomsList.length) {
+                console.log("Couldn't find a classroom for " + _class.name);
+                break;
+            }
+            if (!roomsList[numClasses].colleges[_class.campus]) { continue }
+            if (_class.lab !== roomsList[numClasses].isLab) { continue }
+            if (_class.maximumEnrollments > roomsList[numClasses].roomSize) { continue }
+            if (!canBeAssigned(_class, roomsList[numClasses])) { continue }
+            else { assignedRoom = true }
+            numClasses++;
+        }
+        console.log("Next class...");
+    }
+    console.log("Finished");
 }
 
 
@@ -191,8 +235,8 @@ export async function mainRestrictions(path) {
     await readCSVData(path);
     createRoomData();
     howManyClassesPerDay();
-    console.log(testQueue());
-    console.log(classData.length);
+    console.log(classData[143]);
+    console.log(roomsList[0]);
     // assignRooms();
 } // end of main
 
