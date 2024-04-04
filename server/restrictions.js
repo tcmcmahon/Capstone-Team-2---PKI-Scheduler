@@ -22,9 +22,6 @@ ex.get("/Algo", (req, res) => {
 
 ex.listen(3001, () => console.log("Server is up")); 
 
-// Listen on port 3001 for GET requests
-//ex.listen(3001, () => console.log("Server is up")); 
-
 // Create connection to remote database
 //const connect = mysql.createConnection({
 //     host: '137.48.186.40',
@@ -165,7 +162,8 @@ var nonFinal = [];
 //Assign all classes to a class room, and then sort to avoid time conflicts
 function algoAssign()
 {   let k = 0;//room counter
-    let u = [];//startTimes-endTimes
+    let u = [];//startTimes
+    let d = [];//endTimes
     let o = [];//days
 
     //ASSIGN MW CLASSES
@@ -175,6 +173,7 @@ function algoAssign()
 
         y = classData[i].meetingDates;//store meeting info
         u = y[0].startTime;//store startTimes
+        d = y[0].endTime;//store endTimes
         o = y[0].days;//store days
         
         //For all times in mwTimes array, assign a room that has the days MW
@@ -195,13 +194,13 @@ function algoAssign()
                     //Reset room counter to 0
                     k = 0;
                     //Push class with information
-                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'MW', time: u});
+                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'MW', startTime: u, endTime: d});
                     k++;//increment room counter
                 }
                 else
                 {   
                     //Push class with information
-                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'MW', time: u});
+                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'MW', startTime: u, endTime: d});
                     k++;//increment room counter
                 }  
             } 
@@ -217,6 +216,7 @@ function algoAssign()
 
         y = classData[i].meetingDates;//store meeting info
         u = y[0].startTime;//store startTimes
+        d = y[0].endTime;//store endTimes
         o = y[0].days;//store days
 
         //For all times in trTimes array, assign a room that has the days MW
@@ -237,13 +237,13 @@ function algoAssign()
                     //Reset room counter to 0
                     k = 0;
                     //Push class with information
-                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'TR', time: u});
+                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'TR', startTime: u, endTime: d});
                     k++;//increment room counter
                 }
                 else
                 {   
                     //Push class with information
-                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'TR', time: u});
+                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'TR', startTime: u, endTime: d});
                     k++;//increment room counter
                 }  
             } 
@@ -259,6 +259,7 @@ function algoAssign()
  
         y = classData[i].meetingDates;//store meeting info
         u = y[0].startTime;//store startTimes
+        d = y[0].endTime;//store endTimes
         o = y[0].days;//store days
  
         //For all times in wfTimes array, assign a room that has the days MW
@@ -277,7 +278,7 @@ function algoAssign()
                 else
                 {   
                     //Push class with information
-                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'WF', time: u});
+                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'WF', startTime: u, endTime: d});
                     k++;//increment room counter
                 }  
             } 
@@ -291,6 +292,7 @@ function algoAssign()
 
         y = classData[i].meetingDates;//store meeting info
         u = y[0].startTime;//store startTimes
+        d = y[0].endTime;//store endTimes
         o = y[0].days;//store days
 
         //For all times in mtwrfTimes array, assign a room that has the days MW
@@ -309,7 +311,7 @@ function algoAssign()
                 else
                 {   
                     //Push class with information
-                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'MTWRF', time: u});
+                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'MTWRF', startTime: u, endTime: d});
                     k++;//increment room counter
                 }  
             } 
@@ -323,6 +325,7 @@ function algoAssign()
 
         y = classData[i].meetingDates;//store meeting info
         u = y[0].startTime;//store startTimes
+        d = y[0].endTime;//store endTimes
         o = y[0].days;//store days
 
         //For all times in mTimes array, assign a room that has the days MW
@@ -341,7 +344,7 @@ function algoAssign()
                 else
                 {   
                     //Push class with information
-                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'M', time: u});
+                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'M', startTime: u, endTime: d});
                     k++;//increment room counter
                 }  
             } 
@@ -355,6 +358,7 @@ function algoAssign()
 
         y = classData[i].meetingDates;//store meeting info
         u = y[0].startTime;//store startTimes
+        d = y[0].endTime;//store endTimes
         o = y[0].days;//store days
 
         //For all times in tTimes array, assign a room that has the days MW
@@ -373,7 +377,7 @@ function algoAssign()
                 else
                 {   
                     //Push class with information
-                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'T', time: u});
+                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'T', startTime: u, endTime: d});
                     k++;//increment room counter
                 }  
             } 
@@ -387,6 +391,7 @@ function algoAssign()
 
         y = classData[i].meetingDates;//store meeting info
         u = y[0].startTime;//store startTimes
+        d = y[0].endTime;//store endTimes
         o = y[0].days;//store days
 
         //For all times in wTimes array, assign a room that has the days MW
@@ -405,7 +410,7 @@ function algoAssign()
                 else
                 {   
                     //Push class with information
-                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'W', time: u});
+                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'W', startTime: u, endTime: d});
                     k++;//increment room counter
                 }  
             } 
@@ -419,6 +424,7 @@ function algoAssign()
 
         y = classData[i].meetingDates;//store meeting info
         u = y[0].startTime;//store startTimes
+        d = y[0].endTime;//store endTimes
         o = y[0].days;//store days
 
         //For all times in rTimes array, assign a room that has the days MW
@@ -437,7 +443,7 @@ function algoAssign()
                 else
                 {   
                     //Push class with information
-                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'R', time: u});
+                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'R', startTime: u, endTime: d});
                     k++;//increment room counter
                 }  
             } 
@@ -451,6 +457,7 @@ function algoAssign()
 
         y = classData[i].meetingDates;//store meeting info
         u = y[0].startTime;//store startTimes
+        d = y[0].endTime;//store endTimes
         o = y[0].days;//store days
 
         //For all times in fTimes array, assign a room that has the days MW
@@ -469,7 +476,7 @@ function algoAssign()
                 else
                 {   
                     //Push class with information
-                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'F', time: u});
+                    nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'F', startTime: u, endTime: d});
                     k++;//increment room counter
                 }  
             } 
@@ -482,6 +489,7 @@ function algoAssign()
         let y = [];//stores meeting info
 
         y = classData[i].meetingDates;//store meeting info
+        d = y[0].endTime;//store endTimes
         o = y[0].days;//store days
 
         //For all times in fTimes array, assign a room that has the days MW
@@ -498,7 +506,7 @@ function algoAssign()
             else
             {   
                 //Push class with information
-                nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'S', time: u});
+                nonFinal.push({room: Object.keys(rooms)[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'S', startTime: u, endTime: d});
                 k++;//increment room counter
             }  
         } 
@@ -632,17 +640,79 @@ function main2ElectricBoogaloo() {
 }
 let myobj = [];
 
-// Store parsed data in db and store calendar formatted data in myobj
+function storeAssigninCalendar()
+{
+    var dates = ["2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04", "2024-01-05"];//Dates for calendar data
+    for(let i = 0; i < nonFinal.length; i++)
+    {
+          //check for what class days and assign startDate, endDate, and title in myobj to be used in calendar
+          if(nonFinal[i].days == 'MW')//if days are Monday Wednesday
+          {
+              // insert class into myobj
+              myobj.push({startDate: (dates[0] + "T" + nonFinal[i].startTime), endDate: (dates[0] + "T" + nonFinal[i].endTime), title: nonFinal[i].class});
+              myobj.push({startDate: (dates[2] + "T" + nonFinal[i].startTime), endDate: (dates[2] + "T" + nonFinal[i].endTime), title: nonFinal[i].class});
+              
+          }
+          else if(nonFinal[i].days == 'TR')//if days are Tuesday Thursday
+          {
+              // insert class into myobj
+              myobj.push({startDate: (dates[1] + "T" + nonFinal[i].startTime), endDate: (dates[1] + "T" + nonFinal[i].endTime), title: nonFinal[i].class});
+              myobj.push({startDate: (dates[3] + "T" + nonFinal[i].startTime), endDate: (dates[3] + "T" + nonFinal[i].endTime), title: nonFinal[i].class});
+          }
+          else if(nonFinal[i].days == 'WF')//if days are Wednesday Friday
+          {
+              // insert class into myobj
+              myobj.push({startDate: (dates[2] + "T" + nonFinal[i].startTime), endDate: (dates[2] + "T" + nonFinal[i].endTime), title: nonFinal[i].class});
+              myobj.push({startDate: (dates[4] + "T" + nonFinal[i].startTime), endDate: (dates[4] + "T" + nonFinal[i].endTime), title: nonFinal[i].class});
+          }
+          else if(nonFinal[i].days == 'MTWRF')//if days are everyday
+          {
+              // insert class into myobj
+              myobj.push({startDate: (dates[0] + "T" + nonFinal[i].startTime), endDate: (dates[0] + "T" + nonFinal[i].endTime), title: nonFinal[i].class});
+              myobj.push({startDate: (dates[1] + "T" + nonFinal[i].startTime), endDate: (dates[1] + "T" + nonFinal[i].endTime), title: nonFinal[i].class});
+              myobj.push({startDate: (dates[2] + "T" + nonFinal[i].startTime), endDate: (dates[2] + "T" + nonFinal[i].endTime), title: nonFinal[i].class});
+              myobj.push({startDate: (dates[3] + "T" + nonFinal[i].startTime), endDate: (dates[3] + "T" + nonFinal[i].endTime), title: nonFinal[i].class});
+              myobj.push({startDate: (dates[4] + "T" + nonFinal[i].startTime), endDate: (dates[4] + "T" + nonFinal[i].endTime), title: nonFinal[i].class});
+          }
+          else if(nonFinal[i].days == 'M')//if days are Monday
+          {
+              // insert class into myobj
+              myobj.push({startDate: (dates[0] + "T" + nonFinal[i].startTime), endDate: (dates[0] + "T" + nonFinal[i].endTime), title: nonFinal[i].class});
+          }
+          else if(nonFinal[i].days == 'T')//if days are Tuesday
+          {
+              // insert class into myobj
+              myobj.push({startDate: (dates[1] + "T" + nonFinal[i].startTime), endDate: (dates[1] + "T" + nonFinal[i].endTime), title: nonFinal[i].class});
+          }
+          else if(nonFinal[i].days == 'W')//if days are Wednesday
+          {
+              // insert class into myobj
+              myobj.push({startDate: (dates[2] + "T" + nonFinal[i].startTime), endDate: (dates[2] + "T" + nonFinal[i].endTime), title: nonFinal[i].class});
+          }
+          else if(nonFinal[i].days == 'R')//if days are Thursday
+          {
+              // insert class into myobj
+              myobj.push({startDate: (dates[3] + "T" + nonFinal[i].startTime), endDate: (dates[3] + "T" + nonFinal[i].endTime), title: nonFinal[i].class});
+          }
+          else if(nonFinal[i].days == 'F')//if days are Friday
+          {
+              // insert class into myobj
+              myobj.push({startDate: (dates[4] + "T" + nonFinal[i].startTime), endDate: (dates[4] + "T" + nonFinal[i].endTime), title: nonFinal[i].class});
+          }
+    }
+    formatCalendar();
+}
+
+// Store parsed data in db
 function storeParsedData(){
     var x = [];//holds all values to be stored in database
     var y = [];//holds meeting time information
 
-    var dates = ["2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04", "2024-01-05"];//Dates for calendar data
-    //loops through and assigns data from classData object into array x to be stored
+    //loops through and assigns data from classData object into array x to be stored in database
     for(var i = 0; i < classData.length; i++)
     {
         y = classData[i].meetingDates;//meeting information
-        
+      
         x[0] = classData[i].name;//class name
         x[1] = classData[i].sectionNumber;//class section number
         x[2] = y[0].days;//days of class i.e. MW
@@ -657,67 +727,6 @@ function storeParsedData(){
         {
             x[5] = classData[i].maximumEnrollments;//else maximum enrollment
         }
-        //check for what class days and assign startDate, endDate, and title in myobj to be used in calendar
-        if(x[2] == 'MW')//if days are Monday Wednesday
-        {
-            // insert class into myobj
-            myobj.push({startDate: (dates[0] + "T" + y[0].startTime), endDate: (dates[0] + "T" + y[0].endTime), title: (x[0] + ", Section " + x[1])});
-            myobj.push({startDate: (dates[2] + "T" + y[0].startTime), endDate: (dates[2] + "T" + y[0].endTime), title: (x[0] + ", Section " + x[1])});
-            
-        }
-        else if(x[2] == 'TR')//if days are Tuesday Thursday
-        {
-            // insert class into myobj
-            myobj.push({startDate: (dates[1] + "T" + y[0].startTime), endDate: (dates[1] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
-            myobj.push({startDate: (dates[3] + "T" + y[0].startTime), endDate: (dates[3] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
-        }
-        else if(x[2] == 'WF')//if days are Wednesday Friday
-        {
-            // insert class into myobj
-            myobj.push({startDate: (dates[2] + "T" + y[0].startTime), endDate: (dates[2] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
-            myobj.push({startDate: (dates[4] + "T" + y[0].startTime), endDate: (dates[4] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
-        }
-        else if(x[2] == 'MWF')//if days are Monday Wednesday Friday
-        {
-            // insert class into myobj
-            myobj.push({startDate: (dates[0] + "T" + y[0].startTime), endDate: (dates[0] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
-            myobj.push({startDate: (dates[2] + "T" + y[0].startTime), endDate: (dates[2] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
-            myobj.push({startDate: (dates[4] + "T" + y[0].startTime), endDate: (dates[4] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
-        }
-        else if(x[2] == 'MTWRF')//if days are everyday
-        {
-            // insert class into myobj
-            myobj.push({startDate: (dates[0] + "T" + y[0].startTime), endDate: (dates[0] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
-            myobj.push({startDate: (dates[1] + "T" + y[0].startTime), endDate: (dates[1] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
-            myobj.push({startDate: (dates[2] + "T" + y[0].startTime), endDate: (dates[2] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
-            myobj.push({startDate: (dates[3] + "T" + y[0].startTime), endDate: (dates[3] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
-            myobj.push({startDate: (dates[4] + "T" + y[0].startTime), endDate: (dates[4] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
-        }
-        else if(x[2] == 'M')//if days are Monday
-        {
-            // insert class into myobj
-            myobj.push({startDate: (dates[0] + "T" + y[0].startTime), endDate: (dates[0] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
-        }
-        else if(x[2] == 'T')//if days are Tuesday
-        {
-            // insert class into myobj
-            myobj.push({startDate: (dates[1] + "T" + y[0].startTime), endDate: (dates[1] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
-        }
-        else if(x[2] == 'W')//if days are Wednesday
-        {
-            // insert class into myobj
-            myobj.push({startDate: (dates[2] + "T" + y[0].startTime), endDate: (dates[2] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
-        }
-        else if(x[2] == 'R')//if days are Thursday
-        {
-            // insert class into myobj
-            myobj.push({startDate: (dates[3] + "T" + y[0].startTime), endDate: (dates[3] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
-        }
-        else if(x[2] == 'F')//if days are Friday
-        {
-            // insert class into myobj
-            myobj.push({startDate: (dates[4] + "T" + y[0].startTime), endDate: (dates[4] + "T" + y[0].endTime), title: x[0] + ", Section " + x[1]});
-        }
         //Store data in db with INSERT INTO sql query
         //var query = "INSERT INTO Stage_Course_Sheet (Course_Header, Section_Num, Meeting_Pattern, Session, Campus, Maximum_Enrollment) VALUES (?)";
         // connect.query(query, [x], function(err, result){
@@ -727,6 +736,143 @@ function storeParsedData(){
     }   
 }
 
+function formatCalendar()
+{
+    for(let i = 0; i < myobj.length; i++)
+    {
+        if(myobj[i].startDate.includes("pm"))
+        {
+            myobj[i].startDate = myobj[i].startDate.replaceAll("pm", "");
+        }
+        if(myobj[i].endDate.includes("pm"))
+        {
+            myobj[i].endDate = myobj[i].endDate.replaceAll("pm", "");
+        }
+        if(myobj[i].startDate.includes("am"))
+        {
+            myobj[i].startDate = myobj[i].startDate.replaceAll("am", "");
+        }
+        if(myobj[i].endDate.includes("am"))
+        {
+            myobj[i].endDate = myobj[i].endDate.replaceAll("am", "");
+        }
+    }
+    for(let i = 0; i < myobj.length; i++)
+    {
+        if(myobj[i].startDate.includes("1:"))
+        {
+            myobj[i].startDate = myobj[i].startDate.replace("1:", "13:");
+        }
+        else if(myobj[i].startDate.includes("2:"))
+        {
+            myobj[i].startDate = myobj[i].startDate.replace("2:", "14:");
+        }
+        else if(myobj[i].startDate.includes("3:"))
+        {
+            myobj[i].startDate = myobj[i].startDate.replace("3:", "15:");
+        }
+        else if(myobj[i].startDate.includes("4:"))
+        {
+            myobj[i].startDate = myobj[i].startDate.replace("4:", "16:");
+        }
+        else if(myobj[i].startDate.includes("5:"))
+        {
+            myobj[i].startDate = myobj[i].startDate.replace("5:", "17:");
+        }
+        else if(myobj[i].startDate.includes("6:"))
+        {
+            myobj[i].startDate = myobj[i].startDate.replace("6:", "18:");
+        }
+        else if(myobj[i].startDate.endsWith("T1") == true)
+        {
+            myobj[i].startDate = myobj[i].startDate.replace(/.$/, "13");
+        }
+        else if(myobj[i].startDate.endsWith("T2") == true)
+        {
+            myobj[i].startDate = myobj[i].startDate.replace(/.$/, "14");
+        }
+        else if(myobj[i].startDate.endsWith("T3") == true)
+        {
+            myobj[i].startDate = myobj[i].startDate.replace(/.$/, "15");
+        }
+        else if(myobj[i].startDate.endsWith("T4") == true)
+        {
+            myobj[i].startDate = myobj[i].startDate.replace(/.$/, "16");
+        }
+        else if(myobj[i].startDate.endsWith("T6") == true)
+        {
+            myobj[i].startDate = myobj[i].startDate.replace(/.$/, "17");
+        }
+    }
+    for(let i = 0; i < myobj.length; i++)
+    {
+        if(myobj[i].endDate.includes("T1:"))
+        {
+            myobj[i].endDate = myobj[i].endDate.replace("1:", "13:");
+        }
+        else if(myobj[i].endDate.includes("T2:"))
+        {
+            myobj[i].endDate = myobj[i].endDate.replace("2:", "14:");
+        }
+        else if(myobj[i].endDate.includes("3:"))
+        {
+            myobj[i].endDate = myobj[i].endDate.replace("3:", "15:");
+        }
+        else if(myobj[i].endDate.includes("4:"))
+        {
+            myobj[i].endDate = myobj[i].endDate.replace("4:", "16:");
+        }
+        else if(myobj[i].endDate.includes("5:"))
+        {
+            myobj[i].endDate = myobj[i].endDate.replace("5:", "17:");
+        }
+        else if(myobj[i].endDate.includes("6:"))
+        {
+            myobj[i].endDate = myobj[i].endDate.replace("6:", "18:");
+        }
+        else if(myobj[i].endDate.includes("7:"))
+        {
+            myobj[i].endDate = myobj[i].endDate.replace("7:", "19:");
+        }
+        else if(myobj[i].endDate.includes("8:"))
+        {
+            myobj[i].endDate = myobj[i].endDate.replace("8:", "20:");
+        } 
+        else if(myobj[i].endDate.endsWith("T1"))
+        {
+            myobj[i].endDate = myobj[i].endDate.replace(/.$/, "13");
+        }
+        else if(myobj[i].endDate.endsWith("T2") == true)
+        {
+            myobj[i].endDate = myobj[i].endDate.replace(/.$/, "14");
+        }
+        else if(myobj[i].endDate.endsWith("T3") == true)
+        {
+            myobj[i].endDate = myobj[i].endDate.replace(/.$/, "15");
+        }
+        else if(myobj[i].endDate.endsWith("T4") == true)
+        {
+            myobj[i].endDate = myobj[i].endDate.replace(/.$/, "16");
+        }
+        else if(myobj[i].endDate.endsWith("T5") == true)
+        {
+            myobj[i].endDate = myobj[i].endDate.replace(/.$/, "17");
+        }
+        else if(myobj[i].endDate.endsWith("T6") == true)
+        {
+            myobj[i].endDate = myobj[i].endDate.replace(/.$/, "18");
+        }
+        else if(myobj[i].endDate.endsWith("T7") == true)
+        {
+            myobj[i].endDate = myobj[i].endDate.replace(/.$/, "19");
+        }
+        else if(myobj[i].endDate.endsWith("T8") == true)
+        {
+            myobj[i].endDate = myobj[i].endDate.replace(/.$/, "20");
+        }
+    }
+}
+
 // main function, is async because fs.createReadStream() 
 async function main() {
     await readCSVData();
@@ -734,6 +880,7 @@ async function main() {
     storeParsedData();
     // getClasses();
     algoAssign();
+    storeAssigninCalendar();
     //sendData();
 } // end of main
 
