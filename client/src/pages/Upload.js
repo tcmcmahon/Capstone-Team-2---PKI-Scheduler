@@ -37,13 +37,14 @@ export default function Upload() {
 
   return (
     <div className="App">
+      <body style={{backgroundImage: `url(${img2})`, height: "85vh", width: "100%", display: "block", margin: "auto"}}>
       <h1 style={{backgroundImage: `url(${img})`, backgroundSize: "cover", height: "110px", backgroundColor: "black"}}></h1>
-      <h2 style={{textAlign: "center", margin: "auto"}}>Upload a CSV File below:</h2>
-      <p style={{margin: "auto", textAlign: "center", backgroundColor: "black", color: "white", width: "30%", padding: "5px"}}>
+      <h2 style={{textAlign: "center", margin: "auto", backgroundColor: "black", color: "white", width: "22%", marginBottom: "5px"}}>Upload a CSV File below:</h2>
+      <p style={{margin: "auto", textAlign: "center", backgroundColor: "black", color: "white", width: "25%", padding: "5px"}}>
         <input type="file" accept=".csv" onChange={handleFileChange} />
         <button onClick={handleUpload}>Upload</button>
       </p>
-      <body style={{backgroundImage: `url(${img2})`, backgroundSize: "cover", height: "100vh", width: "90%", display: "block", margin: "auto"}}></body>
+      </body>
     </div>
   );
 }

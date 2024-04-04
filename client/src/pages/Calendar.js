@@ -6,6 +6,7 @@ import {
   WeekView,
   Appointments,
 } from '@devexpress/dx-react-scheduler-material-ui';
+import img from '../resources/O-UNO_Type_Color_White.png';
 
 const currentDate = '2024-01-01';
 const schedulerData = [
@@ -35,6 +36,9 @@ const schedulerData = [
 
 export default function Calendar(){
   return(
+    <div>
+      <h1 style={{backgroundImage: `url(${img})`, backgroundSize: "cover", height: "110px", backgroundColor: "black"}}></h1>
+      <h2 style={{textAlign: "center", margin: "auto", backgroundColor: "black", color: "white", width: "23%"}}>Class schedule for the week</h2>
   <Paper>
     <Scheduler data={schedulerData}>
     <ViewState currentDate={currentDate} />
@@ -42,5 +46,6 @@ export default function Calendar(){
     <Appointments />
     </Scheduler>
   </Paper>
+  </div>
 );
 }
