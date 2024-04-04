@@ -87,7 +87,7 @@ export class ClassroomTimeSlot {
     array to be able to easily read and determine if there are any time conflicts
 */
 export class ClassroomTimeData {
-    constructor(roomNumber) {
+    constructor(roomNumber=null) {
         this.roomNumber = roomNumber;   // room number of classroom
         this.colleges = {'CoE': null,
                          'IS&T': null};   // {bool, bool} {IS&T, CoE}
@@ -98,7 +98,7 @@ export class ClassroomTimeData {
         this.wedClasses = null;           // wednesday classes in order
         this.thuClasses = null;           // thursday classes in order
         this.friClasses = null;           // friday classes in order
-        this.s_sClasses - null;           // s classes in order
+        this.s_sClasses = null;           // s classes in order
     }
     checkTimeConflicts() {
         var days = [this.monClasses, this.tueClasses, this.wedClasses, this.thuClasses, this.friClasses];
@@ -107,14 +107,14 @@ export class ClassroomTimeData {
 }
 
 
-// function sleep(milliseconds) {
-//     var start = new Date().getTime();
-//     for (var i = 0; i < 1e7; i++) {
-//         if ((new Date().getTime() - start) > milliseconds){
-//         break;
-//         }
-//     }
-// }
+function sleep(milliseconds) {
+    var start = new Date().getTime();
+    for (var i = 0; i < 1e7; i++) {
+        if ((new Date().getTime() - start) > milliseconds){
+        break;
+        }
+    }
+}
 
 
 export class PriorityQueue {
@@ -159,7 +159,7 @@ export class PriorityQueue {
             console.log(i)
             console.log(this.queue[i]);
             console.log("\n");
-            // sleep(10000);
+            sleep(30000);
         }
     }
 }

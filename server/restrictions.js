@@ -3,6 +3,7 @@ import {CourseDescription, ClassroomTimeData, PriorityQueue, ClassroomTimeSlot} 
 import fs, { read } from 'fs';
 import { parse } from 'csv-parse';
 import rooms from "./uploads/rooms.json" assert {type: "json"};
+import { setUncaughtExceptionCaptureCallback } from 'process';
 
 
 /* global variables */
@@ -83,11 +84,11 @@ function howManyClassesPerDay() {
             // loop through each day of the meeting dates
             var days = ses.days.split("");
             for (var day of days) {
-                if (ses.startTime in classDayFrequencies[day]) {
-                    classDayFrequencies[day][ses.startTime]++;
+                if (ses.start in classDayFrequencies[day]) {
+                    classDayFrequencies[day][ses.start]++;
                 }
                 else {
-                    classDayFrequencies[day][ses.startTime] = 1;
+                    classDayFrequencies[day][ses.start] = 1;
                 }
             }
         }
@@ -144,14 +145,17 @@ function compareMeetingDates(date1, date2) {
 
 
 function canBeAssigned(_class, room) {
+    console.log(_class);
     var days = _class.meetingDates.days.split("");
     var curr_class, prev_class = null;
     var time_diff;
-    var exit = false;
+    var exit = true;
     var room_clone = structuredClone(room); // used in case room is unassignable
     for (var day in days && !exit) {
         if (day === 'M') {
-            if (room.monClasses === null) { room.monClasses = new ClassroomTimeSlot(_class) }
+            if (room.monClasses === null) { 
+                room.monClasses = new ClassroomTimeSlot(_class)
+            }
             else {
                 curr_class = room.monClasses;
                 while ((curr_class !== null) && (time_diff = compareMeetingDates(_class.meetingDates, curr_class.meetingDates) === 1)) {
@@ -166,7 +170,7 @@ function canBeAssigned(_class, room) {
                     prev_class.next.next = curr_class;
                 }
                 else {
-                    exit = true;
+                    exit = false
                     break;
                 }
             }
@@ -187,7 +191,7 @@ function canBeAssigned(_class, room) {
                     prev_class.next.next = curr_class;
                 }
                 else {
-                    exit = true;
+                    exit = false;
                     break;
                 }
             }
@@ -208,7 +212,7 @@ function canBeAssigned(_class, room) {
                     prev_class.next.next = curr_class;
                 }
                 else {
-                    exit = true;
+                    exit = false;
                     break;
                 }
             }
@@ -229,13 +233,17 @@ function canBeAssigned(_class, room) {
                     prev_class.next.next = curr_class;
                 }
                 else {
-                    exit = true;
+                    exit = false;
                     break;
                 }
             }
         }
         else if (day === 'F') {
-            if (room.friClasses === null) { room.friClasses = new ClassroomTimeSlot(_class) }
+            if (room.friClasses === null) { 
+                room.friClasses = new ClassroomTimeSlot(_class)
+                console.log("Friday Classes: ");
+                console.log(room.monClasses);
+            }
             else {
                 curr_class = room.friClasses;
                 while ((curr_class !== null) && (time_diff = compareMeetingDates(_class.meetingDates, curr_class.meetingDates) === 1)) {
@@ -250,7 +258,7 @@ function canBeAssigned(_class, room) {
                     prev_class.next.next = curr_class;
                 }
                 else {
-                    exit = true;
+                    exit = false;
                     break;
                 }
             }
@@ -271,13 +279,14 @@ function canBeAssigned(_class, room) {
                     prev_class.next.next = curr_class;
                 }
                 else {
-                    exit = true;
+                    exit = false;
                     break;
                 }
             }
         }
     }
-    if (!exit) {
+    if (exit) {
+        console.log(room);
         return true;
     }
     else {
@@ -290,30 +299,47 @@ function canBeAssigned(_class, room) {
 /* assign the actual rooms */
 function assignRooms() {
     // add courses to queue first
-    var days;
+    // var test_data = classData;
+    // var test_data =[classData[0], classData[143], classData[1], classData[180],
+    //                 classData[50], classData[73], classData[115], classData[14],
+    //                 classData[80], classData[69], classData[42], classData[142]];
+    var test_data =[classData[0]];
     const Q = new PriorityQueue();
-    for (var i in classData) {
-        Q.enqueue(classData[i], classDayFrequencies, classData.length);
+    for (var i in test_data) {
+        Q.enqueue(test_data[i]);
     }
-    var _class;
-    while (_class = Q.dequeue()) {
+    console.log("Queue created");
+    var _class = Q.dequeue();
+    while (_class !== undefined) {
+        console.log("\tPopped class: " + _class.name);
         var assignedRoom = false // boolean value to tell if class has already been assigned
-        var numClasses = 0; // number of classes we have looped through
+        var numRoomsChecked = 0; // number of classes we have looped through
         while (!assignedRoom) {
-            if (numClasses === roomsList.length) {
-                console.log("Couldn't find a classroom for " + _class.name);
-                break;
+            if (numRoomsChecked >= roomsList.length) { break }
+            console.log("\t\tChecking room: ", roomsList[numRoomsChecked].roomNumber);
+            if (!roomsList[numRoomsChecked].colleges[_class.campus]) { }
+            else if (_class.lab !== roomsList[numRoomsChecked].isLab) { }
+            else if (_class.maximumEnrollments > roomsList[numRoomsChecked].roomSize) { }
+            else if (canBeAssigned(_class, roomsList[numRoomsChecked])) { 
+                assignedRoom = true;
             }
-            if (!roomsList[numClasses].colleges[_class.campus]) { continue }
-            if (_class.lab !== roomsList[numClasses].isLab) { continue }
-            if (_class.maximumEnrollments > roomsList[numClasses].roomSize) { continue }
-            if (!canBeAssigned(_class, roomsList[numClasses])) { continue }
-            else { assignedRoom = true }
-            numClasses++;
+            numRoomsChecked++;
         }
-        console.log("Next class...");
+        console.log(assignedRoom ? "\tAssigned: " + _class.name + "\n\tto: " + roomsList[--numRoomsChecked].roomNumber : "\tCouldn't find a classroom for " + _class.name);
+        _class = Q.dequeue();
     }
-    console.log("Finished");
+}
+
+
+function testQueue() {
+    const QUEUE = new PriorityQueue();
+    var mTotal, tTotal, wTotal, rTotal, fTotal, sTotal;
+    
+    for (var i in classData) {
+        QUEUE.enqueue(classData[i]);
+    }
+    QUEUE.displayContents();
+
 }
 
 
@@ -322,9 +348,8 @@ export async function mainRestrictions(path) {
     await readCSVData(path);
     createRoomData();
     howManyClassesPerDay();
-    console.log(classData[0]);
-    console.log(roomsList[0]);
-    // assignRooms();
+    // console.log(classDayFrequencies);
+    testQueue();
 } // end of main
 
 
