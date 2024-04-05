@@ -92,9 +92,9 @@ function sortTR()
     for(let i = 0; i < Object.keys(rooms).length; i++)//For all rooms
     {
         let t = [];//time array to check for duplicate times
-        for(let e = 0; e < nonFinal.length && e+1 < nonFinal.length; e++)//for all classes in nonFinal array
+        for(let e = 0; e < nonFinal.length; e++)//for all classes in nonFinal array
         {
-            if(h >= 30)//If we are at last room reset to 0 and keep going
+            if(h > 30)//If we are at last room reset to 0 and keep going
             {
                 h = 0;
             }
@@ -102,15 +102,15 @@ function sortTR()
             {
                 if(t.includes(nonFinal[e].time))//If time array already has the same time entry
                 {
-                    nonFinal[e].room = z[h+12];//Reassign the class to a room 12 rooms up
+                    nonFinal[e].room = z[((h*3)*2)+1];
                 }
-                else if(!(t.includes(nonFinal[e].time)))//else if time array doesn't have the time entry
+                if(!(t.includes(nonFinal[e].time)))//else if time array doesn't have the time entry
                 {
                     t.push(nonFinal[e].time);//Add the time entry to the array
                 }
-                h++;//increment room index counter
             }
-        }
+            h++;//increment room index counter
+        } 
     }
 }
 
@@ -125,7 +125,7 @@ function sortMW()
         let t = [];//Time array
         for(let e = 0; e < nonFinal.length && e+1 < nonFinal.length; e++)//For all classes in nonFinal array
         {
-            if(h >= 30)//If we are at the last room, reset to 0 and continue
+            if(h > 30)//If we are at the last room, reset to 0 and continue
             {
                 h = 0;
             }
@@ -133,15 +133,15 @@ function sortMW()
             {
                 if(t.includes(nonFinal[e].time))//If time array has the time entry already
                 {
-                    nonFinal[e].room = z[h+12];//Reassign class to room 12 rooms up
+                    nonFinal[e].room = z[((h*3)*2)+1];
                 }
                 else if(!(t.includes(nonFinal[e].time)))//else if time is not in array
                 {
                     t.push(nonFinal[e].time);//add time to array
                 }
-                h++;//increment room index counter
             }
-        }
+            h++;//increment room index counter
+        } 
     }
 }
 
@@ -512,87 +512,68 @@ function algoAssign()
         } 
     }
 
-    //Arrays for rooms on each day
-    var mw = [];
-    var tr = [];
-    var wf = [];
-    var mtwrf = [];
-    var m = [];
-    var t = [];
-    var w = [];
-    var r = [];
-    var f = [];
-    var s = [];
+    // //Arrays for rooms on each day
+    // var mw = [];
+    // var tr = [];
+    // var wf = [];
+    // var mtwrf = [];
+    // var m = [];
+    // var t = [];
+    // var w = [];
+    // var r = [];
+    // var f = [];
+    // var s = [];
 
-    // For all room numbers, output rooms assigned for each day in order of room numbers
+    // // For all room numbers, output rooms assigned for each day in order of room numbers
     for(let i = 0; i < Object.keys(rooms).length; i++)//For all rooms
-    {
+    {console.log("\n");
         for(let e = 0; e < nonFinal.length; e++)//For all classes in nonFinal
         {
             //If current class is assigned to current room number and is on certain day, push to respective array.
-            if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "MW")
-            {
-                mw.push(nonFinal[e]);
-            }
-            if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "TR")
-            {
-                tr.push(nonFinal[e]);
-            }
-            if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "WF")
-            {
-                wf.push(nonFinal[e]);
-            }
-            if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "MTWRF")
-            {
-                mtwrf.push(nonFinal[e]);
-            }
-            if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "M")
-            {
-                m.push(nonFinal[e]);
-            }
-            if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "T")
-            {
-                t.push(nonFinal[e]);
-            }
-            if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "W")
-            {
-                w.push(nonFinal[e]);
-            }
-            if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "R")
-            {
-                r.push(nonFinal[e]);
-            }
-            if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "F")
-            {
-                f.push(nonFinal[e]);
-            }
-            if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "S")
-            {
-                s.push(nonFinal[e]);
-            }   
+            // if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "MW")
+            // {
+            //     mw.push(nonFinal[e]);  
+            //     console.log(nonFinal[e].room);
+            // }
+            // if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "TR")
+            // {
+            //     tr.push(nonFinal[e]);
+            //     console.log(nonFinal[e].room);
+            // }
+    //         if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "WF")
+    //         {
+    //             wf.push(nonFinal[e]);
+    //         }
+    //         if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "MTWRF")
+    //         {
+    //             mtwrf.push(nonFinal[e]);
+    //         }
+    //         if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "M")
+    //         {
+    //             m.push(nonFinal[e]);
+    //         }
+    //         if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "T")
+    //         {
+    //             t.push(nonFinal[e]);
+    //         }
+    //         if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "W")
+    //         {
+    //             w.push(nonFinal[e]);
+    //         }
+    //         if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "R")
+    //         {
+    //             r.push(nonFinal[e]);
+    //         }
+    //         if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "F")
+    //         {
+    //             f.push(nonFinal[e]);
+    //         }
+    //         if(nonFinal[e].room == Object.keys(rooms)[i] && nonFinal[e].days == "S")
+    //         {
+    //             s.push(nonFinal[e]);
+    //         }   
         }
     }
-    //Output all classes on each day
-    // console.log("\nMonday/Wednesday: ");
-    // console.log(mw);
-    // console.log("\nTuesday/Thursday: ");
-    // console.log(tr);
-    // console.log("\nWednesday/Friday: ");
-    // console.log(wf);
-    // console.log("\nMonday/Tuesday/Wednesday/Thursday/Friday: ");
-    // console.log(mtwrf);
-    // console.log("\nMonday: ");
-    // console.log(m);
-    // console.log("\nTuesday: ");
-    // console.log(t);
-    // console.log("\nWednesday: ");
-    // console.log(w);
-    // console.log("\nThursday: ");
-    // console.log(r);
-    // console.log("\nFriday: ");
-    // console.log(f);
-    // console.log("\nSaturday/Sunday: ");
-    // console.log(s);
 }
 
 // global variables 
