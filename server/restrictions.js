@@ -115,7 +115,7 @@ function algoAssign(rooms)
         u = y[0].startTime;//store startTimes
         d = y[0].endTime;//store endTimes
         o = y[0].days;//store days
-        if(k >= 30)
+        if(k >= 30)//If we are at the last room reset to room 0
         {
             k = 0;
         }
@@ -127,56 +127,59 @@ function algoAssign(rooms)
         {
             continue;
         }
-        else if(o == 'MW')
+        else if(o == 'MW')//If days are Monday/Wednesday
         {    
             //Push class with information
             nonFinal.push({room: rooms[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'MW', startTime: u, endTime: d});
         }
-        else if(o == 'TR')
+        else if(o == 'TR')//If days are Tuesday/Thursday
         {
  
             //Push class with information
             nonFinal.push({room: rooms[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'TR', startTime: u, endTime: d});  
         } 
-        else if(o == 'WF')
+        else if(o == 'WF')//If days are Wednesday/Friday
         {
                 //Push class with information
                 nonFinal.push({room: rooms[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'WF', startTime: u, endTime: d});
         } 
-        else if(o == 'MTWRF')
+        else if(o == 'MTWRF')//If days are Monday/Tuesday/Wednesday/Thursday/Friday
         {
                 //Push class with information
                 nonFinal.push({room: rooms[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'MTWRF', startTime: u, endTime: d});
         } 
-        else if(o == 'M')
+        else if(o == 'M')//If days are Monday only
         {  
                 //Push class with information
                 nonFinal.push({room: rooms[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'M', startTime: u, endTime: d});
         } 
-        else if(o == 'T')
+        else if(o == 'T')//If days are Tuesday only
         { 
                 //Push class with information
                 nonFinal.push({room: rooms[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'T', startTime: u, endTime: d});
         } 
-        else if(o == 'W')
+        else if(o == 'W')//If days are Wednesday only
         {   
                 //Push class with information
                 nonFinal.push({room: rooms[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'W', startTime: u, endTime: d});
         } 
-        else if(o == 'R')
+        else if(o == 'R')//If days are Thursday only
         { 
                 //Push class with information
                 nonFinal.push({room: rooms[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'R', startTime: u, endTime: d});
         } 
-        else if(o == 'F')
+        else if(o == 'F')//If days are Friday only
         {  
                 //Push class with information
                 nonFinal.push({room: rooms[k], class: classData[i].name + " Section " + classData[i].sectionNumber, days: 'F', startTime: u, endTime: d});
         } 
-        k++;
+        k++;//Increment to next room number
     }
+    //Sort Monday/Wednesday times
     sortMW(z);
+    //Sort Tuesday/Thursday times
     sortTR(z);
+    //Store assignment data in object to send to the calendar
     storeAssigninCalendar();
 }
 
@@ -222,10 +225,11 @@ function readCSVData() {
 //Array of final sorted data to send to the calendar
 let finalForCalendar = [];
 
+//Stores final assignment data into finalForCalendar object to be passed to the calendar page
 function storeAssigninCalendar()
 {
     var dates = ["2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04", "2024-01-05"];//Dates for calendar data
-    
+        //For all assigned classes on Monday/Wednesday
         for(let i = 0; i < sortedMW.length; i++)
         {
             // insert class into finalForCalendar
@@ -233,12 +237,14 @@ function storeAssigninCalendar()
             finalForCalendar.push({startDate: (dates[2] + "T" + sortedMW[i].startTime), endDate: (dates[2] + "T" + sortedMW[i].endTime), title: sortedMW[i].class + " Room " + sortedMW[i].room});
               
         }
+        //For all assigned classes on Tuesday/Thursday
         for(let i = 0; i < sortedTR.length; i++)
         {
             // insert class into finalForCalendar
             finalForCalendar.push({startDate: (dates[1] + "T" + sortedTR[i].startTime), endDate: (dates[1] + "T" + sortedTR[i].endTime), title: sortedTR[i].class + " Room " + sortedTR[i].room});
             finalForCalendar.push({startDate: (dates[3] + "T" + sortedTR[i].startTime), endDate: (dates[3] + "T" + sortedTR[i].endTime), title: sortedTR[i].class + " Room " + sortedTR[i].room});
         }
+        //For the rest of the assigned classes
         for(let i = 0; i < nonFinal.length; i++)
         {
           if(nonFinal[i].days == 'WF')//if days are Wednesday Friday
@@ -282,6 +288,7 @@ function storeAssigninCalendar()
               finalForCalendar.push({startDate: (dates[4] + "T" + nonFinal[i].startTime), endDate: (dates[4] + "T" + nonFinal[i].endTime), title: nonFinal[i].class + " Room " + nonFinal[i].room});
           }
     }
+    //Reformat the dateTime so the calendar can use it
     formatCalendar();
 }
 
@@ -318,8 +325,10 @@ function storeParsedData(){
     }   
 }
 
+//Reformats time and date information to work with the calendar page
 function formatCalendar()
-{
+{   
+    //For all calendar data, if startDate or endDate has pm or am in the time, remove it
     for(let i = 0; i < finalForCalendar.length; i++)
     {
         if(finalForCalendar[i].startDate.includes("pm"))
@@ -339,6 +348,7 @@ function formatCalendar()
             finalForCalendar[i].endDate = finalForCalendar[i].endDate.replaceAll("am", "");
         }
     }
+    //For all calendar data, reformat startTime from 12hr to 24hr format
     for(let i = 0; i < finalForCalendar.length; i++)
     {
         if(finalForCalendar[i].startDate.includes("1:"))
@@ -365,6 +375,8 @@ function formatCalendar()
         {
             finalForCalendar[i].startDate = finalForCalendar[i].startDate.replace("6:", "18:");
         }
+        //Handle special cases to ensure proper reformatting of startTimes. I.e. for the first case, cases above will reformat T11:45 to T113:45.
+        //cases below will only reformat correct times, I.e. T1:45 to T13:45. /.$/ matches any character at the end of a string
         else if(finalForCalendar[i].startDate.endsWith("T1") == true)
         {
             finalForCalendar[i].startDate = finalForCalendar[i].startDate.replace(/.$/, "13");
@@ -386,6 +398,7 @@ function formatCalendar()
             finalForCalendar[i].startDate = finalForCalendar[i].startDate.replace(/.$/, "17");
         }
     }
+    //For all calendar data, reformat endTime from 12hr to 24hr format
     for(let i = 0; i < finalForCalendar.length; i++)
     {
         if(finalForCalendar[i].endDate.includes("T1:"))
@@ -420,6 +433,8 @@ function formatCalendar()
         {
             finalForCalendar[i].endDate = finalForCalendar[i].endDate.replace("8:", "20:");
         } 
+        //Handle special cases to ensure proper reformatting of endTimes. I.e. for the first case, cases above will reformat T11:45 to T113:45.
+        //cases below will only reformat correct times, I.e. T1:45 to T13:45. /.$/ matches any character at the end of a string
         else if(finalForCalendar[i].endDate.endsWith("T1"))
         {
             finalForCalendar[i].endDate = finalForCalendar[i].endDate.replace(/.$/, "13");
