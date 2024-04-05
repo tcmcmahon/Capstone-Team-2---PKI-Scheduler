@@ -7,8 +7,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "index": "nodemon index.js",
+    "open": "start http://localhost:3000",
     "restrictions": "nodemon restrictions.js",
-    "start": "concurrently \"npm:index\" \"npm:restrictions\""
+    "start": "concurrently \"npm:index\" \"npm:restrictions\" \"npm:open\""
   },
   "author": "",
   "license": "ISC",
