@@ -9,16 +9,14 @@ import {
   AppointmentTooltip,
   ViewSwitcher,
   Toolbar,
-  DateNavigator
+  DateNavigator,
 } from '@devexpress/dx-react-scheduler-material-ui';
 import img from '../resources/O-UNO_Type_Color_White.png';
 import axios from 'axios';
 
 let cData = [];
-let d = [];
 let response;
 let result;
-let c = [{startDate: "2024-01-01T12", endDate: "2024-01-01T13", title: "hello"}];
 
 response = await axios.get("http://localhost:3001/Data");
 result = response.data;
