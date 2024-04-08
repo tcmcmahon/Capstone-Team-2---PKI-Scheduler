@@ -1,4 +1,3 @@
-// import modules 
 import { CourseDescription } from './Class_Objects.js';
 import fs from 'fs';
 import { parse } from 'csv-parse';
@@ -22,8 +21,7 @@ ex.get("/Algo", (req, res) => {
     res.json(final);//Send data in json
     });
 
-//Listen on port 3001 for data requests to /Data and /Algo
-ex.listen(3001, () => console.log("Server is up")); 
+ex.listen(3001, () => console.log("Server is up"));//Listen on port 3001 for data requests to /Data and /Algo 
 
 // Create connection to remote database
 //const connect = mysql.createConnection({
@@ -39,14 +37,10 @@ ex.listen(3001, () => console.log("Server is up"));
 //     console.log('Connected to the remote database!');
 // });
 
-//Total number of Rooms
-let z = Object.keys(rooms);
+let z = Object.keys(rooms);//Total number of Rooms
+let seatNumbers = [];//Seats for each room
 
-//Seats for each room
-let seatNumbers = [];
-
-//For all rooms add seat number to b
-for(let i = 0; i < z.length; i++)
+for(let i = 0; i < z.length; i++)//For all rooms add seat number to seatNumbers
 {
     seatNumbers.push(rooms[z[i]].Seats);//Put seat number in array seatNumbers
 }
@@ -65,11 +59,9 @@ const unassignableClasses =  ["AREN 3030 - AE DESIGN AND SIMULATION STUDIO III",
                             "CNST 112 - CONSTRUCTION COMMUNICATIONS",
                             "CNST 225 - INTRODUCTION TO BUILDING INFORMATION MODELING "];
 
-//Array for final assignment
-let final = [];
+let final = [];//Array for final assignment
 
-//Sort Monday/Wednesday classes to resolve time conflicts
-function sortNonFinal(totalRooms)
+function sortNonFinal(totalRooms)//Sort Monday/Wednesday classes to resolve time conflicts
 {
     for(let i = 0; i < totalRooms.length; i++)//For all totalRooms
     { 
@@ -179,22 +171,18 @@ function sortNonFinal(totalRooms)
             }
         } 
     }
-    console.log(final.length);
 }
 
-//Structure for all classes with room, first pass through
-var nonFinal = [];
+var nonFinal = [];//Structure for all classes with room, first pass through
 
-//Assign all classes to a class room, and then sort to avoid time conflicts
-function algoAssign(totalRooms)
+function algoAssign(totalRooms)//Assign all classes to a class room, and then sort to avoid time conflicts
 {   let k = 0;//room counter
     let u = [];//startTimes
     let d = [];//endTimes
     let o = [];//days
-    let m = [];
-
-    //For all classes in class data, assign a room number. Will be sorted later
-    for(let i = 0; i < classData.length; i++)
+    let m = [];//maximumEnrollment
+    
+    for(let i = 0; i < classData.length; i++)//For all classes in class data, assign a room number. Will be sorted later
     {
         let y = [];//stores meeting info
 
@@ -264,19 +252,16 @@ function algoAssign(totalRooms)
         } 
         k++;//Increment to next room number
     }
-    console.log(nonFinal.length);
-    //Sort nonFinal into final
-    sortNonFinal(z);
-    //Store assignment data in object to send to the calendar
-    storeAssigninCalendar();
+    sortNonFinal(z);//Sort nonFinal into final
+    storeAssigninCalendar();//Store assignment data in object to send to the calendar
 }
 
 // global variables 
 var classData = []; // will hold instances of classDescription, will end up with the data for all of the classes
 var crossListedCoursesToCheck = []; // will temporarily hold classes that are cross listed and skip them if listed
 
-// read data from the csv file 
-function readCSVData() {
+function readCSVData()// read data from the csv file 
+{
     return new Promise((resolve) => {
         var prevClassName; // holds the previous class stated in csv file
         var crossListedCourses; // will either be empty or hold values for cross listed courses
@@ -300,8 +285,8 @@ function readCSVData() {
                 }
                 classData.push(cd);
             }
-            else { // will save the previous class name for the next row
-                prevClassName = row[0];
+            else { 
+                prevClassName = row[0];// save the previous class name for the next row
             } // end of if statement
         })
         .on('end', function() {
@@ -310,15 +295,13 @@ function readCSVData() {
     }); // end of return
 } // end of readCSVData
 
-//Array of final sorted data to send to the calendar
-let finalForCalendar = [];
+let finalForCalendar = [];//Array of final sorted data to send to the calendar
 
-//Stores final assignment data into finalForCalendar object to be passed to the calendar page
-function storeAssigninCalendar()
+function storeAssigninCalendar()//Stores final assignment data into finalForCalendar object to be passed to the calendar page
 {
     var dates = ["2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04", "2024-01-05"];//Dates for calendar data
-        //For all assigned classes store in calendar format
-        for(let i = 0; i < final.length; i++)
+       
+        for(let i = 0; i < final.length; i++)//For all assigned classes store in calendar format
         {
             if(nonFinal[i].days == 'MW')//if days are Monday/Wednesday
             {
@@ -373,17 +356,15 @@ function storeAssigninCalendar()
                 finalForCalendar.push({startDate: (dates[4] + "T" + final[i].startTime), endDate: (dates[4] + "T" + final[i].endTime), title: final[i].class + " Room " + final[i].room});
             }
     }
-    //Reformat the dateTime so the calendar can use it
-    formatCalendar();
+    formatCalendar();//Reformat the dateTime so the calendar can use it
 }
 
-// Store parsed data in db
-function storeParsedData(){
+function storeParsedData()// Store parsed data in db
+{
     var x = [];//holds all values to be stored in database
     var y = [];//holds meeting time information
 
-    //loops through and assigns data from classData object into array x to be stored in database
-    for(var i = 0; i < classData.length; i++)
+    for(var i = 0; i < classData.length; i++)//loops through and assigns data from classData object into array x to be stored in database
     {
         y = classData[i].meetingDates;//meeting information
       
@@ -410,11 +391,9 @@ function storeParsedData(){
     }   
 }
 
-//Reformats time and date information to work with the calendar page
-function formatCalendar()
+function formatCalendar()//Reformats time and date information to work with the calendar page
 {   
-    //For all calendar data, if startDate or endDate has pm or am in the time, remove it
-    for(let i = 0; i < finalForCalendar.length; i++)
+    for(let i = 0; i < finalForCalendar.length; i++)//For all calendar data, if startDate or endDate has pm or am in the time, remove it
     {
         if(finalForCalendar[i].startDate.includes("pm"))
         {
@@ -433,8 +412,7 @@ function formatCalendar()
             finalForCalendar[i].endDate = finalForCalendar[i].endDate.replaceAll("am", "");
         }
     }
-    //For all calendar data, reformat startTime from 12hr to 24hr format
-    for(let i = 0; i < finalForCalendar.length; i++)
+    for(let i = 0; i < finalForCalendar.length; i++)//For all calendar data, reformat startTime from 12hr to 24hr format
     {
         if(finalForCalendar[i].startDate.includes("1:"))
         {
@@ -483,8 +461,7 @@ function formatCalendar()
             finalForCalendar[i].startDate = finalForCalendar[i].startDate.replace(/.$/, "17");
         }
     }
-    //For all calendar data, reformat endTime from 12hr to 24hr format
-    for(let i = 0; i < finalForCalendar.length; i++)
+    for(let i = 0; i < finalForCalendar.length; i++)//For all calendar data, reformat endTime from 12hr to 24hr format
     {
         if(finalForCalendar[i].endDate.includes("T1:"))
         {
@@ -555,13 +532,13 @@ function formatCalendar()
     }
 }
 
-// main function, is async because fs.createReadStream() 
-async function main() {
+
+async function main()// main function, is async because fs.createReadStream() 
+{
     await readCSVData();
     storeParsedData();
     algoAssign(z);
 } // end of main
 
-// launch main 
-main();
+main();// launch main
 // EOF

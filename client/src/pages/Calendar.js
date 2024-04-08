@@ -14,15 +14,16 @@ import {
 import img from '../resources/O-UNO_Type_Color_White.png';
 import axios from 'axios';
 
-let cData = [];
-let response;
-let result;
+let cData = [];//Array for calendar data received from restrictions.js
+let response;//Variable for response from axios GET request to /Data
+let result;//Result of resolved response from axios GET request
 
-response = await axios.get("http://localhost:3001/Data");
-result = response.data;
-cData = (JSON.stringify(result));
-cData = JSON.parse(cData);
-const currentDate = '2024-01-01';
+response = await axios.get("http://localhost:3001/Data");//Store response from GET request
+
+result = response.data;//Resolve data from response
+cData = (JSON.stringify(result));//Turn resolved data into a string
+cData = JSON.parse(cData);//Turn resovled data into JSON
+const currentDate = '2024-01-01';//Current date for calendar
 
 export default function Calendar(){
   return(

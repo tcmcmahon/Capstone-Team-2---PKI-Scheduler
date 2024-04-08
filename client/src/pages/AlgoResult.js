@@ -2,13 +2,13 @@ import axios from 'axios';
 import img from '../resources/O-UNO_Type_Color_White.png';
 import img2 from '../resources/photo-1606761568499-6d2451b23c66.avif';
 
-let response
-let result
-let algoResult = [];
+let response;//Response from axios GET request to /Algo
+let result;//Result of resolved response
+let algoResult = [];//Array for resolved data
 
-response = await axios.get("http://localhost:3001/Algo");
-result = response.data;
-algoResult.push(JSON.stringify(result, null, 2));
+response = await axios.get("http://localhost:3001/Algo");//Store response from GET request to /Algo
+result = response.data;//Resolve data from response into result
+algoResult.push(JSON.stringify(result, null, 2));//Push data in string format to algoResult array
 
 export default function AlgoResult(){
     return <div>
