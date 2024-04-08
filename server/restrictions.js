@@ -1,3 +1,10 @@
+/**
+ * @file Handles reading/parsing uploaded .CSV file, storing said data in database, taking classes from that data and
+ * running the assingment algorithm on them, and formatting the data to send it to the calendar page.
+ * Also sends data to the Calendar.js and AlgoResult.js pages.
+ * @author Travis McMahon, Jacob Finley 
+ */
+
 import { CourseDescription } from './Class_Objects.js';
 import fs from 'fs';
 import { parse } from 'csv-parse';
@@ -11,16 +18,17 @@ const ex = express();
 ex.use(express.json());
 ex.use(cors());
 
-//Setup /Data path for sending data to the calendar
+//Send calendar data when /Data path is GET requested
 ex.get("/Data", (req, res) => {
 res.json(finalForCalendar);//Send data in json
 });
 
-//Setup /Algo for sending data to the algorithm results page
+//Send final assignment data when /Algo path is GET requested
 ex.get("/Algo", (req, res) => {
     res.json(final);//Send data in json
     });
 
+//Start server listener on port 3001 for data requests 
 ex.listen(3001, () => console.log("Server is up"));//Listen on port 3001 for data requests to /Data and /Algo 
 
 // Create connection to remote database
@@ -31,8 +39,8 @@ ex.listen(3001, () => console.log("Server is up"));//Listen on port 3001 for dat
 //     database: 'scheduler'
 // });
 
-// Attempt connection, throw error if failed
-//connect.connect((err) => {
+//Attempt connection to remote database
+// connect.connect((err) => {
 //     if (err) throw err;
 //     console.log('Connected to the remote database!');
 // });
@@ -61,7 +69,10 @@ const unassignableClasses =  ["AREN 3030 - AE DESIGN AND SIMULATION STUDIO III",
 
 let final = [];//Array for final assignment
 
-function sortNonFinal(totalRooms)//Sort Monday/Wednesday classes to resolve time conflicts
+/**Sort nonFinal array of classes to resolve time conflicts in rooms
+ * @param totalRooms The total number of rooms in the building. Taken as parameter incase this ever changes
+*/
+function sortNonFinal(totalRooms)
 {
     for(let i = 0; i < totalRooms.length; i++)//For all totalRooms
     { 
@@ -175,7 +186,11 @@ function sortNonFinal(totalRooms)//Sort Monday/Wednesday classes to resolve time
 
 var nonFinal = [];//Structure for all classes with room, first pass through
 
-function algoAssign(totalRooms)//Assign all classes to a class room, and then sort to avoid time conflicts
+/**
+ * Function to assign all classes a room for first pass through. Rooms will have conflicts. Then calls the sorting algorithms to resolve conflicts.
+ * @param totalRooms Total number of rooms in the building. Taken as parameter in case this ever changes
+ */
+function algoAssign(totalRooms)
 {   let k = 0;//room counter
     let u = [];//startTimes
     let d = [];//endTimes
@@ -260,6 +275,11 @@ function algoAssign(totalRooms)//Assign all classes to a class room, and then so
 var classData = []; // will hold instances of classDescription, will end up with the data for all of the classes
 var crossListedCoursesToCheck = []; // will temporarily hold classes that are cross listed and skip them if listed
 
+/**
+ * Function for reading data from the uploaded .CSV file and storing it into an array
+ * @returns {array} Array classData with parsed classroom information from uploaded .CSV file
+ * 
+ */
 function readCSVData()// read data from the csv file 
 {
     return new Promise((resolve) => {
@@ -297,6 +317,10 @@ function readCSVData()// read data from the csv file
 
 let finalForCalendar = [];//Array of final sorted data to send to the calendar
 
+/**
+ * Function for taking final assignment data and formatting it to work with the calendar. 
+ * Output: Array finalForCalendar containing formatted classroom data.
+ */
 function storeAssigninCalendar()//Stores final assignment data into finalForCalendar object to be passed to the calendar page
 {
     var dates = ["2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04", "2024-01-05"];//Dates for calendar data
@@ -359,6 +383,10 @@ function storeAssigninCalendar()//Stores final assignment data into finalForCale
     formatCalendar();//Reformat the dateTime so the calendar can use it
 }
 
+/**
+ * Function for taking data read from .CSV file and storing it into the remote MySQL database
+ * Output: Data inserted into MySQL table successfully, or an error if unsuccessful
+ */
 function storeParsedData()// Store parsed data in db
 {
     var x = [];//holds all values to be stored in database
@@ -391,6 +419,10 @@ function storeParsedData()// Store parsed data in db
     }   
 }
 
+/**
+ * Function for taking calendar data from finalForCalendar array and cleaning it up to match calendar components format
+ * Output: Reformatted calendar data in finalForCalendar
+ */
 function formatCalendar()//Reformats time and date information to work with the calendar page
 {   
     for(let i = 0; i < finalForCalendar.length; i++)//For all calendar data, if startDate or endDate has pm or am in the time, remove it
@@ -531,7 +563,6 @@ function formatCalendar()//Reformats time and date information to work with the 
         }
     }
 }
-
 
 async function main()// main function, is async because fs.createReadStream() 
 {

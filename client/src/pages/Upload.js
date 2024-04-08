@@ -1,7 +1,16 @@
+/**
+ * @file Renders the upload page so the user can input and upload a .CSV file
+ * @author Jacob Finley, Joshua Shadbolt
+ */
+
 import React, { useState } from 'react';
 import img from '../resources/O-UNO_Type_Color_White.png';
 import img2 from '../resources/photo-1606761568499-6d2451b23c66.avif';
 
+/**
+ * Function for displaying the upload page
+ * @returns {html} Html page for allowing the user to upload a .CSV file to the /uploads folder in the server
+ */
 export default function Upload() {
   const [file, setFile] = useState(null);
 

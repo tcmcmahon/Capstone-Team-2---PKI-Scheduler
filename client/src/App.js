@@ -1,3 +1,8 @@
+/**
+ * @file Handles rendering of the Navigation bar on all pages
+ * @author Joshua Shadbolt
+ */
+
 import Navbar from "./Navbar"
 import Home from "./pages/Home"
 import Upload from "./pages/Upload"
@@ -5,6 +10,10 @@ import Calendar from "./pages/Calendar"
 import AlgoResult from "./pages/AlgoResult"
 import { Route, Routes } from "react-router-dom"
 
+/**
+ * Function for rendering the Navigation bar
+ * @returns {html} Navigation bar for all pages
+ */
 function App() {
     return (
         <>

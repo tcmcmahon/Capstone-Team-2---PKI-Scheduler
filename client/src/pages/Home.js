@@ -1,6 +1,15 @@
+/**
+ * @file Renders the home page of the application
+ * @author Joshua Shadbolt, Travis McMahon
+ */
+
 import img from '../resources/O-UNO_Type_Color_White.png';
 import img2 from '../resources/photo-1606761568499-6d2451b23c66.avif';
 
+/**
+ * Function for rendering the home page for the web application
+ * @returns {html} Html home page to be displayed on opening of web app
+ */
 export default function Home(){
     return( 
         <div>

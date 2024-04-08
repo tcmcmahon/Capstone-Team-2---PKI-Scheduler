@@ -1,6 +1,15 @@
+/**
+ * @file Handles configuration of the Navigation bar functionality
+ * @author Joshua Shadbolt
+ */
+
 import { useImperativeHandle } from "react"
 import { Link, useMatch, useResolvedPath } from "react-router-dom"
 
+/**
+ * Function for configuring the Navigation Bar
+ * @returns Functional Navigation Bar for all pages
+ */
 export default function Navbar() {
     return (
         <nav className="nav">
@@ -16,6 +25,11 @@ export default function Navbar() {
     )
 }
 
+/**
+ * Function for setting up a custom link in the Navigation Bar
+ * @param {*} param0 input for configuring a custom link for the Navigation Bar
+ * @returns new custom link for Navigation Bar
+ */
 function CustomLink({ to, children, ...props }) {
     const resolvedPath = useResolvedPath(to)
     const isActive = useMatch({ path: resolvedPath.pathname, end:true })

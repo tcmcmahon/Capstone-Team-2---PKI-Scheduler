@@ -1,3 +1,8 @@
+/**
+ * @file Renders the initial page upon opening of application
+ * @author Joshua Shadbolt, Travis McMahon
+ */
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';

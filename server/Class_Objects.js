@@ -1,3 +1,8 @@
+/**
+ * @file Handles storing of all relevant classroom data
+ * @author Jacob Finley 
+ */
+
 /* object that grabs course details */
 export class CourseDescription {
     // TODO : move functions from restrictrions.js to here to reduce clutter there

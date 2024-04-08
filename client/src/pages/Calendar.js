@@ -1,3 +1,8 @@
+/**
+ * @file Renders the calendar component and displays final classroom assignment
+ * @author Frederic Shope, Travis McMahon
+ */
+
 import * as React from 'react';
 import Paper from '@mui/material/Paper';
 import { ViewState } from '@devexpress/dx-react-scheduler';
@@ -25,6 +30,10 @@ cData = (JSON.stringify(result));//Turn resolved data into a string
 cData = JSON.parse(cData);//Turn resovled data into JSON
 const currentDate = '2024-01-01';//Current date for calendar
 
+/**
+ * Function for rendering the calendar page
+ * @returns {html} Html page for calendar component/GUI
+ */
 export default function Calendar(){
   return(
     <div>

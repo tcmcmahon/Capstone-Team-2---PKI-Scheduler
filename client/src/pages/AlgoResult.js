@@ -1,3 +1,8 @@
+/**
+ * @file Renders the page for display of the algorithms output
+ * @author Travis McMahon
+ */
+
 import axios from 'axios';
 import img from '../resources/O-UNO_Type_Color_White.png';
 import img2 from '../resources/photo-1606761568499-6d2451b23c66.avif';
@@ -10,6 +15,10 @@ response = await axios.get("http://localhost:3001/Algo");//Store response from G
 result = response.data;//Resolve data from response into result
 algoResult.push(JSON.stringify(result, null, 2));//Push data in string format to algoResult array
 
+/**
+ * Function for displaying the raw data output from the algorithm
+ * @returns {html} Html page containing the raw output data from the algorithm
+ */
 export default function AlgoResult(){
     return <div>
                <body style={{backgroundImage: `url(${img2})`, backgroundSize: "contain", backgroundRepeat: "repeat-y", bacbackgroundPosition: "top"}}>
