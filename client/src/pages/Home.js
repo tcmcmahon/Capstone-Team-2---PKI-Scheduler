@@ -1,6 +1,7 @@
 /**
  * @file Renders the home page of the application
  * @author Joshua Shadbolt, Travis McMahon
+ * @namespace Home
  */
 
 import img from '../resources/O-UNO_Type_Color_White.png';

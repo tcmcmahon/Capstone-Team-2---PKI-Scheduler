@@ -1,9 +1,10 @@
 /**
  * @file Handles storing of all relevant classroom data
  * @author Jacob Finley 
+ * @namespace ClassObjects
  */
 
-/* object that grabs course details */
+/** Object that grabs course details */
 export class CourseDescription {
     // TODO : move functions from restrictrions.js to here to reduce clutter there
     constructor() {
@@ -75,7 +76,7 @@ export class CourseDescription {
 }
 
 
-/* linked list of classroom data */
+/** Linked list of classroom time data */
 class ClassroomTimeSlot {
     constructor(days=null, start=null, end=null, next=null) {
         this.days = days
@@ -86,8 +87,8 @@ class ClassroomTimeSlot {
 }
 
 
-/* 
-    object that will hold CourseDescription objects, IN ORDER, of when they are in an 
+/**  
+    Object that will hold CourseDescription objects, IN ORDER, of when they are in an 
     array to be able to easily read and determine if there are any time conflicts
 */
 export class ClassroomTimeData {
@@ -109,7 +110,9 @@ export class ClassroomTimeData {
     }
 }
 
-
+/**
+ * Class for creating Priority Queue for class times
+ */
 export class PriorityQueue {
     constructor() {
         this.queue = [];

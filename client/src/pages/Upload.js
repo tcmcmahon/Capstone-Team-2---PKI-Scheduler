@@ -1,6 +1,8 @@
 /**
  * @file Renders the upload page so the user can input and upload a .CSV file
- * @author Jacob Finley, Joshua Shadbolt
+ * @author Jacob Finley
+ * @author Joshua Shadbolt
+ * @namespace Upload
  */
 
 import React, { useState } from 'react';

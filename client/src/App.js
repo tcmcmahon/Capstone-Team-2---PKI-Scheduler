@@ -1,6 +1,7 @@
 /**
  * @file Handles rendering of the Navigation bar on all pages
  * @author Joshua Shadbolt
+ * @namespace App
  */
 
 import Navbar from "./Navbar"

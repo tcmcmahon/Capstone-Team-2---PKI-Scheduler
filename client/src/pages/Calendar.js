@@ -1,6 +1,7 @@
 /**
  * @file Renders the calendar component and displays final classroom assignment
  * @author Frederic Shope, Travis McMahon
+ * @namespace Calendar
  */
 
 import * as React from 'react';

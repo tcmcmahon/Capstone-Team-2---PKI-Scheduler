@@ -1,6 +1,7 @@
 /**
  * @file Renders the page for display of the algorithms output
  * @author Travis McMahon
+ * @namespace AlgorithmResults
  */
 
 import axios from 'axios';

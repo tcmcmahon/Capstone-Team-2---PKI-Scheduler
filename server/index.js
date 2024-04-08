@@ -1,8 +1,3 @@
-/**
- * @file Handles starting the server and uploading the .CSV file from the Upload.js page
- * @author Jacob Finley
- */
-
 import express from 'express';
 import cors from 'cors';
 import multer from 'multer';

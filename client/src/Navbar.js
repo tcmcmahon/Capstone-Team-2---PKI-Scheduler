@@ -1,6 +1,7 @@
 /**
  * @file Handles configuration of the Navigation bar functionality
  * @author Joshua Shadbolt
+ * @namespace Navbar
  */
 
 import { useImperativeHandle } from "react"
@@ -27,8 +28,8 @@ export default function Navbar() {
 
 /**
  * Function for setting up a custom link in the Navigation Bar
- * @param {*} param0 input for configuring a custom link for the Navigation Bar
- * @returns new custom link for Navigation Bar
+ * @param param0 input for configuring a custom link for the Navigation Bar
+ * @returns {html} new custom link for Navigation Bar
  */
 function CustomLink({ to, children, ...props }) {
     const resolvedPath = useResolvedPath(to)
