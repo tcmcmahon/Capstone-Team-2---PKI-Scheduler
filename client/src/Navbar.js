@@ -9,7 +9,7 @@ import { Link, useMatch, useResolvedPath } from "react-router-dom"
 
 /**
  * Function for configuring the Navigation Bar
- * @returns Functional Navigation Bar for all pages
+ * @returns {html} Functional Navigation Bar for all pages
  * @memberof Navbar
  */
 export default function Navbar() {

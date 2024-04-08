@@ -23,6 +23,7 @@ app.use(cors());
  * Stores the uploaded .CSV file into the uploads folder
  * @function storage 
  * @returns {void} Stores the uploaded .CSV file in uploads
+ * @memberof ServerIndex
  */
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -37,13 +38,19 @@ const upload = multer({ storage });
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Serve the React app
+/** Serve the React app
+ * @function
+ * @returns {void} Serves the react app
+ * @memberof ServerIndex
+ */ 
 app.use(express.static(path.join(__dirname, '../client/build')));
 
 // Handle file upload
 /**
  * handles the uploading of a file and outputs the status
  * @function post 
+ * @returns {String} status of upload
+ * @memberof ServerIndex
  */
 app.post('/upload', upload.single('file'), (req, res) => {
   if (!req.file) {
@@ -59,14 +66,18 @@ app.post('/upload', upload.single('file'), (req, res) => {
 /**
  * Starts a server listener to get uploaded files
  * @function listen 
+ * @memberof ServerIndex
+ * @returns {String} status of server
  */
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
 
 /**
+ * Outputs uploaded CSV to console
  * @param {String} filePath Path to uploaded file
  * @returns {void} prints CSV file data to the console
+ * @memberof ServerIndex
  */
 function printCSVtoCLI(filePath) {
   fs.createReadStream(filePath)

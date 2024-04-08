@@ -19,17 +19,29 @@ const ex = express();
 ex.use(express.json());
 ex.use(cors());
 
-//Send calendar data when /Data path is GET requested
+/** Send calendar data when /Data path is GET requested
+ * @function
+ * @returns {void} Sends finalForCalendar object to requester
+ * @memberof Restrictions
+ */
 ex.get("/Data", (req, res) => {
 res.json(finalForCalendar);//Send data in json
 });
 
-//Send final assignment data when /Algo path is GET requested
+/** Send final assingment data when /Algo path is GET requested
+ * @function
+ * @returns {void} Sends final object to requester
+ * @memberof Restrictions
+ */
 ex.get("/Algo", (req, res) => {
     res.json(final);//Send data in json
     });
 
-//Start server listener on port 3001 for data requests 
+/** Start server listener on port 3001 for data requests 
+ * @function
+ * @returns {void} Starts a listener for data on http://localhost:3001
+ * @memberof Restrictions
+ */
 ex.listen(3001, () => console.log("Server is up"));//Listen on port 3001 for data requests to /Data and /Algo 
 
 // Create connection to remote database
@@ -40,11 +52,15 @@ ex.listen(3001, () => console.log("Server is up"));//Listen on port 3001 for dat
 //     database: 'scheduler'
 // });
 
-//Attempt connection to remote database
-// connect.connect((err) => {
-//     if (err) throw err;
-//     console.log('Connected to the remote database!');
-// });
+/** Attempt connection to remote database using credentials from connect
+ * @function
+ * @returns {void} Logs status of attempted connection to the console
+ * @memberof Restrictions
+ */ 
+connect.connect((err) => {
+    if (err) throw err;
+    console.log('Connected to the remote database!');
+});
 
 let z = Object.keys(rooms);//Total number of Rooms
 let seatNumbers = [];//Seats for each room
