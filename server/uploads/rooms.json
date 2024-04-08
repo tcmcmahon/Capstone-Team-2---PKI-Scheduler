@@ -1,0 +1,242 @@
+{
+    "108": {
+        "RoomType": "Zoom Ready",
+        "Info": {
+            "IS&T": true,
+            "CoE": true
+        },
+        "Seats": 12
+    },
+    "145": {
+        "RoomType": "Lab",
+        "Info": {
+            "IS&T": true,
+            "CoE": true
+        },
+        "Seats": 18
+    },
+    "149": {
+        "RoomType": "Lab",
+        "Info": {
+            "IS&T": true,
+            "CoE": true
+        },
+        "Seats": 10
+    },
+    "150": {
+        "RoomType": "Zoom Ready",
+        "Info": {
+            "IS&T": true,
+            "CoE": true
+        },
+        "Seats": 16
+    },
+    "151": {
+        "RoomType": "Lab",
+        "Info": {
+            "IS&T": true,
+            "CoE": true
+        },
+        "Seats": 18
+    },
+    "153": {
+        "RoomType": "Zoom Ready",
+        "Info": {
+            "IS&T": true,
+            "CoE": true
+        },
+        "Seats": 42
+    },
+    "155": {
+        "RoomType": "Zoom Ready",
+        "Info": {
+            "IS&T": true,
+            "CoE": true
+        },
+        "Seats": 40
+    },
+    "157": {
+        "RoomType": "Zoom Ready",
+        "Info": {
+            "IS&T": true,
+            "CoE": true
+        },
+        "Seats": 24
+    },
+    "160": {
+        "RoomType": "Zoom Ready",
+        "Info": {
+            "IS&T": true,
+            "CoE": true
+        },
+        "Seats": 42
+    },
+    "161": {
+        "RoomType": "Zoom Ready",
+        "Info": {
+            "IS&T": true,
+            "CoE": true
+        },
+        "Seats": 30
+    },
+    "164": {
+        "RoomType": "Zoom Ready",
+        "Info": {
+            "IS&T": true,
+            "CoE": true
+        },
+        "Seats": 56
+    },
+    "249": {
+        "RoomType": "Lab",
+        "Info": {
+            "IS&T": true,
+            "CoE": true
+        },
+        "Seats": 5
+    },
+    "250": {
+        "RoomType": "Zoom Ready",
+        "Info": {
+            "IS&T": true,
+            "CoE": true
+        },
+        "Seats": 16
+    },
+    "252": {
+        "RoomType": "Zoom Ready",
+        "Info": {
+            "IS&T": true,
+            "CoE": true
+        },
+        "Seats": 58
+    },
+    "256": {
+        "RoomType": "Zoom Ready",
+        "Info": {
+            "IS&T": true,
+            "CoE": true
+        },
+        "Seats": 40
+    },
+    "259": {
+        "RoomType": "Zoom Ready",
+        "Info": {
+            "IS&T": true,
+            "CoE": true
+        },
+        "Seats": 16
+    },
+    "260": {
+        "RoomType": "Zoom Ready",
+        "Info": {
+            "IS&T": true,
+            "CoE": true
+        },
+        "Seats": 60
+    },
+    "261": {
+        "RoomType": "Zoom Ready",
+        "Info": {
+            "IS&T": true,
+            "CoE": true
+        },
+        "Seats": 24
+    },
+    "263": {
+        "RoomType": "Zoom Ready",
+        "Info": {
+            "IS&T": true,
+            "CoE": true
+        },
+        "Seats": 50
+    },
+    "269": {
+        "RoomType": "Zoom Ready",
+        "Info": {
+            "IS&T": true,
+            "CoE": false
+        },
+        "Seats": 30
+    },
+    "270": {
+        "RoomType": "Zoom Ready",
+        "Info": {
+            "IS&T": true,
+            "CoE": true
+        },
+        "Seats": 16
+    },
+    "274": {
+        "RoomType": "Zoom Ready",
+        "Info": {
+            "IS&T": true,
+            "CoE": true
+        },
+        "Seats": 32
+    },
+    "276": {
+        "RoomType": "Zoom Ready",
+        "Info": {
+            "IS&T": true,
+            "CoE": false
+        },
+        "Seats": 40
+    },
+    "278": {
+        "RoomType": "Zoom Ready",
+        "Info": {
+            "IS&T": true,
+            "CoE": false
+        },
+        "Seats": 40
+    },
+    "279": {
+        "RoomType": "Zoom Ready",
+        "Info": {
+            "IS&T": true,
+            "CoE": false
+        },
+        "Seats": 30
+    },
+    "350": {
+        "RoomType": "Zoom Ready",
+        "Info": {
+            "IS&T": true,
+            "CoE": true
+        },
+        "Seats": 16
+    },
+    "352": {
+        "RoomType": "Lab",
+        "Info": {
+            "IS&T": true,
+            "CoE": true
+        },
+        "Seats": 6
+    },
+    "361": {
+        "RoomType": "Zoom Ready",
+        "Info": {
+            "IS&T": true,
+            "CoE": false
+        },
+        "Seats": 40
+    },
+    "368": {
+        "RoomType": "Lab",
+        "Info": {
+            "IS&T": true,
+            "CoE": true
+        },
+        "Seats": 7
+    },
+    "391A": {
+        "RoomType": "Zoom Ready",
+        "Info": {
+            "IS&T": true,
+            "CoE": false
+        },
+        "Seats": 10
+    }
+}
