@@ -1,50 +1,35 @@
-import React, { useState } from 'react';
-import img from './O-UNO_Type_Color_White.png';
-import img2 from './photo-1606761568499-6d2451b23c66.avif';
+/**
+ * @file Handles rendering of the Navigation bar on all pages
+ * @author Joshua Shadbolt
+ * @namespace RenderNavbar
+ */
 
+import Navbar from "./Navbar"
+import Home from "./pages/Home"
+import Upload from "./pages/Upload"
+import Calendar from "./pages/Calendar"
+import AlgoResult from "./pages/AlgoResult"
+import { Route, Routes } from "react-router-dom"
+
+/**
+ * Function for rendering the Navigation bar
+ * @returns {html} Navigation bar for all pages
+ * @memberof RenderNavbar
+ */
 function App() {
-  const [file, setFile] = useState(null);
-
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
-
-  const handleUpload = async () => {
-    if (!file) {
-      alert('Please select a file!');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-      const response = await fetch('http://localhost:3000/upload', {
-        method: 'POST',
-        body: formData
-      });
-
-      if (response.ok) {
-        alert('File uploaded successfully!');
-      } else {
-        throw new Error('Failed to upload file.');
-      }
-    } catch (error) {
-      console.error('Error uploading file:', error);
-      alert('Error uploading file: ' + error.message); // Log the error message received from the server
-    }
-  };
-
-  return (
-    <div className="App">
-      <h1 style={{backgroundImage: `url(${img})`, backgroundSize: "cover", height: "110px", backgroundColor: "black"}}></h1>
-      <h2 style={{textAlign: "center", margin: "auto", padding: "10px"}}>Welcome to the PKI Classroom Scheduler!</h2>
-      <h3 style={{textAlign: "center", margin: "auto"}}>Upload a CSV File below to get started</h3>
-      <p style={{margin: "auto", textAlign: "center", backgroundColor: "black", color: "white", width: "25%", padding: "10px"}}><input type="file" accept=".csv" onChange={handleFileChange} />
-      <button onClick={handleUpload}>Upload</button></p>
-      <body style={{backgroundImage: `url(${img2})`, backgroundSize: "cover", height: "100vh", width: "90%", display: "block", margin: "auto"}}></body>
-    </div>
-  );
+    return (
+        <>
+            <Navbar />
+            <div className="container">
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/upload" element={<Upload />} />
+                    <Route path="/calendar" element={<Calendar />} />
+                    <Route path="/algorithm" element={<AlgoResult />} />
+                </Routes>
+            </div>
+        </>
+    )
 }
 
-export default App;
+export default App
