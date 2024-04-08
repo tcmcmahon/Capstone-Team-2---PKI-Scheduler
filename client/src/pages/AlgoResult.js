@@ -19,6 +19,7 @@ algoResult.push(JSON.stringify(result, null, 2));//Push data in string format to
 /**
  * Function for displaying the raw data output from the algorithm
  * @returns {html} Html page containing the raw output data from the algorithm
+ * @memberof AlgorithmResults
  */
 export default function AlgoResult(){
     return <div>

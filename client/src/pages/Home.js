@@ -10,6 +10,7 @@ import img2 from '../resources/photo-1606761568499-6d2451b23c66.avif';
 /**
  * Function for rendering the home page for the web application
  * @returns {html} Html home page to be displayed on opening of web app
+ * @memberof Home
  */
 export default function Home(){
     return( 

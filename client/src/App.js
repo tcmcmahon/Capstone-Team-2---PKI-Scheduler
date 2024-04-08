@@ -1,6 +1,7 @@
 /**
  * @file Handles rendering of the Navigation bar on all pages
  * @author Joshua Shadbolt
+ * @namespace RenderNavbar
  */
 
 import Navbar from "./Navbar"
@@ -13,6 +14,7 @@ import { Route, Routes } from "react-router-dom"
 /**
  * Function for rendering the Navigation bar
  * @returns {html} Navigation bar for all pages
+ * @memberof RenderNavbar
  */
 function App() {
     return (

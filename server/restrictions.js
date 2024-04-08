@@ -70,9 +70,11 @@ const unassignableClasses =  ["AREN 3030 - AE DESIGN AND SIMULATION STUDIO III",
 
 let final = [];//Array for final assignment
 
-/**Sort nonFinal array of classes to resolve time conflicts in rooms
+/**
+ * Sort nonFinal array of classes to resolve time conflicts in rooms
  * @param totalRooms The total number of rooms in the building. Taken as parameter incase this ever changes
  * @returns {void} Stores sorted output in array final
+ * @memberof Restrictions
 */
 function sortNonFinal(totalRooms)
 {
@@ -192,6 +194,7 @@ var nonFinal = [];//Structure for all classes with room, first pass through
  * Function to assign all classes a room for first pass through. Rooms will have conflicts. Then calls the sorting algorithms to resolve conflicts.
  * @param totalRooms Total number of rooms in the building. Taken as parameter in case this ever changes
  * @returns {void} Stores unsorted assignment in array nonFinal
+ * @memberof Restrictions
  */
 function algoAssign(totalRooms)
 {   let k = 0;//room counter
@@ -281,7 +284,7 @@ var crossListedCoursesToCheck = []; // will temporarily hold classes that are cr
 /**
  * Function for reading data from the uploaded .CSV file and storing it into an array
  * @returns {array} Array classData with parsed classroom information from uploaded .CSV file
- * 
+ * @memberof Restrictions
  */
 function readCSVData()// read data from the csv file 
 {
@@ -324,6 +327,7 @@ let finalForCalendar = [];//Array of final sorted data to send to the calendar
  * Function for taking final assignment data and formatting it to work with the calendar. 
  * Output: Array finalForCalendar containing formatted classroom data.
  * @returns {void} Stores final assignment in array finalForCalendar
+ * @memberof Restrictions
  */
 function storeAssigninCalendar()//Stores final assignment data into finalForCalendar object to be passed to the calendar page
 {
@@ -391,6 +395,7 @@ function storeAssigninCalendar()//Stores final assignment data into finalForCale
  * Function for taking data read from .CSV file and storing it into the remote MySQL database
  * Output: Data inserted into MySQL table successfully, or an error if unsuccessful
  * @returns {void} stores parsed CSV data in array classData
+ * @memberof Restrictions
  */
 function storeParsedData()// Store parsed data in db
 {
@@ -428,6 +433,7 @@ function storeParsedData()// Store parsed data in db
  * Function for taking calendar data from finalForCalendar array and cleaning it up to match calendar components format
  * Output: Reformatted calendar data in finalForCalendar
  * @returns {void} Reformats final assingment data into a format for the calendar
+ * @memberof Restrictions
  */
 function formatCalendar()//Reformats time and date information to work with the calendar page
 {   

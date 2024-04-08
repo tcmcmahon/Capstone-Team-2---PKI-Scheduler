@@ -110,6 +110,758 @@
     
 
     
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".algoAssign"><span class="type-signature">(static) </span>algoAssign<span class="signature">(totalRooms)</span><span class="type-signature"> &rarr; {void}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Function to assign all classes a room for first pass through. Rooms will have conflicts. Then calls the sorting algorithms to resolve conflicts.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>totalRooms</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Total number of rooms in the building. Taken as parameter in case this ever changes</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="server_restrictions.js.html">server/restrictions.js</a>, <a href="server_restrictions.js.html#line199">line 199</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Stores unsorted assignment in array nonFinal
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">void</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".formatCalendar"><span class="type-signature">(static) </span>formatCalendar<span class="signature">()</span><span class="type-signature"> &rarr; {void}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Function for taking calendar data from finalForCalendar array and cleaning it up to match calendar components formatOutput: Reformatted calendar data in finalForCalendar
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="server_restrictions.js.html">server/restrictions.js</a>, <a href="server_restrictions.js.html#line438">line 438</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Reformats final assingment data into a format for the calendar
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">void</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".readCSVData"><span class="type-signature">(static) </span>readCSVData<span class="signature">()</span><span class="type-signature"> &rarr; {array}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Function for reading data from the uploaded .CSV file and storing it into an array
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="server_restrictions.js.html">server/restrictions.js</a>, <a href="server_restrictions.js.html#line289">line 289</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Array classData with parsed classroom information from uploaded .CSV file
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".sortNonFinal"><span class="type-signature">(static) </span>sortNonFinal<span class="signature">(totalRooms)</span><span class="type-signature"> &rarr; {void}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Sort nonFinal array of classes to resolve time conflicts in rooms
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>totalRooms</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The total number of rooms in the building. Taken as parameter incase this ever changes</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="server_restrictions.js.html">server/restrictions.js</a>, <a href="server_restrictions.js.html#line79">line 79</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Stores sorted output in array final
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">void</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".storeAssigninCalendar"><span class="type-signature">(static) </span>storeAssigninCalendar<span class="signature">()</span><span class="type-signature"> &rarr; {void}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Function for taking final assignment data and formatting it to work with the calendar. Output: Array finalForCalendar containing formatted classroom data.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="server_restrictions.js.html">server/restrictions.js</a>, <a href="server_restrictions.js.html#line332">line 332</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Stores final assignment in array finalForCalendar
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">void</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".storeParsedData"><span class="type-signature">(static) </span>storeParsedData<span class="signature">()</span><span class="type-signature"> &rarr; {void}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Function for taking data read from .CSV file and storing it into the remote MySQL databaseOutput: Data inserted into MySQL table successfully, or an error if unsuccessful
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="server_restrictions.js.html">server/restrictions.js</a>, <a href="server_restrictions.js.html#line400">line 400</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    stores parsed CSV data in array classData
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">void</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+    
 
     
 
@@ -124,13 +876,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="AlgorithmResults.html">AlgorithmResults</a></li><li><a href="Calendar.html">Calendar</a></li><li><a href="ClassObjects.html">ClassObjects</a></li><li><a href="Home.html">Home</a></li><li><a href="Index_.html">Index</a></li><li><a href="Navbar.html">Navbar</a></li><li><a href="Restrictions.html">Restrictions</a></li><li><a href="Upload.html">Upload</a></li></ul><h3>Classes</h3><ul><li><a href="ClassroomTimeData.html">ClassroomTimeData</a></li><li><a href="ClassroomTimeSlot.html">ClassroomTimeSlot</a></li><li><a href="CourseDescription.html">CourseDescription</a></li><li><a href="PriorityQueue.html">PriorityQueue</a></li></ul><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#CustomLink">CustomLink</a></li><li><a href="global.html#algoAssign">algoAssign</a></li><li><a href="global.html#formatCalendar">formatCalendar</a></li><li><a href="global.html#readCSVData">readCSVData</a></li><li><a href="global.html#sortNonFinal">sortNonFinal</a></li><li><a href="global.html#storeAssigninCalendar">storeAssigninCalendar</a></li><li><a href="global.html#storeParsedData">storeParsedData</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="AlgorithmResults.html">AlgorithmResults</a></li><li><a href="Calendar.html">Calendar</a></li><li><a href="ClassObjects.html">ClassObjects</a></li><li><a href="ClientIndex.html">ClientIndex</a></li><li><a href="Home.html">Home</a></li><li><a href="Navbar.html">Navbar</a></li><li><a href="RenderNavbar.html">RenderNavbar</a></li><li><a href="Restrictions.html">Restrictions</a></li><li><a href="ServerIndex.html">ServerIndex</a></li><li><a href="Upload.html">Upload</a></li></ul><h3>Classes</h3><ul><li><a href="ClassObjects.ClassroomTimeSlot.html">ClassroomTimeSlot</a></li><li><a href="ClassObjects.exports.ClassroomTimeData.html">exports.ClassroomTimeData</a></li><li><a href="ClassObjects.exports.CourseDescription.html">exports.CourseDescription</a></li><li><a href="ClassObjects.exports.PriorityQueue.html">exports.PriorityQueue</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CustomLink">CustomLink</a></li><li><a href="global.html#listen">listen</a></li><li><a href="global.html#post">post</a></li><li><a href="global.html#printCSVtoCLI">printCSVtoCLI</a></li><li><a href="global.html#storage">storage</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon Apr 08 2024 12:15:45 GMT-0500 (Central Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon Apr 08 2024 12:52:38 GMT-0500 (Central Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

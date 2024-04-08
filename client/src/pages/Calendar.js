@@ -34,6 +34,7 @@ const currentDate = '2024-01-01';//Current date for calendar
 /**
  * Function for rendering the calendar page
  * @returns {html} Html page for calendar component/GUI
+ * @memberof Calendar
  */
 export default function Calendar(){
   return(

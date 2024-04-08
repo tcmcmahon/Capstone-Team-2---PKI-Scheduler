@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: client/src/Navbar.js</title>
+    <title>JSDoc: Source: server/index.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: client/src/Navbar.js</h1>
+    <h1 class="page-title">Source: server/index.js</h1>
 
     
 
@@ -27,50 +27,81 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * @file Handles configuration of the Navigation bar functionality
- * @author Joshua Shadbolt
- * @namespace Navbar
+ * @file Handles starting of the server to listen for uploads and stores the upload
+ * @author Jacob Finley
+ * @namespace ServerIndex
  */
 
-import { useImperativeHandle } from "react"
-import { Link, useMatch, useResolvedPath } from "react-router-dom"
+import express from 'express';
+import cors from 'cors';
+import multer from 'multer';
+import { fileURLToPath } from 'url';
+import path from 'path';
+import fs from 'fs';
+import { parse } from 'csv-parse';
+
+const app = express();
+const PORT = 3000;
+
+// Enable CORS for all routes
+app.use(cors());
+
+// Multer configuration
+/**
+ * Stores the uploaded .CSV file into the uploads folder
+ * @function storage 
+ * @returns {void} Stores the uploaded .CSV file in uploads
+ */
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}_${file.originalname}`);
+  }
+});
+
+const upload = multer({ storage });
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Serve the React app
+app.use(express.static(path.join(__dirname, '../client/build')));
+
+// Handle file upload
+/**
+ * handles the uploading of a file and outputs the status
+ * @function post 
+ */
+app.post('/upload', upload.single('file'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).send('No files were uploaded.');
+  }
+
+  console.log('Uploaded file:', req.file.originalname);
+  printCSVtoCLI("./uploads/" + req.file.filename)
+  res.send('File uploaded successfully.');
+});
+
+// Start the server
+/**
+ * Starts a server listener to get uploaded files
+ * @function listen 
+ */
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
 
 /**
- * Function for configuring the Navigation Bar
- * @returns Functional Navigation Bar for all pages
- * @memberof Navbar
+ * @param {String} filePath Path to uploaded file
+ * @returns {void} prints CSV file data to the console
  */
-export default function Navbar() {
-    return (
-        &lt;nav className="nav">
-            &lt;Link to="/" className="site-title">
-                PKI Class Scheduler
-            &lt;/Link>
-            &lt;ul>
-                &lt;CustomLink to="/upload">Upload&lt;/CustomLink>
-                &lt;CustomLink to="/calendar">Calendar&lt;/CustomLink>
-                &lt;CustomLink to="/algorithm">Algorithm Results&lt;/CustomLink>
-            &lt;/ul>
-        &lt;/nav>
-    )
-}
-
-/**
- * Function for setting up a custom link in the Navigation Bar
- * @param param0 input for configuring a custom link for the Navigation Bar
- * @returns {html} new custom link for Navigation Bar
- */
-function CustomLink({ to, children, ...props }) {
-    const resolvedPath = useResolvedPath(to)
-    const isActive = useMatch({ path: resolvedPath.pathname, end:true })
-
-    return (
-        &lt;li className={isActive ? "active" : ""}>
-            &lt;Link to={to} {...props}>
-                {children}
-            &lt;/Link>
-        &lt;/li>
-    )
+function printCSVtoCLI(filePath) {
+  fs.createReadStream(filePath)
+    .pipe(parse({ delimiter: ",", from_line: 2 }))
+    .on("data", function (row) {
+      console.log(row);
+    })
 }</code></pre>
         </article>
     </section>

@@ -4,7 +4,9 @@
  * @namespace ClassObjects
  */
 
-/** Object that grabs course details */
+/** Object that grabs course details
+ * @memberof ClassObjects
+ */
 export class CourseDescription {
     // TODO : move functions from restrictrions.js to here to reduce clutter there
     constructor() {
@@ -76,7 +78,9 @@ export class CourseDescription {
 }
 
 
-/** Linked list of classroom time data */
+/** Linked list of classroom time data 
+ * @memberof ClassObjects
+*/
 class ClassroomTimeSlot {
     constructor(days=null, start=null, end=null, next=null) {
         this.days = days
@@ -90,6 +94,7 @@ class ClassroomTimeSlot {
 /**  
     Object that will hold CourseDescription objects, IN ORDER, of when they are in an 
     array to be able to easily read and determine if there are any time conflicts
+    @memberof ClassObjects
 */
 export class ClassroomTimeData {
     constructor(roomNumber) {
@@ -112,6 +117,7 @@ export class ClassroomTimeData {
 
 /**
  * Class for creating Priority Queue for class times
+ * @memberof ClassObjects
  */
 export class PriorityQueue {
     constructor() {

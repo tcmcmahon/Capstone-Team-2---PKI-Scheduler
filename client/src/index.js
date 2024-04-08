@@ -1,7 +1,7 @@
 /**
  * @file Renders the initial page upon opening of application
  * @author Joshua Shadbolt, Travis McMahon
- * @namespace Index
+ * @namespace ClientIndex
  */
 
 import React from 'react';
