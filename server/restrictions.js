@@ -88,7 +88,7 @@ let final = [];//Array for final assignment
 
 /**
  * Sort nonFinal array of classes to resolve time conflicts in rooms
- * @param totalRooms The total number of rooms in the building. Taken as parameter incase this ever changes
+ * @param {Array<String>} totalRooms The total number of rooms in the building. Taken as parameter incase this ever changes
  * @returns {void} Stores sorted output in array final
  * @memberof Restrictions
 */
@@ -208,7 +208,7 @@ var nonFinal = [];//Structure for all classes with room, first pass through
 
 /**
  * Function to assign all classes a room for first pass through. Rooms will have conflicts. Then calls the sorting algorithms to resolve conflicts.
- * @param totalRooms Total number of rooms in the building. Taken as parameter in case this ever changes
+ * @param {Array<String>} totalRooms Total number of rooms in the building. Taken as parameter in case this ever changes
  * @returns {void} Stores unsorted assignment in array nonFinal
  * @memberof Restrictions
  */
