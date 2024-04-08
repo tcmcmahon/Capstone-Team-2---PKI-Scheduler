@@ -1,6 +1,6 @@
 # Capstone-Team-2---PKI-Scheduler
 
-LINK TO GITHUB PAGES:
+LINK TO JSDOC ON GITHUB PAGES:
 https://tcmcmahon.github.io/Capstone-Team2-PKI-Scheduler/
 
 ### ABOUT THE APPLICATION:
