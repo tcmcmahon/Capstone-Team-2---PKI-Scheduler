@@ -345,7 +345,6 @@ function testQueue() {
         classBusyness = 0;
         i = 0;
         // loop through each meeting time
-        // console.log(_class);
         for (var meetingDate of _class.meetingDates) {
             // loop through each day
             totalCourseTime = 0;
@@ -377,15 +376,8 @@ function testQueue() {
                 totalCourseTime += end - start;
             }
             QUEUE.enqueue(structuredClone(_class), i, totalCourseTime);
-            // console.log(meetingDate);
-            // console.log("Start : " + start);
-            // console.log("End   : " + end);
-            // console.log("Total : " + totalCourseTime);
-            // console.log("Class#: " + i);
-            // console.log("Number of shared classes at start time: " + classBusyness);
             i++;
         }
-        console.log("\n");
     }
     QUEUE.displayContents();
 }

@@ -135,10 +135,10 @@ export class PriorityQueue {
     }
     displayContents() {
         for (var i in this.queue) {
-            // console.log(i)
-            console.log(this.queue[i][1]);
-            // console.log("\n");
-            // sleep(1000);
+            console.log(i)
+            console.log(this.queue[i]);
+            console.log("\n");
+            sleep(1000);
         }
     }
 }
