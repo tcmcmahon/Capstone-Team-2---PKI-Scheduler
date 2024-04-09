@@ -121,7 +121,7 @@ export class PriorityQueue {
     constructor() {
         this.queue = [];
     }
-    enqueue(_class) {
+    enqueue(_class, freq) {
         var _classList = [];
         for (var i in _class.meetingDates) {
             _classList.push(structuredClone(_class));

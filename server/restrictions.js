@@ -25,6 +25,7 @@ const meetOnS = ["ECEN 891 - SPECIAL TOPICS IN ELECTRIC AND COMPUTER ENGINEERING
                 "ECEN 491 - SPECIAL TOPICS IN ELECTRIC AND COMPUTER ENGINEERING IV"]
 var roomsList = [];
 var classDayFrequencies = {'M': {},'T': {},'W': {},'R': {},'F': {},'S': {}}
+var classDayTotals = {'M': 0,'T': 0,'W': 0,'R': 0,'F': 0,'S': 0}
 
 
 /* read data from the csv file */
@@ -90,6 +91,7 @@ function howManyClassesPerDay() {
                 else {
                     classDayFrequencies[day][ses.start] = 1;
                 }
+                classDayTotals[day]++;
             }
         }
         total_count++;
@@ -331,15 +333,64 @@ function assignRooms() {
 }
 
 
+
+// things to keep track of
+/* 
+    Y | How long does the class last
+    Y | How busy is the class at that time during that day
+    N | Take into account how important that time is at that day during the week
+*/
 function testQueue() {
     const QUEUE = new PriorityQueue();
-    var mTotal, tTotal, wTotal, rTotal, fTotal, sTotal;
-    
-    for (var i in classData) {
-        QUEUE.enqueue(classData[i]);
+    const TOTAL_AVAILABLE_TIME = (15*60 + 15) * 6; // Overall time of when classes can be scheduled throughout the week
+    var totalCourseTime;
+    var classBusyness;
+    var start, end, startSplit, endSplit;
+    // loop through each class
+    for (var _class of classData) {
+        classBusyness = 0;
+        // loop through each meeting time
+        for (var meetingDate of _class.meetingDates) {
+            // loop through each day
+            totalCourseTime = 0;
+            for (var day of meetingDate.days) { 
+                classBusyness += classDayFrequencies[day][meetingDate.start];
+                startSplit = meetingDate.start.split(":");
+                endSplit = meetingDate.end.split(":");
+                if (meetingDate.start.includes("pm") && !meetingDate.start.includes("12")) {
+                    start = startSplit.length > 1 
+                            ? 12*60 + parseInt(startSplit[0])*60 + parseInt(startSplit[1])
+                            : 12*60 + parseInt(startSplit[0])*60;
+                }
+                else {
+                    start = startSplit.length > 1 
+                            ? parseInt(startSplit[0])*60 + parseInt(startSplit[1] )
+                            : parseInt(startSplit[0])*60;
+                }
+                if (meetingDate.end.includes("pm") && !meetingDate.end.includes("12")) {
+                    end = endSplit.length > 1 
+                            ? 12*60 + parseInt(endSplit[0])*60 + parseInt(endSplit[1])
+                            : 12*60 + parseInt(endSplit[0])*60;
+                }
+                else {
+                    end = endSplit.length > 1 
+                            ? parseInt(endSplit[0])*60 + parseInt(endSplit[1])
+                            : parseInt(endSplit[0])*60;
+                }
+                totalCourseTime += end - start;
+            }
+            console.log(meetingDate);
+            console.log("Start: " + start);
+            console.log("End: " + end);
+            console.log("Total: " + totalCourseTime);
+            console.log("Number of shared classes at start time: " + classBusyness);
+            console.log("Frequency      : " + totalCourseTime/TOTAL_AVAILABLE_TIME * 100);
+        }
+        console.log("\n");
+        // QUEUE.enqueue(classData[i]);
     }
-    QUEUE.displayContents();
-
+    console.log(TOTAL_AVAILABLE_TIME);
+    // QUEUE.displayContents();
 }
 
 
@@ -349,6 +400,7 @@ export async function mainRestrictions(path) {
     createRoomData();
     howManyClassesPerDay();
     // console.log(classDayFrequencies);
+    // console.log(classDayTotals);
     testQueue();
 } // end of main
 
