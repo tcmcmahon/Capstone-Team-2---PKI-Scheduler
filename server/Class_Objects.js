@@ -121,45 +121,24 @@ export class PriorityQueue {
     constructor() {
         this.queue = [];
     }
-    enqueue(_class, freq) {
-        var _classList = [];
-        for (var i in _class.meetingDates) {
-            _classList.push(structuredClone(_class));
-            _classList[i].meetingDates = _class.meetingDates[i];
+    enqueue(_class, classDay, courseTime) {
+        var i = 0;
+        _class.meetingDates = _class.meetingDates[classDay];
+        while (i < this.queue.length) {
+            if (this.queue[i][1] <= courseTime) { break }
+            i++;
         }
-        for (var _classInstance of _classList) {
-            var numDays = _classInstance.meetingDates.days.length;
-            if (this.queue.lenth === 0) {
-                this.queue.push(_classInstance);
-            }
-            else if (numDays === 1) {
-                this.queue.push(_classInstance);
-            }
-            else {
-                var i = 0;
-                var assigned = false;
-                while (!assigned && i < this.queue.length) {
-                    if (numDays >= this.queue[i].meetingDates.days.length) {
-                        this.queue.splice(i, 0, _classInstance);
-                        assigned = true;
-                    }
-                    i++;
-                }
-                if (!assigned) {
-                    this.queue.push(_classInstance);
-                }
-            }
-        }
+        this.queue.splice(i, 0, [_class, courseTime]);
     }
     dequeue() {
         return this.queue.shift();
     }
     displayContents() {
         for (var i in this.queue) {
-            console.log(i)
-            console.log(this.queue[i]);
-            console.log("\n");
-            sleep(30000);
+            // console.log(i)
+            console.log(this.queue[i][1]);
+            // console.log("\n");
+            // sleep(1000);
         }
     }
 }

@@ -333,26 +333,23 @@ function assignRooms() {
 }
 
 
-
-// things to keep track of
-/* 
-    Y | How long does the class last
-    Y | How busy is the class at that time during that day
-    N | Take into account how important that time is at that day during the week
-*/
+/* test to make sure queue is working */
 function testQueue() {
     const QUEUE = new PriorityQueue();
-    const TOTAL_AVAILABLE_TIME = (15*60 + 15) * 6; // Overall time of when classes can be scheduled throughout the week
     var totalCourseTime;
     var classBusyness;
     var start, end, startSplit, endSplit;
+    var i;
     // loop through each class
     for (var _class of classData) {
         classBusyness = 0;
+        i = 0;
         // loop through each meeting time
+        // console.log(_class);
         for (var meetingDate of _class.meetingDates) {
             // loop through each day
             totalCourseTime = 0;
+            // loop through each day of the individual meeting date
             for (var day of meetingDate.days) { 
                 classBusyness += classDayFrequencies[day][meetingDate.start];
                 startSplit = meetingDate.start.split(":");
@@ -364,7 +361,7 @@ function testQueue() {
                 }
                 else {
                     start = startSplit.length > 1 
-                            ? parseInt(startSplit[0])*60 + parseInt(startSplit[1] )
+                            ? parseInt(startSplit[0])*60 + parseInt(startSplit[1])
                             : parseInt(startSplit[0])*60;
                 }
                 if (meetingDate.end.includes("pm") && !meetingDate.end.includes("12")) {
@@ -379,18 +376,18 @@ function testQueue() {
                 }
                 totalCourseTime += end - start;
             }
-            console.log(meetingDate);
-            console.log("Start: " + start);
-            console.log("End: " + end);
-            console.log("Total: " + totalCourseTime);
-            console.log("Number of shared classes at start time: " + classBusyness);
-            console.log("Frequency      : " + totalCourseTime/TOTAL_AVAILABLE_TIME * 100);
+            QUEUE.enqueue(structuredClone(_class), i, totalCourseTime);
+            // console.log(meetingDate);
+            // console.log("Start : " + start);
+            // console.log("End   : " + end);
+            // console.log("Total : " + totalCourseTime);
+            // console.log("Class#: " + i);
+            // console.log("Number of shared classes at start time: " + classBusyness);
+            i++;
         }
         console.log("\n");
-        // QUEUE.enqueue(classData[i]);
     }
-    console.log(TOTAL_AVAILABLE_TIME);
-    // QUEUE.displayContents();
+    QUEUE.displayContents();
 }
 
 
