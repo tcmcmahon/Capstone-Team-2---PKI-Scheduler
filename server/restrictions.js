@@ -57,10 +57,10 @@ ex.listen(3001, () => console.log("Server is up"));//Listen on port 3001 for dat
  * @returns {void} Logs status of attempted connection to the console
  * @memberof Restrictions
  */ 
-connect.connect((err) => {
-    if (err) throw err;
-    console.log('Connected to the remote database!');
-});
+// connect.connect((err) => {
+//     if (err) throw err;
+//     console.log('Connected to the remote database!');
+// });
 
 let z = Object.keys(rooms);//Total number of Rooms
 let seatNumbers = [];//Seats for each room
@@ -97,21 +97,21 @@ function sortNonFinal(totalRooms)
     for(let i = 0; i < totalRooms.length; i++)//For all totalRooms
     { 
         let t = [];//Time array
-        for(let e = 0; e < nonFinal.length; e++)//For all classes in nonFinal array
+        for(let e = 0; e < nonFinal.length && e + 1 < nonFinal.length; e++)//For all classes in nonFinal array
         {
-            if(nonFinal[e].days == "MW" && nonFinal[e].room == z[i] && !(t.includes(nonFinal[e].startTime)) && nonFinal[e].maxEnrollment <= seatNumbers[i])//If current Monday/Wednesday class has same room as current room and its start time is not in the time array
+            if(nonFinal[e].days == "MW" && nonFinal[e].room == z[i] && !(t.includes(nonFinal[e].startTime)) && nonFinal[e].maxEnrollment <= seatNumbers[i] && nonFinal[e].endTime < nonFinal[e+1].startTime)//If current Monday/Wednesday class has same room as current room and its start time is not in the time array
             {
                 t.push(nonFinal[e].startTime);//Add startTime of current room into current time array
                 final.push(nonFinal[e]);//Add class to sorted Monday/Wednesday array
             }
         }
-    }
+    }console.log(final)
     for(let i = 0; i < totalRooms.length; i++)//For all totalRooms
     { 
         let t = [];//Time array
-        for(let e = 0; e < nonFinal.length; e++)//For all classes in nonFinal array
+        for(let e = 0; e < nonFinal.length && e + 1 < nonFinal.length; e++)//For all classes in nonFinal array
         {
-            if(nonFinal[e].days == "TR" && nonFinal[e].room == z[i] && !(t.includes(nonFinal[e].startTime)) && nonFinal[e].maxEnrollment <= seatNumbers[i])//If current Tuesday/Thursday class has same room as current room and its start time is not in the time array
+            if(nonFinal[e].days == "TR" && nonFinal[e].room == z[i] && !(t.includes(nonFinal[e].startTime)) && nonFinal[e].maxEnrollment <= seatNumbers[i] && nonFinal[e].maxEnrollment <= seatNumbers[i] && nonFinal[e].endTime < nonFinal[e+1].startTime)//If current Tuesday/Thursday class has same room as current room and its start time is not in the time array
             {
                 t.push(nonFinal[e].startTime);//Add startTime into current time array
                 final.push(nonFinal[e]);//Add class into sorted Tuesday/Thursday array
@@ -121,9 +121,9 @@ function sortNonFinal(totalRooms)
     for(let i = 0; i < totalRooms.length; i++)//For all totalRooms
     { 
         let t = [];//Time array
-        for(let e = 0; e < nonFinal.length; e++)//For all classes in nonFinal array
+        for(let e = 0; e < nonFinal.length && e + 1 < nonFinal.length; e++)//For all classes in nonFinal array
         {
-            if(nonFinal[e].days == "WF" && nonFinal[e].room == z[i] && !(t.includes(nonFinal[e].startTime)) && nonFinal[e].maxEnrollment <= seatNumbers[i])//If current Wednesday/Friday class has same room as current room and its start time is not in the time array
+            if(nonFinal[e].days == "WF" && nonFinal[e].room == z[i] && !(t.includes(nonFinal[e].startTime)) && nonFinal[e].maxEnrollment <= seatNumbers[i] && nonFinal[e].maxEnrollment <= seatNumbers[i] && nonFinal[e].endTime < nonFinal[e+1].startTime)//If current Wednesday/Friday class has same room as current room and its start time is not in the time array
             {
                 t.push(nonFinal[e].startTime);//Add startTime into current time array
                 final.push(nonFinal[e]);//Add class into sorted Tuesday/Thursday array
@@ -133,9 +133,9 @@ function sortNonFinal(totalRooms)
     for(let i = 0; i < totalRooms.length; i++)//For all totalRooms
     { 
         let t = [];//Time array
-        for(let e = 0; e < nonFinal.length; e++)//For all classes in nonFinal array
+        for(let e = 0; e < nonFinal.length && e + 1 < nonFinal.length; e++)//For all classes in nonFinal array
         {
-            if(nonFinal[e].days == "MTWRF" && nonFinal[e].room == z[i] && !(t.includes(nonFinal[e].startTime)) && nonFinal[e].maxEnrollment <= seatNumbers[i])//If current Monday/Tuesday/Wednesday/Thursday/Friday class has same room as current room and its start time is not in the time array
+            if(nonFinal[e].days == "MTWRF" && nonFinal[e].room == z[i] && !(t.includes(nonFinal[e].startTime)) && nonFinal[e].maxEnrollment <= seatNumbers[i] && nonFinal[e].maxEnrollment <= seatNumbers[i] && nonFinal[e].endTime < nonFinal[e+1].startTime)//If current Monday/Tuesday/Wednesday/Thursday/Friday class has same room as current room and its start time is not in the time array
             {
                 t.push(nonFinal[e].startTime);//Add startTime into current time array
                 final.push(nonFinal[e]);//Add class into sorted Tuesday/Thursday array
@@ -145,9 +145,9 @@ function sortNonFinal(totalRooms)
     for(let i = 0; i < totalRooms.length; i++)//For all totalRooms
     { 
         let t = [];//Time array
-        for(let e = 0; e < nonFinal.length; e++)//For all classes in nonFinal array
+        for(let e = 0; e < nonFinal.length && e + 1 < nonFinal.length; e++)//For all classes in nonFinal array
         {
-            if(nonFinal[e].days == "M" && nonFinal[e].room == z[i] && !(t.includes(nonFinal[e].startTime)) && nonFinal[e].maxEnrollment <= seatNumbers[i])//If current Monday class has same room as current room and its start time is not in the time array
+            if(nonFinal[e].days == "M" && nonFinal[e].room == z[i] && !(t.includes(nonFinal[e].startTime)) && nonFinal[e].maxEnrollment <= seatNumbers[i] && nonFinal[e].maxEnrollment <= seatNumbers[i] && nonFinal[e].endTime < nonFinal[e+1].startTime)//If current Monday class has same room as current room and its start time is not in the time array
             {
                 t.push(nonFinal[e].startTime);//Add startTime into current time array
                 final.push(nonFinal[e]);//Add class into sorted Tuesday/Thursday array
@@ -157,9 +157,9 @@ function sortNonFinal(totalRooms)
     for(let i = 0; i < totalRooms.length; i++)//For all totalRooms
     { 
         let t = [];//Time array
-        for(let e = 0; e < nonFinal.length; e++)//For all classes in nonFinal array
+        for(let e = 0; e < nonFinal.length && e + 1 < nonFinal.length; e++)//For all classes in nonFinal array
         {
-            if(nonFinal[e].days == "T" && nonFinal[e].room == z[i] && !(t.includes(nonFinal[e].startTime)) && nonFinal[e].maxEnrollment <= seatNumbers[i])//If current Tuesday class has same room as current room and its start time is not in the time array
+            if(nonFinal[e].days == "T" && nonFinal[e].room == z[i] && !(t.includes(nonFinal[e].startTime)) && nonFinal[e].maxEnrollment <= seatNumbers[i] && nonFinal[e].maxEnrollment <= seatNumbers[i] && nonFinal[e].endTime < nonFinal[e+1].startTime)//If current Tuesday class has same room as current room and its start time is not in the time array
             {
                 t.push(nonFinal[e].startTime);//Add startTime into current time array
                 final.push(nonFinal[e]);//Add class into sorted Tuesday/Thursday array
@@ -169,9 +169,9 @@ function sortNonFinal(totalRooms)
     for(let i = 0; i < totalRooms.length; i++)//For all totalRooms
     { 
         let t = [];//Time array
-        for(let e = 0; e < nonFinal.length; e++)//For all classes in nonFinal array
+        for(let e = 0; e < nonFinal.length && e + 1 < nonFinal.length; e++)//For all classes in nonFinal array
         {
-            if(nonFinal[e].days == "W" && nonFinal[e].room == z[i] && !(t.includes(nonFinal[e].startTime)) && nonFinal[e].maxEnrollment <= seatNumbers[i])//If current Wednesday class has same room as current room and its start time is not in the time array
+            if(nonFinal[e].days == "W" && nonFinal[e].room == z[i] && !(t.includes(nonFinal[e].startTime)) && nonFinal[e].maxEnrollment <= seatNumbers[i] && nonFinal[e].maxEnrollment <= seatNumbers[i] && nonFinal[e].endTime < nonFinal[e+1].startTime)//If current Wednesday class has same room as current room and its start time is not in the time array
             {
                 t.push(nonFinal[e].startTime);//Add startTime into current time array
                 final.push(nonFinal[e]);//Add class into sorted Tuesday/Thursday array
@@ -181,9 +181,9 @@ function sortNonFinal(totalRooms)
     for(let i = 0; i < totalRooms.length; i++)//For all totalRooms
     { 
         let t = [];//Time array
-        for(let e = 0; e < nonFinal.length; e++)//For all classes in nonFinal array
+        for(let e = 0; e < nonFinal.length && e + 1 < nonFinal.length; e++)//For all classes in nonFinal array
         {
-            if(nonFinal[e].days == "R" && nonFinal[e].room == z[i] && !(t.includes(nonFinal[e].startTime)) && nonFinal[e].maxEnrollment <= seatNumbers[i])//If current Thursday class has same room as current room and its start time is not in the time array
+            if(nonFinal[e].days == "R" && nonFinal[e].room == z[i] && !(t.includes(nonFinal[e].startTime)) && nonFinal[e].maxEnrollment <= seatNumbers[i] && nonFinal[e].maxEnrollment <= seatNumbers[i] && nonFinal[e].endTime < nonFinal[e+1].startTime)//If current Thursday class has same room as current room and its start time is not in the time array
             {
                 t.push(nonFinal[e].startTime);//Add startTime into current time array
                 final.push(nonFinal[e]);//Add class into sorted Tuesday/Thursday array
@@ -193,9 +193,9 @@ function sortNonFinal(totalRooms)
     for(let i = 0; i < totalRooms.length; i++)//For all totalRooms
     { 
         let t = [];//Time array
-        for(let e = 0; e < nonFinal.length; e++)//For all classes in nonFinal array
+        for(let e = 0; e < nonFinal.length && e + 1 < nonFinal.length; e++)//For all classes in nonFinal array
         {
-            if(nonFinal[e].days == "F" && nonFinal[e].room == z[i] && !(t.includes(nonFinal[e].startTime)) && nonFinal[e].maxEnrollment <= seatNumbers[i])//If current Friday class has same room as current room and its start time is not in the time array
+            if(nonFinal[e].days == "F" && nonFinal[e].room == z[i] && !(t.includes(nonFinal[e].startTime)) && nonFinal[e].maxEnrollment <= seatNumbers[i] && nonFinal[e].maxEnrollment <= seatNumbers[i] && nonFinal[e].endTime < nonFinal[e+1].startTime)//If current Friday class has same room as current room and its start time is not in the time array
             {
                 t.push(nonFinal[e].startTime);//Add startTime into current time array
                 final.push(nonFinal[e]);//Add class into sorted Tuesday/Thursday array
@@ -289,6 +289,7 @@ function algoAssign(totalRooms)
         } 
         k++;//Increment to next room number
     }
+    formatNonFinal();
     sortNonFinal(z);//Sort nonFinal into final
     storeAssigninCalendar();//Store assignment data in object to send to the calendar
 }
@@ -351,25 +352,25 @@ function storeAssigninCalendar()//Stores final assignment data into finalForCale
        
         for(let i = 0; i < final.length; i++)//For all assigned classes store in calendar format
         {
-            if(nonFinal[i].days == 'MW')//if days are Monday/Wednesday
+            if(final[i].days == 'MW')//if days are Monday/Wednesday
             {
                 // insert class into finalForCalendar
                 finalForCalendar.push({startDate: (dates[0] + "T" + final[i].startTime), endDate: (dates[0] + "T" + final[i].endTime), title: final[i].class + " Room " + final[i].room});
                 finalForCalendar.push({startDate: (dates[2] + "T" + final[i].startTime), endDate: (dates[2] + "T" + final[i].endTime), title: final[i].class + " Room " + final[i].room});
             }
-            else if(nonFinal[i].days == 'TR')//if days are Tuesday/Thursday
+            else if(final[i].days == 'TR')//if days are Tuesday/Thursday
             {
                 // insert class into finalForCalendar
                 finalForCalendar.push({startDate: (dates[1] + "T" + final[i].startTime), endDate: (dates[1] + "T" + final[i].endTime), title: final[i].class + " Room " + final[i].room});
                 finalForCalendar.push({startDate: (dates[3] + "T" + final[i].startTime), endDate: (dates[3] + "T" + final[i].endTime), title: final[i].class + " Room " + final[i].room});
             }
-            if(nonFinal[i].days == 'WF')//if days are Wednesday/Friday
+            if(final[i].days == 'WF')//if days are Wednesday/Friday
             {
                 // insert class into finalForCalendar
                 finalForCalendar.push({startDate: (dates[2] + "T" + final[i].startTime), endDate: (dates[2] + "T" + final[i].endTime), title: final[i].class + " Room " + final[i].room});
                 finalForCalendar.push({startDate: (dates[4] + "T" + final[i].startTime), endDate: (dates[4] + "T" + final[i].endTime), title: final[i].class + " Room " + final[i].room});
             }
-            else if(nonFinal[i].days == 'MTWRF')//if days are everyday
+            else if(final[i].days == 'MTWRF')//if days are everyday
             {
                 // insert class into finalForCalendar
                 finalForCalendar.push({startDate: (dates[0] + "T" + final[i].startTime), endDate: (dates[0] + "T" + final[i].endTime), title: final[i].class + " Room " + final[i].room});
@@ -378,27 +379,27 @@ function storeAssigninCalendar()//Stores final assignment data into finalForCale
                 finalForCalendar.push({startDate: (dates[3] + "T" + final[i].startTime), endDate: (dates[3] + "T" + final[i].endTime), title: final[i].class + " Room " + final[i].room});
                 finalForCalendar.push({startDate: (dates[4] + "T" + final[i].startTime), endDate: (dates[4] + "T" + final[i].endTime), title: final[i].class + " Room " + final[i].room});
             }
-            else if(nonFinal[i].days == 'M')//if days are Monday
+            else if(final[i].days == 'M')//if days are Monday
             {
                 // insert class into finalForCalendar
                 finalForCalendar.push({startDate: (dates[0] + "T" + final[i].startTime), endDate: (dates[0] + "T" + final[i].endTime), title: final[i].class + " Room " + final[i].room});
             }
-            else if(nonFinal[i].days == 'T')//if days are Tuesday
+            else if(final[i].days == 'T')//if days are Tuesday
             {
                 // insert class into finalForCalendar
                 finalForCalendar.push({startDate: (dates[1] + "T" + final[i].startTime), endDate: (dates[1] + "T" + final[i].endTime), title: final[i].class + " Room " + final[i].room});
             }
-            else if(nonFinal[i].days == 'W')//if days are Wednesday
+            else if(final[i].days == 'W')//if days are Wednesday
             {
                 // insert class into finalForCalendar
                 finalForCalendar.push({startDate: (dates[2] + "T" + final[i].startTime), endDate: (dates[2] + "T" + final[i].endTime), title: final[i].class + " Room " + final[i].room});
             }
-            else if(nonFinal[i].days == 'R')//if days are Thursday
+            else if(final[i].days == 'R')//if days are Thursday
             {
                 // insert class into finalForCalendar
                 finalForCalendar.push({startDate: (dates[3] + "T" + final[i].startTime), endDate: (dates[3] + "T" + final[i].endTime), title: final[i].class + " Room " + final[i].room});
             }
-            else if(nonFinal[i].days == 'F')//if days are Friday
+            else if(final[i].days == 'F')//if days are Friday
             {
                 // insert class into finalForCalendar
                 finalForCalendar.push({startDate: (dates[4] + "T" + final[i].startTime), endDate: (dates[4] + "T" + final[i].endTime), title: final[i].class + " Room " + final[i].room});
@@ -588,6 +589,95 @@ function formatCalendar()//Reformats time and date information to work with the 
         else if(finalForCalendar[i].endDate.endsWith("T8") == true)
         {
             finalForCalendar[i].endDate = finalForCalendar[i].endDate.replace(/.$/, "20");
+        }
+    }
+}
+
+function formatNonFinal()//Reformats time and date information to work with the calendar page
+{   
+    for(let i = 0; i < nonFinal.length; i++)//For all calendar data, if startTime or endTime has pm or am in the time, remove it
+    {
+        if(nonFinal[i].startTime.includes("pm"))
+        {
+            nonFinal[i].startTime = nonFinal[i].startTime.replaceAll("pm", "");
+        }
+        if(nonFinal[i].endTime.includes("pm"))
+        {
+            nonFinal[i].endTime = nonFinal[i].endTime.replaceAll("pm", "");
+        }
+        if(nonFinal[i].startTime.includes("am"))
+        {
+            nonFinal[i].startTime = nonFinal[i].startTime.replaceAll("am", "");
+        }
+        if(nonFinal[i].endTime.includes("am"))
+        {
+            nonFinal[i].endTime = nonFinal[i].endTime.replaceAll("am", "");
+        }
+    }
+    for(let i = 0; i < nonFinal.length; i++)//For all calendar data, reformat startTime from 12hr to 24hr format
+    {
+        if(nonFinal[i].startTime.startsWith("1:") == true)
+        {
+            nonFinal[i].startTime = nonFinal[i].startTime.replace("1:", "13:");
+        }
+        else if(nonFinal[i].startTime.startsWith("2:") == true)
+        {
+            nonFinal[i].startTime = nonFinal[i].startTime.replace("2:", "14:");
+        }
+        else if(nonFinal[i].startTime.startsWith("3:") == true)
+        {
+            nonFinal[i].startTime = nonFinal[i].startTime.replace("3:", "15:");
+        }
+        else if(nonFinal[i].startTime.startsWith("4:") == true)
+        {
+            nonFinal[i].startTime = nonFinal[i].startTime.replace("4:", "16:");
+        }
+        else if(nonFinal[i].startTime.startsWith("5:") == true)
+        {
+            nonFinal[i].startTime = nonFinal[i].startTime.replace("5:", "17:");
+        }
+        else if(nonFinal[i].startTime.startsWith("6:") == true)
+        {
+            nonFinal[i].startTime = nonFinal[i].startTime.replace("6:", "18:");
+        }
+        else if(nonFinal[i].startTime == ("9"))
+        {
+            nonFinal[i].startTime = nonFinal[i].startTime.replace("9", "09:00");
+        }
+        else if(nonFinal[i].startTime.startsWith("12"))
+        {
+            nonFinal[i].startTime = nonFinal[i].startTime.replace("12", "12:00");
+        }
+    }
+    for(let i = 0; i < nonFinal.length; i++)//For all calendar data, reformat endTime from 12hr to 24hr format
+    {
+        if(nonFinal[i].endTime.startsWith("1:") == true)
+        {
+            nonFinal[i].endTime = nonFinal[i].endTime.replace("1:", "13:");
+        }
+        else if(nonFinal[i].endTime.startsWith("2:") == true)
+        {
+            nonFinal[i].endTime = nonFinal[i].endTime.replace("2:", "14:");
+        }
+        else if(nonFinal[i].endTime.startsWith("3:") == true)
+        {
+            nonFinal[i].endTime = nonFinal[i].endTime.replace("3:", "15:");
+        }
+        else if(nonFinal[i].endTime.startsWith("4:") == true)
+        {
+            nonFinal[i].endTime = nonFinal[i].endTime.replace("4:", "16:");
+        }
+        else if(nonFinal[i].endTime.startsWith("5:") == true)
+        {
+            nonFinal[i].endTime = nonFinal[i].endTime.replace("5:", "17:");
+        }
+        else if(nonFinal[i].endTime.startsWith("6:") == true)
+        {
+            nonFinal[i].endTime = nonFinal[i].endTime.replace("6:", "18:");
+        }
+        else if(nonFinal[i].endTime.startsWith("7:") == true)
+        {
+            nonFinal[i].endTime = nonFinal[i].endTime.replace("7:", "19:");
         }
     }
 }
