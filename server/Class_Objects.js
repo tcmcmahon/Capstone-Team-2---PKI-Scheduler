@@ -49,12 +49,12 @@ export class CourseDescription {
         this.campus = (campusString == "UNO-IS") ? "IS&T" : "CoE";
     }
     setClassSize(classSize, crossListedSize) {
-        if (this.crossListedWith) {
-            this.maximumEnrollments = Number(classSize);
+        if (this.crossListedWith.length > 0) {
+            this.maximumEnrollments = Number(crossListedSize);
             return false;
         }
         else {
-            this.maximumEnrollments = Number(crossListedSize);
+            this.maximumEnrollments = Number(classSize);
         }
     }
     checkIfCrossListed(thisCourse, crossListings, allCrossListings) {
