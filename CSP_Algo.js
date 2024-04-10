@@ -37,9 +37,10 @@ function recursiveBacktrackingSearch(assignment, csp){
         return assignment
     }
 
-    let selectedCourse = selectCourseMRV(assignment, csp)
+    const selectedCourse = selectCourseMRV(assignment, csp)
+    const orderedRooms = orderDomainValues(selectedCourse, selectedCourse.possibleRooms, assignment, csp)
 
-    for (let room in selectedCourse.possibleRooms){
+    for (let room in orderedRooms){
 
         if (isConsistent(selectedCourse, selectedCourse.possibleRooms[room], assignment, csp)){
             assignment[selectedCourse.name] = selectedCourse.possibleRooms[room]
@@ -68,6 +69,25 @@ function selectCourseMRV(assignment, csp){
         return course.possibleRooms.length < minCourse.possibleRooms.length ? course : minCourse
     }, unassignedCourses[0])
 
+}
+
+function orderDomainValues(course, possibleRooms, assignment, csp){
+    return possibleRooms.slice().sort((a, b) => {
+        return countConflicts(course, a, assignment, csp) - countConflicts(course, b, assignment, csp)
+    })
+}
+
+function countConflicts(course, room, assignment, csp){
+
+    let count = 0
+
+    for(const neighbor of course.neighbors){
+        if (neighbor.name in assignment && assignment[neighbor] == room){
+            count++
+        }
+    }
+
+    return count
 }
 
 function isConsistent(course, room, assignment, csp){
