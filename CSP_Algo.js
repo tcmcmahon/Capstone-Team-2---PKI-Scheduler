@@ -1,28 +1,32 @@
 class Course {
-    constructor(name, timeslots){
+    constructor(name, timeslots, possibleRooms){
         this.name = name
         this.timeslots = timeslots
         this.neighbors = []
-        this.possibleRooms = []
+        this.possibleRooms = possibleRooms
     }
 }
 
 allRooms = [101, 102, 103]
 
-CourseA = new Course("A", [])
-CourseB = new Course("B", [])
-CourseC = new Course("C", [])
+CourseWA = new Course("WA", [], allRooms)
+CourseNT = new Course("NT", [], allRooms)
+CourseSA = new Course("SA", [], allRooms)
+CourseQLI = new Course('QLI', [], allRooms)
+CourseNSW = new Course('NSW', [], allRooms)
+CourseVIC = new Course('VIC', [], allRooms)
+CourseT = new Course('T', [], allRooms)
 
-CourseA.neighbors = [CourseB, CourseC]
-CourseA.possibleRooms = [101, 102]
+CourseWA.neighbors = [CourseNT, CourseSA]
+CourseNT.neighbors = [CourseWA, CourseSA, CourseQLI]
+CourseSA.neighbors =  [CourseWA, CourseNT,  CourseQLI, CourseNSW, CourseVIC]
+CourseQLI.neighbors = [CourseNT, CourseSA, CourseNSW]
+CourseNSW.neighbors = [CourseSA, CourseQLI, CourseVIC]
+CourseVIC.neighbors = [CourseSA, CourseNSW]
 
-CourseB.neighbors = [CourseA, CourseC]
-CourseB.possibleRooms = [101, 102, 103]
+CSPProblem = [CourseWA, CourseNT, CourseSA, CourseQLI, CourseNSW, CourseVIC, CourseT]
 
-CourseC.neighbors = [CourseA, CourseB]
-CourseC.possibleRooms = [101, 102, 103]
-
-CSPProblem = [CourseA, CourseB, CourseC]
+//Assignment functions begin here
 
 function backtrackingSearch(csp){
     return recursiveBacktrackingSearch({}, csp)
@@ -33,7 +37,7 @@ function recursiveBacktrackingSearch(assignment, csp){
         return assignment
     }
 
-    let selectedCourse = selectCourse(assignment, csp)
+    let selectedCourse = selectCourseMRV(assignment, csp)
 
     for (let room in selectedCourse.possibleRooms){
 
@@ -57,12 +61,13 @@ function isComplete(assignment, csp){
     return Object.keys(assignment).length === csp.length
 }
 
-function selectCourse(assignment, csp){
-    for (let course in csp){
-        if (!(csp[course].name in assignment)){
-            return csp[course]
-        }
-    }
+function selectCourseMRV(assignment, csp){
+    const unassignedCourses = csp.filter(course => !(course.name in assignment))
+
+    return unassignedCourses.reduce((minCourse, course) => {
+        return course.possibleRooms.length < minCourse.possibleRooms.length ? course : minCourse
+    }, unassignedCourses[0])
+
 }
 
 function isConsistent(course, room, assignment, csp){
