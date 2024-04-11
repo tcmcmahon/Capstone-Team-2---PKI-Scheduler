@@ -19,7 +19,7 @@ export class CourseDescription {
         this.sectionNumber = sectionString;
     }
     setLab(sectionString) {
-        this.lab = (sectionString === "Laboratory") ? true : false;
+        this.isLab = (sectionString === "Laboratory") ? true : false;
     }
     spliceTime(timeString) { // e.g. "MW 10:30am-11:45am; F 12:00pm-1:15pm"
         var timeDaySplit;
@@ -44,12 +44,15 @@ export class CourseDescription {
         this.campus = (campusString == "UNO-IS") ? "IS&T" : "CoE";
     }
     setClassSize(classSize, crossListedSize) {
-        if (this.crossListedWith) {
-            this.maximumEnrollments = Number(classSize);
+        if (this.crossListedWith.length > 0) {
+            this.maximumEnrollments = Number(crossListedSize);
             return false;
         }
         else {
-            this.maximumEnrollments = Number(crossListedSize);
+            this.maximumEnrollments = Number(classSize);
+        }
+        if (this.maximumEnrollments > 18) {
+            this.isLab = false;
         }
     }
     checkIfCrossListed(thisCourse, crossListings, allCrossListings) {
@@ -76,7 +79,7 @@ export class CourseDescription {
 /* linked list of classroom data */
 export class ClassroomTimeSlot {
     constructor(_class, next=null) {
-        this._class = _class;
+        this.class = _class;
         this.nextClass = next;
     }
 }
@@ -125,20 +128,21 @@ export class PriorityQueue {
         var i = 0;
         _class.meetingDates = _class.meetingDates[classDay];
         while (i < this.queue.length) {
-            if (this.queue[i][1] <= courseTime) { break }
-            i++;
+            if (this.queue[i][1] < courseTime) { break }
+            else if (this.queue[i][1] === courseTime && this.queue[i][0].meetingDates.days.length < _class.meetingDates.days.length) { break }
+            else { i++ }
         }
         this.queue.splice(i, 0, [_class, courseTime]);
     }
-    dequeue() {
+    dequeue(i=0) {
         return this.queue.shift();
     }
     displayContents() {
         for (var i in this.queue) {
             console.log(i)
-            console.log(this.queue[i]);
+            console.log(this.queue[i][0]);
             console.log("\n");
-            sleep(1000);
+            sleep(10000);
         }
     }
 }

@@ -9,7 +9,7 @@ import { setUncaughtExceptionCaptureCallback } from 'process';
 /* global variables */
 var classData = []; // will hold instances of classDescription, will end up with the data for all of the classes
 var crossListedCoursesToCheck = []; // will temporarily hold classes that are cross listed and skip them if listed
-const unassignableClasses =  ["AREN 3030 - AE DESIGN AND SIMULATION STUDIO III",
+const unassignableClasses =["AREN 3030 - AE DESIGN AND SIMULATION STUDIO III",
                             "CIVE 334 - INTRODUCTION TO GEOTECHNICAL ENGINEERING",
                             "CIVE 378 - MATERIALS OF CONSTRUCTION",
                             "AREN 3220 - ELECTRICAL SYSTEMS FOR BUILDINGS I",
@@ -20,12 +20,37 @@ const unassignableClasses =  ["AREN 3030 - AE DESIGN AND SIMULATION STUDIO III",
                             "AREN 4040 - BUILDING ENVELOPES",
                             "CIVE 102 - GEOMATICS FOR CIVIL ENGINEERING",
                             "CNST 112 - CONSTRUCTION COMMUNICATIONS",
-                            "CNST 225 - INTRODUCTION TO BUILDING INFORMATION MODELING "];
+                            "CNST 225 - INTRODUCTION TO BUILDING INFORMATION MODELING",
+                            "ECEN 103 - ELECTRICAL AND COMPUTER ENGINEERING FUNDAMENTALS",
+                            "ECEN 106 - MICROPROCESSOR APPLICATIONS",
+                            "ECEN 123 - INTRODUCTION TO ELECTRICAL AND COMPUTER ENGINEERING",
+                            "ECEN 194 - SPECIAL TOPICS IN ELECTRICAL AND COMPUTER ENGINEERING I",
+                            "ECEN 313 - SWITCHING CIRCUITS THEORY",
+                            "ECEN 433 - MICROPROCESSOR SYSTEM DESIGN"];
+const unassignableClassesSections =[['1', '2', '3', '4'],
+                                    ['2', '3', '4'],
+                                    ['2', '3', '4'],
+                                    ['1', '2', '3', '4'],
+                                    ['1', '2', '3', '4'],
+                                    ['1', '2', '3', '4'],
+                                    ['1', '2', '3', '4'],
+                                    ['1', '2', '3', '4'],
+                                    ['1', '2', '3', '4'],
+                                    ['2', '3'],
+                                    ['1', '2', '3', '4'],
+                                    ['1', '2', '3', '4'],
+                                    ['2'],
+                                    ['3', '4'],
+                                    ['1', '2', '3', '4'],
+                                    ['2', '4'],
+                                    ['2', '3'],
+                                    ['2']]
 const meetOnS = ["ECEN 891 - SPECIAL TOPICS IN ELECTRIC AND COMPUTER ENGINEERING IV",
                 "ECEN 491 - SPECIAL TOPICS IN ELECTRIC AND COMPUTER ENGINEERING IV"]
 var roomsList = [];
 var classDayFrequencies = {'M': {},'T': {},'W': {},'R': {},'F': {},'S': {}}
 var classDayTotals = {'M': 0,'T': 0,'W': 0,'R': 0,'F': 0,'S': 0}
+const QUEUE = new PriorityQueue();
 
 
 /* read data from the csv file */
@@ -39,7 +64,10 @@ function readCSVData(file_path) {
         .on('data', function (row) { // iterates through each row in csv file
             var cd = new CourseDescription(); // creates object to store class data
             if (row[34] !== '' && cd.checkIfCrossListed([row[6], row[7]], row[34], crossListedCoursesToCheck)) { /* cross listed */ }
-            else if (row[0] === '' && unassignableClasses.includes(prevClassName)) { }
+            else if (row[0] === '' 
+                    && unassignableClasses.includes(prevClassName) 
+                    && unassignableClassesSections[unassignableClasses.indexOf(prevClassName)].includes(row[7])) { }
+            else if (row[29] > 60 || row[35] > 60) {}
             else if (row[0] === '') {
                 cd.setCourseName(prevClassName);
                 cd.setSectionNum(row[7]);
@@ -100,11 +128,15 @@ function howManyClassesPerDay() {
 
 
 /* Will compare two meeting dates, return types:
+    -2 if date2 is null
     -1 if date1 is earlier
     0  if during the same time 
     1  if date2 is earlier
 */
 function compareMeetingDates(date1, date2) { 
+    if (date2 === null) {
+        return -2;
+    }
     var parsedDate1 = {'startHour': null,
                         'startMin': null,
                         'endHour': null,
@@ -147,195 +179,108 @@ function compareMeetingDates(date1, date2) {
 
 
 function canBeAssigned(_class, room) {
-    console.log(_class);
-    var days = _class.meetingDates.days.split("");
-    var curr_class, prev_class = null;
-    var time_diff;
-    var exit = true;
-    var room_clone = structuredClone(room); // used in case room is unassignable
-    for (var day in days && !exit) {
-        if (day === 'M') {
-            if (room.monClasses === null) { 
-                room.monClasses = new ClassroomTimeSlot(_class)
-            }
-            else {
-                curr_class = room.monClasses;
-                while ((curr_class !== null) && (time_diff = compareMeetingDates(_class.meetingDates, curr_class.meetingDates) === 1)) {
-                    prev_class = curr_class;
-                    curr_class = curr_class.nextClass;
-                }
-                if (curr_class === null) {
-                    curr_class.next = new ClassroomTimeSlot(_class);
-                }
-                else if (time_diff === -1) {
-                    prev_class.next = new ClassroomTimeSlot(_class);
-                    prev_class.next.next = curr_class;
-                }
-                else {
-                    exit = false
-                    break;
-                }
-            }
+    var found = true;
+    var roomClone = structuredClone(room); // backup in case room isn't available
+    var currClass, prevClass = null;
+    var classDays = [];
+    var timeDiff;
+    for (var day of _class.meetingDates.days.split("")) {
+        switch (day) {
+            case 'M':
+                classDays.push(room.monClasses);
+                break;
+            case 'T':
+                classDays.push(room.tueClasses);
+                break;
+            case 'W':
+                classDays.push(room.wedClasses);
+                break;
+            case 'R':
+                classDays.push(room.thuClasses);
+                break;
+            case 'F':
+                classDays.push(room.friClasses);
+                break;
+            case 'S':
+                classDays.push(room.s_sClasses);
+                break;
+            default:
+                console.log("WE HAVE A PROBLEM");
         }
-        else if (day === 'T') {
-            if (room.tueClasses === null) { room.tueClasses = new ClassroomTimeSlot(_class) }
-            else {
-                curr_class = room.tueClasses;
-                while ((curr_class !== null) && (time_diff = compareMeetingDates(_class.meetingDates, curr_class.meetingDates) === 1)) {
-                    prev_class = curr_class;
-                    curr_class = curr_class.nextClass;
-                }
-                if (curr_class === null) {
-                    curr_class.next = new ClassroomTimeSlot(_class);
-                }
-                else if (time_diff === -1) {
-                    prev_class.next = new ClassroomTimeSlot(_class);
-                    prev_class.next.next = curr_class;
-                }
-                else {
-                    exit = false;
-                    break;
-                }
-            }
+    }
+    for (var classDay of classDays) {
+        if (classDay === null) {
+            classDay = new ClassroomTimeSlot(_class);
+            continue;
         }
-        else if (day === 'W') {
-            if (room.wedClasses === null) { room.wedClasses = new ClassroomTimeSlot(_class) }
-            else {
-                curr_class = room.wedClasses;
-                while ((curr_class !== null) && (time_diff = compareMeetingDates(_class.meetingDates, curr_class.meetingDates) === 1)) {
-                    prev_class = curr_class;
-                    curr_class = curr_class.nextClass;
-                }
-                if (curr_class === null) {
-                    curr_class.next = new ClassroomTimeSlot(_class);
-                }
-                else if (time_diff === -1) {
-                    prev_class.next = new ClassroomTimeSlot(_class);
-                    prev_class.next.next = curr_class;
-                }
-                else {
-                    exit = false;
-                    break;
-                }
+        currClass = classDay;
+        timeDiff = compareMeetingDates(_class.MeetingDates, currClass.class.meetingDates);
+        while (currClass !== null) {
+            if (timeDiff === 1) {
+                prevClass = currClass;
+                currClass = currClass.next
             }
-        }
-        else if (day === 'R') {
-            if (room.thuClasses === null) { room.thuClasses = new ClassroomTimeSlot(_class) }
-            else {
-                curr_class = room.thuClasses;
-                while ((curr_class !== null) && (time_diff = compareMeetingDates(_class.meetingDates, curr_class.meetingDates) === 1)) {
-                    prev_class = curr_class;
-                    curr_class = curr_class.nextClass;
-                }
-                if (curr_class === null) {
-                    curr_class.next = new ClassroomTimeSlot(_class);
-                }
-                else if (time_diff === -1) {
-                    prev_class.next = new ClassroomTimeSlot(_class);
-                    prev_class.next.next = curr_class;
-                }
-                else {
-                    exit = false;
-                    break;
-                }
+            else if (timeDiff === 0) {
+                found = false;
+                room = roomClone;
+                return found;
             }
-        }
-        else if (day === 'F') {
-            if (room.friClasses === null) { 
-                room.friClasses = new ClassroomTimeSlot(_class)
-                console.log("Friday Classes: ");
-                console.log(room.monClasses);
-            }
-            else {
-                curr_class = room.friClasses;
-                while ((curr_class !== null) && (time_diff = compareMeetingDates(_class.meetingDates, curr_class.meetingDates) === 1)) {
-                    prev_class = curr_class;
-                    curr_class = curr_class.nextClass;
-                }
-                if (curr_class === null) {
-                    curr_class.next = new ClassroomTimeSlot(_class);
-                }
-                else if (time_diff === -1) {
-                    prev_class.next = new ClassroomTimeSlot(_class);
-                    prev_class.next.next = curr_class;
-                }
-                else {
-                    exit = false;
-                    break;
-                }
-            }
-        }
-        else if (day === 'S') {
-            if (room.s_sClasses === null) { room.s_sClasses = new ClassroomTimeSlot(_class) }
-            else {
-                curr_class = room.s_sClasses;
-                while ((curr_class !== null) && (time_diff = compareMeetingDates(_class.meetingDates, curr_class.meetingDates) === 1)) {
-                    prev_class = curr_class;
-                    curr_class = curr_class.nextClass;
-                }
-                if (curr_class === null) {
-                    curr_class.next = new ClassroomTimeSlot(_class);
-                }
-                else if (time_diff === -1) {
-                    prev_class.next = new ClassroomTimeSlot(_class);
-                    prev_class.next.next = curr_class;
-                }
-                else {
-                    exit = false;
-                    break;
-                }
+            else if (timeDiff < 0) {
+                prevClass.next = new ClassroomTimeSlot(_class, currClass);
             }
         }
     }
-    if (exit) {
-        console.log(room);
-        return true;
-    }
-    else {
-        room = room_clone;
-        return false;
-    }
+    return found;
 }
 
 
 /* assign the actual rooms */
 function assignRooms() {
     // add courses to queue first
-    // var test_data = classData;
-    // var test_data =[classData[0], classData[143], classData[1], classData[180],
-    //                 classData[50], classData[73], classData[115], classData[14],
-    //                 classData[80], classData[69], classData[42], classData[142]];
-    var test_data =[classData[0]];
-    const Q = new PriorityQueue();
-    for (var i in test_data) {
-        Q.enqueue(test_data[i]);
+    // var test_limit = [0, 1, 14, 42, 50, 69, 73, 80, 115, 142, 143, 160];
+    var test_limit = [0];
+    var test_data = [];
+    for (var i = 0; i < QUEUE.queue.length; i++) {
+        test_data.push(QUEUE.dequeue());
+        if (!test_limit.includes(i)) {
+            test_data.pop()
+        }
     }
-    console.log("Queue created");
-    var _class = Q.dequeue();
+    var i = 0;
+    var _class = test_data.shift();
     while (_class !== undefined) {
-        console.log("\tPopped class: " + _class.name);
+        console.log(i++);
+        console.log("\Assigning class: " + _class[0].name);
+        // console.log(_class[0]);
         var assignedRoom = false // boolean value to tell if class has already been assigned
         var numRoomsChecked = 0; // number of classes we have looped through
         while (!assignedRoom) {
-            if (numRoomsChecked >= roomsList.length) { break }
-            console.log("\t\tChecking room: ", roomsList[numRoomsChecked].roomNumber);
-            if (!roomsList[numRoomsChecked].colleges[_class.campus]) { }
-            else if (_class.lab !== roomsList[numRoomsChecked].isLab) { }
-            else if (_class.maximumEnrollments > roomsList[numRoomsChecked].roomSize) { }
-            else if (canBeAssigned(_class, roomsList[numRoomsChecked])) { 
-                assignedRoom = true;
+            if (numRoomsChecked >= roomsList.length) { break } // checked everyroom and couldn't find a slot
+            // console.log("\t\tChecking room: ", roomsList[numRoomsChecked].roomNumber);
+            if (!roomsList[numRoomsChecked].colleges[_class[0].campus]) { 
+                // console.log("\t\t\tWrong College");
             }
+            else if (_class[0].isLab !== roomsList[numRoomsChecked].isLab) {
+                // console.log("\t\t\tLab Issue");
+            }
+            else if (_class[0].maximumEnrollments > roomsList[numRoomsChecked].roomSize) { 
+                // console.log("\t\t\tSmall Size");
+            }
+            else if (!canBeAssigned(_class[0], roomsList[numRoomsChecked])) { 
+                // console.log("\t\t\tNo Rooms Available");
+            }
+            else { assignedRoom = true }
             numRoomsChecked++;
         }
-        console.log(assignedRoom ? "\tAssigned: " + _class.name + "\n\tto: " + roomsList[--numRoomsChecked].roomNumber : "\tCouldn't find a classroom for " + _class.name);
-        _class = Q.dequeue();
+        console.log(assignedRoom ? "\tAssigned: " + _class[0].name + "\n\tto: " + roomsList[--numRoomsChecked].roomNumber + "\n\n" : "\tCouldn't find a classroom for " + _class[0].name + "\n\n");
+        _class = test_data.shift();
     }
+    console.log(roomsList[5]);
 }
 
 
-/* test to make sure queue is working */
-function testQueue() {
-    const QUEUE = new PriorityQueue();
+/* Put the classes from classData into a Queue */ 
+function Queueify() {
     var totalCourseTime;
     var classBusyness;
     var start, end, startSplit, endSplit;
@@ -345,15 +290,15 @@ function testQueue() {
         classBusyness = 0;
         i = 0;
         // loop through each meeting time
-        for (var meetingDate of _class.meetingDates) {
+        for (var date of _class.meetingDates) {
             // loop through each day
             totalCourseTime = 0;
             // loop through each day of the individual meeting date
-            for (var day of meetingDate.days) { 
-                classBusyness += classDayFrequencies[day][meetingDate.start];
-                startSplit = meetingDate.start.split(":");
-                endSplit = meetingDate.end.split(":");
-                if (meetingDate.start.includes("pm") && !meetingDate.start.includes("12")) {
+            for (var day of date.days) { 
+                classBusyness += classDayFrequencies[day][date.start];
+                startSplit = date.start.split(":");
+                endSplit = date.end.split(":");
+                if (date.start.includes("pm") && !date.start.includes("12")) {
                     start = startSplit.length > 1 
                             ? 12*60 + parseInt(startSplit[0])*60 + parseInt(startSplit[1])
                             : 12*60 + parseInt(startSplit[0])*60;
@@ -363,7 +308,7 @@ function testQueue() {
                             ? parseInt(startSplit[0])*60 + parseInt(startSplit[1])
                             : parseInt(startSplit[0])*60;
                 }
-                if (meetingDate.end.includes("pm") && !meetingDate.end.includes("12")) {
+                if (date.end.includes("pm") && !date.end.includes("12")) {
                     end = endSplit.length > 1 
                             ? 12*60 + parseInt(endSplit[0])*60 + parseInt(endSplit[1])
                             : 12*60 + parseInt(endSplit[0])*60;
@@ -379,7 +324,7 @@ function testQueue() {
             i++;
         }
     }
-    QUEUE.displayContents();
+    // QUEUE.displayContents();
 }
 
 
@@ -388,9 +333,11 @@ export async function mainRestrictions(path) {
     await readCSVData(path);
     createRoomData();
     howManyClassesPerDay();
-    // console.log(classDayFrequencies);
-    // console.log(classDayTotals);
-    testQueue();
+    Queueify();
+    // console.log(QUEUE.queue.length);
+    // console.log(QUEUE.queue[0][0]);
+    // console.log(QUEUE.queue[3][0]);
+    assignRooms();
 } // end of main
 
 
