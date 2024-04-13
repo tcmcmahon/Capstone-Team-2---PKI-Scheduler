@@ -14,9 +14,6 @@ import cors from 'cors';
 import mysql from 'mysql2';
 import rooms from './uploads/rooms.json' assert {type: 'json'};
 import { finalForCalendar, formatNonFinal, storeAssigninCalendar} from './calendarFormat.js';
-import { exit } from 'process';
-import { link } from 'fs/promises';
-import { all } from 'axios';
 
 //Set up express/cors
 const ex = express();
@@ -28,14 +25,18 @@ ex.use(cors());
  * @returns {void} Sends finalForCalendar object to requester
  * @memberof Restrictions
  */
-ex.get("/Data", (req, res) => {res.json(finalForCalendar);});//Send data in json
+ex.get("/Data", (req, res) => {
+res.json(finalForCalendar);//Send data in json
+});
 
 /** Send final assignment data when /Algo path is GET requested
  * @function
  * @returns {void} Sends final object to requester
  * @memberof Restrictions
  */
-ex.get("/Algo", (req, res) => {res.json(final);});//Send data in json
+ex.get("/Algo", (req, res) => {
+    res.json(final);//Send data in json
+    });
 
 /** Start server listener on port 3001 for data requests 
  * @function
@@ -71,12 +72,18 @@ for(let i = 0; i < z.length; i++)//For all rooms add seat number to seatNumbers
 }
 
 // Array of unassignable classes
-const unassignableClasses =  ["AREN 3030 - AE DESIGN AND SIMULATION STUDIO III", "CIVE 334 - INTRODUCTION TO GEOTECHNICAL ENGINEERING",
-                              "CIVE 378 - MATERIALS OF CONSTRUCTION",            "AREN 3220 - ELECTRICAL SYSTEMS FOR BUILDINGS I",
-                              "AREN 4250 - LIGHTING DESIGN",                     "AREN 4940 - SPECIAL TOPICS IN ARCHITECTURAL ENGINEERING IV",
-                              "AREN 8220 - ELECTRICAL SYSTEMS FOR BUILDINGS II", "AREN 1030 - DESIGN AND SIMULATION STUDIO I",
-                              "AREN 4040 - BUILDING ENVELOPES",                  "CIVE 102 - GEOMATICS FOR CIVIL ENGINEERING",
-                              "CNST 112 - CONSTRUCTION COMMUNICATIONS",          "CNST 225 - INTRODUCTION TO BUILDING INFORMATION MODELING "];
+const unassignableClasses =  ["AREN 3030 - AE DESIGN AND SIMULATION STUDIO III",
+                            "CIVE 334 - INTRODUCTION TO GEOTECHNICAL ENGINEERING",
+                            "CIVE 378 - MATERIALS OF CONSTRUCTION",
+                            "AREN 3220 - ELECTRICAL SYSTEMS FOR BUILDINGS I",
+                            "AREN 4250 - LIGHTING DESIGN",
+                            "AREN 4940 - SPECIAL TOPICS IN ARCHITECTURAL ENGINEERING IV",
+                            "AREN 8220 - ELECTRICAL SYSTEMS FOR BUILDINGS II",
+                            "AREN 1030 - DESIGN AND SIMULATION STUDIO I",
+                            "AREN 4040 - BUILDING ENVELOPES",
+                            "CIVE 102 - GEOMATICS FOR CIVIL ENGINEERING",
+                            "CNST 112 - CONSTRUCTION COMMUNICATIONS",
+                            "CNST 225 - INTRODUCTION TO BUILDING INFORMATION MODELING "];
 
 export var final = [];//Array for final assignment
 
@@ -87,36 +94,6 @@ export var final = [];//Array for final assignment
  * @memberof Restrictions
 */
 
-let leftOver = [];
-
-function sort(v)
-{
-    if(v.length > 0)
-    {
-        for(let i = 0; i < z.length; i++)
-        {   let t = [];
-            let e = [];
-            for(let j = 0; j < v.length; j++)
-            {   
-                if(v[j].maxEnrollment <= seatNumbers[i] && !t.includes(v[j].startTime.slice(0,2)) && !e.includes(v[j].startTime.slice(0,2)))
-                {
-                    v[j].room = z[i];
-                    t.push(v[j].startTime.slice(0,2));
-                    e.push(v[j].endTime.slice(0,2));
-                    final.push(v[j]);
-                    v.splice(j, 1);
-                }
-            }
-        }
-        leftOver = nonFinal.filter(a => !final.find(b => (a.class === b.class)));
-        sort(leftOver);
-    }
-    else
-    {
-        return final;
-    }
-}
-
 export var nonFinal = [];//Structure for all classes with room, first pass through
 
 /**
@@ -125,9 +102,6 @@ export var nonFinal = [];//Structure for all classes with room, first pass throu
  * @returns {void} Stores unsorted assignment in array nonFinal
  * @memberof Restrictions
  */
-
-let lowP = [];
-
 function firstAssign(totalRooms)
 {   
     let k = 0;//room counter
@@ -135,10 +109,14 @@ function firstAssign(totalRooms)
     let d = [];//endTimes
     let o = [];//days
     let m = [];//maximumEnrollment
+    for(let j = 0; j < totalRooms.length; j++)
+    {
+        let t = [];
+        let l = [];
     for(let i = 0; i < classData.length; i++)//For all classes in class data, assign a room number. Will be sorted later
     {
         let y = [];//stores meeting info
-            
+        
         y = classData[i].meetingDates;//store meeting info
         u = y[0].startTime;//store startTimes
         d = y[0].endTime;//store endTimes
@@ -149,25 +127,36 @@ function firstAssign(totalRooms)
         {
             k = 0;//Reset to room 0
         }
-        else if(unassignableClasses.includes(classData[i].name) || classData[i].sectionNumber.includes("82"))//If class is an unassignable class or it is Lincoln, skip
+        else if(unassignableClasses.includes(classData[i].name) 
+                  || classData[i].sectionNumber.includes("82"))//If class is an unassignable class or it is Lincoln, skip
         {
             continue;
         }
-        else if(o == "MW" || o == "M" || o == "WF" || o == "T" || o == "W"  || o == "TR" || o == "R" || o == "F")//Store each class for each high priority day slot
-        {    
-            //Push class with information
+        else if(m <= seatNumbers[k] && !(t.includes(classData[i].class)) && !(l.includes(u)))
+        {
+            l.push(u);
+            t.push(classData[i].class);
             nonFinal.push({room: totalRooms[k], class: (classData[i].name + " Section " + classData[i].sectionNumber), days: o, startTime: u, endTime: d, maxEnrollment: m});
         }
-        else if(o == "MWF" || o == "MTWRF")
-        {
-            lowP.push({room: totalRooms[k], class: (classData[i].name + " Section " + classData[i].sectionNumber), days: o, startTime: u, endTime: d, maxEnrollment: m});
-        }
+        // else if(o == "MW"     || o == "M"
+        //      || o == "WF"     || o == "T"
+        //      || o == "MTWRF"  || o == "W"
+        //      || o == "TR"     || o == "R"
+        //      || o == "MWF"    || o == "F")//Store each class for each day slot
+        //     {    
+                //Push class with information
+            //     nonFinal.push({room: totalRooms[k], class: (classData[i].name + " Section " + classData[i].sectionNumber), days: o, startTime: u, endTime: d, maxEnrollment: m});
+            // }
         k++;//Increment to next room number
+    }}
+    for(let i = 0; i < nonFinal.length; i++)
+    {
+        if(nonFinal[i].days == "TR" && nonFinal[i].room == "256")
+        {
+            console.log(nonFinal[i])
+        }
     }
     formatNonFinal();//Reformat times to 24hr format
-    sort(nonFinal);
-    // sort(lowP);
-    storeAssigninCalendar();
 }
 
 // global variables 
@@ -257,7 +246,7 @@ async function main()// main function, is async because fs.createReadStream()
     await readCSVData();
     storeParsedData();
     firstAssign(z);
-    console.log(final.slice(0,24));
+    storeAssigninCalendar();//Store assignment data in object to send to the calendar
 } // end of main
 
 main();// launch main
