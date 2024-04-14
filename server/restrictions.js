@@ -14,6 +14,8 @@ import cors from 'cors';
 import mysql from 'mysql2';
 import rooms from './uploads/rooms.json' assert {type: 'json'};
 import { finalForCalendar, formatNonFinal, storeAssigninCalendar} from './calendarFormat.js';
+import { exit } from 'process';
+import { link } from 'fs/promises';
 
 //Set up express/cors
 const ex = express();
@@ -87,6 +89,89 @@ const unassignableClasses =  ["AREN 3030 - AE DESIGN AND SIMULATION STUDIO III",
 
 export var final = [];//Array for final assignment
 
+let correct = [];
+let notCorrect = [];
+let d = [];
+function sortMe(vars)
+{ 
+    for(let i = 0; i < z.length; i++)
+    {   
+        let t = [];
+        for(let j = 0; j < vars.length; j++)
+        {
+            if(vars[j].room == z[i] && vars[j].maxEnrollment <= seatNumbers[i])
+            {
+                t.push(vars[j]);
+                correct.push(vars[j]);
+            }
+        }  
+        vars = vars.filter(a => !t.find(b => (a.room === b.room && a.class === b.class && a.maxEnrollment === b.maxEnrollment)));
+        notCorrect = vars;
+    }
+    for(let i = 0; i < notCorrect.length; i++)
+    {
+        notCorrect[i].room = "";
+    }
+    for(let i = 0; i < z.length; i++)
+    {   
+        for(let j = 0; j < notCorrect.length; j++)
+        {
+            if(notCorrect[j].maxEnrollment <= seatNumbers[i])
+            {
+                notCorrect[j].room = z[i];
+                d.push(notCorrect[j]);
+            }
+        }
+        notCorrect = notCorrect.filter(a => !d.find(b => (a.room === b.room && a.class === b.class && a.maxEnrollment === b.maxEnrollment)));
+    }
+    sortTimes(d);
+    sortTimes(correct); 
+}
+
+let c = [];
+let b = [];
+function sortTimes(vars)
+{
+    for(let i = 0; i < z.length; i++)
+    {   
+        let t = [];
+        let a = [];
+        for(let j = 0; j < vars.length; j++)
+        {
+            if(vars[j].room == z[i] && !t.includes(vars[j].startTime))
+            {
+                t.push(vars[j].startTime);
+                final.push(vars[j]);
+            }
+            else if(vars[j].room == z[i] && t.includes(vars[j].startTime))
+            {
+                if(!a.includes(vars[j].startTime))
+                {
+                    a.push(vars[j].startTime);
+                    c.push(vars[j]);
+                }
+            }
+        }
+        b.push(a);
+    }
+    for(let i = 0; i < c.length; i++)
+    {
+        c[i].room = "";
+    }  
+    for(let j = 0; j < b.length; j++)
+    {
+        for(let i = 0; i < c.length; i++)
+        {
+            if(b[j].length != 0 && !b[j].includes(c[i].startTime))
+            {
+                b[j].push(c[i].startTime);
+                c[i].room = z[j];
+                final.push(c[i]);
+            }
+        }
+    }
+}
+
 /**
  * Sort nonFinal array of classes to resolve time conflicts in rooms
  * @param {Array<String>} totalRooms The total number of rooms in the building. Taken as parameter incase this ever changes
@@ -109,14 +194,10 @@ function firstAssign(totalRooms)
     let d = [];//endTimes
     let o = [];//days
     let m = [];//maximumEnrollment
-    for(let j = 0; j < totalRooms.length; j++)
-    {
-        let t = [];
-        let l = [];
     for(let i = 0; i < classData.length; i++)//For all classes in class data, assign a room number. Will be sorted later
     {
         let y = [];//stores meeting info
-        
+            
         y = classData[i].meetingDates;//store meeting info
         u = y[0].startTime;//store startTimes
         d = y[0].endTime;//store endTimes
@@ -128,35 +209,23 @@ function firstAssign(totalRooms)
             k = 0;//Reset to room 0
         }
         else if(unassignableClasses.includes(classData[i].name) 
-                  || classData[i].sectionNumber.includes("82"))//If class is an unassignable class or it is Lincoln, skip
+                || classData[i].sectionNumber.includes("82"))//If class is an unassignable class or it is Lincoln, skip
         {
             continue;
         }
-        else if(m <= seatNumbers[k] && !(t.includes(classData[i].class)) && !(l.includes(u)))
-        {
-            l.push(u);
-            t.push(classData[i].class);
-            nonFinal.push({room: totalRooms[k], class: (classData[i].name + " Section " + classData[i].sectionNumber), days: o, startTime: u, endTime: d, maxEnrollment: m});
-        }
-        // else if(o == "MW"     || o == "M"
-        //      || o == "WF"     || o == "T"
-        //      || o == "MTWRF"  || o == "W"
-        //      || o == "TR"     || o == "R"
-        //      || o == "MWF"    || o == "F")//Store each class for each day slot
-        //     {    
-                //Push class with information
-            //     nonFinal.push({room: totalRooms[k], class: (classData[i].name + " Section " + classData[i].sectionNumber), days: o, startTime: u, endTime: d, maxEnrollment: m});
-            // }
+        else if(   o == "MW"     || o == "M"
+                || o == "WF"     || o == "T"
+                || o == "MTWRF"  || o == "W"
+                || o == "TR"     || o == "R"
+                || o == "MWF"    || o == "F")//Store each class for each day slot
+                {    
+                    //Push class with information
+                    nonFinal.push({room: totalRooms[k], class: (classData[i].name + " Section " + classData[i].sectionNumber), days: o, startTime: u, endTime: d, maxEnrollment: m});
+                }
         k++;//Increment to next room number
-    }}
-    for(let i = 0; i < nonFinal.length; i++)
-    {
-        if(nonFinal[i].days == "TR" && nonFinal[i].room == "256")
-        {
-            console.log(nonFinal[i])
-        }
     }
     formatNonFinal();//Reformat times to 24hr format
+    sortMe(nonFinal);
 }
 
 // global variables 
@@ -246,7 +315,10 @@ async function main()// main function, is async because fs.createReadStream()
     await readCSVData();
     storeParsedData();
     firstAssign(z);
-    storeAssigninCalendar();//Store assignment data in object to send to the calendar
+    let x = [];
+    x = final.filter(a => final.find(b => (a.room === b.room && a.class !== b.class && a.startTime === b.startTime && a.endTime === b.endTime && a.days === b.days)));
+    console.log(x.length);
+    //storeAssigninCalendar();//Store assignment data in object to send to the calendar
 } // end of main
 
 main();// launch main
