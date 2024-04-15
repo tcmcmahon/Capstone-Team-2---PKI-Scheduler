@@ -75,102 +75,19 @@ for(let i = 0; i < z.length; i++)//For all rooms add seat number to seatNumbers
 
 // Array of unassignable classes
 const unassignableClasses =  ["AREN 3030 - AE DESIGN AND SIMULATION STUDIO III",
-                            "CIVE 334 - INTRODUCTION TO GEOTECHNICAL ENGINEERING",
-                            "CIVE 378 - MATERIALS OF CONSTRUCTION",
-                            "AREN 3220 - ELECTRICAL SYSTEMS FOR BUILDINGS I",
-                            "AREN 4250 - LIGHTING DESIGN",
-                            "AREN 4940 - SPECIAL TOPICS IN ARCHITECTURAL ENGINEERING IV",
-                            "AREN 8220 - ELECTRICAL SYSTEMS FOR BUILDINGS II",
-                            "AREN 1030 - DESIGN AND SIMULATION STUDIO I",
-                            "AREN 4040 - BUILDING ENVELOPES",
-                            "CIVE 102 - GEOMATICS FOR CIVIL ENGINEERING",
-                            "CNST 112 - CONSTRUCTION COMMUNICATIONS",
-                            "CNST 225 - INTRODUCTION TO BUILDING INFORMATION MODELING "];
+                              "CIVE 334 - INTRODUCTION TO GEOTECHNICAL ENGINEERING",
+                              "CIVE 378 - MATERIALS OF CONSTRUCTION",
+                              "AREN 3220 - ELECTRICAL SYSTEMS FOR BUILDINGS I",
+                              "AREN 4250 - LIGHTING DESIGN",
+                              "AREN 4940 - SPECIAL TOPICS IN ARCHITECTURAL ENGINEERING IV",
+                              "AREN 8220 - ELECTRICAL SYSTEMS FOR BUILDINGS II",
+                              "AREN 1030 - DESIGN AND SIMULATION STUDIO I",
+                              "AREN 4040 - BUILDING ENVELOPES",
+                              "CIVE 102 - GEOMATICS FOR CIVIL ENGINEERING",
+                              "CNST 112 - CONSTRUCTION COMMUNICATIONS",
+                              "CNST 225 - INTRODUCTION TO BUILDING INFORMATION MODELING "];
 
 export var final = [];//Array for final assignment
-
-let correct = [];
-let notCorrect = [];
-let d = [];
-function sortMe(vars)
-{ 
-    for(let i = 0; i < z.length; i++)
-    {   
-        let t = [];
-        for(let j = 0; j < vars.length; j++)
-        {
-            if(vars[j].room == z[i] && vars[j].maxEnrollment <= seatNumbers[i])
-            {
-                t.push(vars[j]);
-                correct.push(vars[j]);
-            }
-        }  
-        vars = vars.filter(a => !t.find(b => (a.room === b.room && a.class === b.class && a.maxEnrollment === b.maxEnrollment)));
-        notCorrect = vars;
-    }
-    for(let i = 0; i < notCorrect.length; i++)
-    {
-        notCorrect[i].room = "";
-    }
-    for(let i = 0; i < z.length; i++)
-    {   
-        for(let j = 0; j < notCorrect.length; j++)
-        {
-            if(notCorrect[j].maxEnrollment <= seatNumbers[i])
-            {
-                notCorrect[j].room = z[i];
-                d.push(notCorrect[j]);
-            }
-        }
-        notCorrect = notCorrect.filter(a => !d.find(b => (a.room === b.room && a.class === b.class && a.maxEnrollment === b.maxEnrollment)));
-    }
-    sortTimes(d);
-    sortTimes(correct); 
-}
-
-let c = [];
-let b = [];
-function sortTimes(vars)
-{
-    for(let i = 0; i < z.length; i++)
-    {   
-        let t = [];
-        let a = [];
-        for(let j = 0; j < vars.length; j++)
-        {
-            if(vars[j].room == z[i] && !t.includes(vars[j].startTime))
-            {
-                t.push(vars[j].startTime);
-                final.push(vars[j]);
-            }
-            else if(vars[j].room == z[i] && t.includes(vars[j].startTime))
-            {
-                if(!a.includes(vars[j].startTime))
-                {
-                    a.push(vars[j].startTime);
-                    c.push(vars[j]);
-                }
-            }
-        }
-        b.push(a);
-    }
-    for(let i = 0; i < c.length; i++)
-    {
-        c[i].room = "";
-    }  
-    for(let j = 0; j < b.length; j++)
-    {
-        for(let i = 0; i < c.length; i++)
-        {
-            if(b[j].length != 0 && !b[j].includes(c[i].startTime))
-            {
-                b[j].push(c[i].startTime);
-                c[i].room = z[j];
-                final.push(c[i]);
-            }
-        }
-    }
-}
 
 /**
  * Sort nonFinal array of classes to resolve time conflicts in rooms
@@ -225,7 +142,6 @@ function firstAssign(totalRooms)
         k++;//Increment to next room number
     }
     formatNonFinal();//Reformat times to 24hr format
-    sortMe(nonFinal);
 }
 
 // global variables 
@@ -316,8 +232,8 @@ async function main()// main function, is async because fs.createReadStream()
     storeParsedData();
     firstAssign(z);
     let x = [];
-    x = final.filter(a => final.find(b => (a.room === b.room && a.class !== b.class && a.startTime === b.startTime && a.endTime === b.endTime && a.days === b.days)));
-    console.log(x.length);
+    // x = final.filter(a => final.find(b => (a.room === b.room && a.class !== b.class && a.startTime === b.startTime && a.endTime === b.endTime && a.days === b.days)));
+    // console.log(x.length);
     //storeAssigninCalendar();//Store assignment data in object to send to the calendar
 } // end of main
 
