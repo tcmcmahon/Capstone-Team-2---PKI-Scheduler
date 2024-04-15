@@ -1,0 +1,34 @@
+/* AlgoResult.css */
+
+.algo-container {
+    padding: 20px;
+    text-align: center;
+}
+
+.algo-header {
+    background-color: #282c34;
+    color: white;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.algo-title {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.algo-content {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.algo-data {
+    white-space: pre-wrap; /* Wrap text and maintain line breaks */
+    font-family: 'Courier New', Courier, monospace; /* Use a monospace font for better readability of data */
+}
+
+.algo-logo {
+    max-width: 600px; /* Limit the maximum width of the logo */
+    margin-bottom: 30px; /* Add margin to separate the logo from the title */
+}
+
