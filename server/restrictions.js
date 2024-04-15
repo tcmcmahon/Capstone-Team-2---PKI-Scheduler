@@ -57,10 +57,10 @@ ex.listen(3001, () => console.log("Server is up"));//Listen on port 3001 for dat
  * @returns {void} Logs status of attempted connection to the console
  * @memberof Restrictions
  */ 
-connect.connect((err) => {
-    if (err) throw err;
-    console.log('Connected to the remote database!');
-});
+// connect.connect((err) => {
+//     if (err) throw err;
+//     console.log('Connected to the remote database!');
+// });
 
 let z = Object.keys(rooms);//Total number of Rooms
 let seatNumbers = [];//Seats for each room
