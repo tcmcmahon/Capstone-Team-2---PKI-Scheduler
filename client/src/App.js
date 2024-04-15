@@ -12,12 +12,6 @@ import AlgoResult from "./pages/AlgoResult";
 import { Route, Routes } from "react-router-dom";
 import "./App.css"; // Import the App.css file for styling
 
-
-/**
- * Function for rendering the Navigation bar
- * @returns {html} Navigation bar for all pages
- * @memberof RenderNavbar
- */
 function App() {
     return (
         <div className="app-container">

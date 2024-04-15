@@ -8,12 +8,6 @@ import img from '../resources/O-UNO_Type_Color_White.png';
 import img2 from '../resources/photo-1606761568499-6d2451b23c66.avif';
 import "./Home.css"; // Import the Home.css file for styling
 
-/**
- * Function for rendering the home page for the web application
- * @returns {html} Html home page to be displayed on opening of web app
- * @memberof Home
- */
-
 export default function Home() {
     return( 
         <div className="home-container">

@@ -1,0 +1,51 @@
+/* Home.css */
+
+.home-container {
+    padding: 20px;
+}
+
+.home-header {
+    background-size: cover;
+    background-position: center;
+    text-align: center;
+    padding: 100px 0;
+    color: #fff;
+}
+
+.home-logo {
+    max-width: 600px;
+}
+
+.home-title {
+    font-size: 2.5rem;
+    margin-top: 20px;
+}
+
+.home-subtitle {
+    font-size: 1.2rem;
+    margin-top: 20px;
+}
+
+.home-content {
+    margin-top: 40px;
+    color: #333;
+}
+
+.home-footer {
+    margin-top: 40px;
+    text-align: center;
+    color: #666;
+    font-size: 0.9rem;
+    font-weight: bold; /* Apply bold font weight */
+    font-size: 1.1rem; /* Increase font size */
+}
+
+.home-content strong {
+    font-weight: bold;
+}
+
+.img2 {
+    width: 100%; /* Adjust the width as needed */
+    height: auto; /* Maintain aspect ratio */
+    max-height: 600px; /* Adjust the maximum height as needed */
+}
