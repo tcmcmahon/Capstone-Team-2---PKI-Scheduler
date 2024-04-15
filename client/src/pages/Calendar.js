@@ -17,42 +17,48 @@ import {
   Toolbar,
   DateNavigator,
 } from '@devexpress/dx-react-scheduler-material-ui';
-import img from '../resources/O-UNO_Type_Color_White.png';
+import img from '../resources/O-UNO_Type_Color_White.png'; // Import the new logo image
 import axios from 'axios';
+import "./Upload.css"; // Import the Upload.css styles
 
-let cData = [];//Array for calendar data received from restrictions.js
-let response;//Variable for response from axios GET request to /Data
-let result;//Result of resolved response from axios GET request
+let cData = [];
+let response;
+let result;
 
-response = await axios.get("http://localhost:3001/Data");//Store response from GET request
+response = await axios.get("http://localhost:3001/Data");
 
-result = response.data;//Resolve data from response
-cData = (JSON.stringify(result));//Turn resolved data into a string
-cData = JSON.parse(cData);//Turn resovled data into JSON
-const currentDate = '2024-01-01';//Current date for calendar
+result = response.data;
+cData = (JSON.stringify(result));
+cData = JSON.parse(cData);
+const currentDate = '2024-01-01';
 
 /**
  * Function for rendering the calendar page
  * @returns {html} Html page for calendar component/GUI
  * @memberof Calendar
  */
-export default function Calendar(){
-  return(
-    <div>
-      <h1 style={{backgroundImage: `url(${img})`, backgroundSize: "cover", height: "110px", backgroundColor: "black"}}></h1>
-      <h2 style={{textAlign: "center", margin: "auto", backgroundColor: "black", color: "white", width: "23%"}}>Class schedule for the week</h2>
-  <Paper>
-    <Scheduler data={cData}>
-    <ViewState defaultCurrentDate={currentDate} />
-    <WeekView startDayHour={8} endDayHour={20} excludedDays={[0,6]} />
-    <DayView startDayHour={8} endDayHour={20} excludedDays={[0,6]} />
-    <Appointments />
-    <AppointmentTooltip/>
-    <Toolbar/>
-    <DateNavigator/>
-    <ViewSwitcher/>
-    </Scheduler>
-  </Paper>
-  </div>
-);
+export default function Calendar() {
+  return (
+    <div className="upload-container"> {/* Apply the same class name */}
+      <header className="upload-header"> {/* Apply the same class name */}
+        <img src={img} alt="Logo" className="upload-logo" /> {/* Use the new logo */}
+        <h1 className="upload-title">Class schedule for the week</h1> {/* Use the same title */}
+      </header>
+      <div className="upload-content"> {/* Apply the same class name */}
+        <Paper>
+          <Scheduler data={cData}>
+            <ViewState defaultCurrentDate={currentDate} />
+            <WeekView startDayHour={8} endDayHour={20} excludedDays={[0, 6]} />
+            <DayView startDayHour={8} endDayHour={20} excludedDays={[0, 6]} />
+            <Appointments />
+            <AppointmentTooltip />
+            <Toolbar />
+            <DateNavigator />
+            <ViewSwitcher />
+          </Scheduler>
+        </Paper>
+      </div>
+    </div>
+  );
 }
+
