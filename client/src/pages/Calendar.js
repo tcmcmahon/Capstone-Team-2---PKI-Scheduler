@@ -24,16 +24,16 @@ import {
   DateNavigator,
 } from '@devexpress/dx-react-scheduler-material-ui';
 import img from '../resources/O-UNO_Type_Color_White.png';
-import axios from 'axios';
+// import axios from 'axios';
 
-let cData = [];//Array for calendar data received from restrictions.js
-let response;//Variable for response from axios GET request to /Data
-let result;//Result of resolved response from axios GET request
+// let cData = [];//Array for calendar data received from restrictions.js
+// let response; Variable for response from axios GET request to /Data
+// let result;//Result of resolved response from axios GET request
 
 //response = await axios.get("http://localhost:3001/Data");//Store response from GET request
 //substituting for the changes we need from the Data GET
 
-response = [
+const res = [
   {
     "startDate": "2024-01-02T14:45",
     "endDate": "2024-01-02T17:15",
@@ -102,10 +102,10 @@ response = [
   }
 ];
 
-result = response.data;//Resolve data from response
+// result = response.data;//Resolve data from response
 
-cData = (JSON.stringify(result));//Turn resolved data into a string
-cData = JSON.parse(cData);//Turn resolved data into JSON
+// cData = (JSON.stringify(result));//Turn resolved data into a string
+// cData = JSON.parse(cData);//Turn resolved data into JSON
 const currentDate = '2024-01-01';//Current date for calendar
 const rooms = [
   {text: 'Room 252', id: 252},
@@ -120,7 +120,7 @@ export default class Demo extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      data: cData,
+      data: res,
       resources: [{
         fieldName: 'Rooms',
         title: 'Classroom',
@@ -146,7 +146,7 @@ export default class Demo extends React.PureComponent {
         <h1 style={{backgroundImage: `url(${img})`, backgroundSize: "cover", height: "110px", backgroundColor: "black"}}></h1>
         <h2 style={{textAlign: "center", margin: "auto", backgroundColor: "black", color: "white", width: "23%"}}>Class schedule for the week</h2>
     <Paper>
-      <Scheduler data={cData}>
+      <Scheduler data={res}>
       <ViewState defaultCurrentDate={currentDate} />
       <GroupingState grouping = {grouping} />
       <WeekView startDayHour={8} endDayHour={20} excludedDays={[0,6]} />
