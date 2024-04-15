@@ -4,12 +4,14 @@
  * @namespace RenderNavbar
  */
 
-import Navbar from "./Navbar"
-import Home from "./pages/Home"
-import Upload from "./pages/Upload"
-import Calendar from "./pages/Calendar"
-import AlgoResult from "./pages/AlgoResult"
-import { Route, Routes } from "react-router-dom"
+import Navbar from "./Navbar";
+import Home from "./pages/Home";
+import Upload from "./pages/Upload";
+import Calendar from "./pages/Calendar";
+import AlgoResult from "./pages/AlgoResult";
+import { Route, Routes } from "react-router-dom";
+import "./App.css"; // Import the App.css file for styling
+
 
 /**
  * Function for rendering the Navigation bar
@@ -18,9 +20,9 @@ import { Route, Routes } from "react-router-dom"
  */
 function App() {
     return (
-        <>
+        <div className="app-container">
             <Navbar />
-            <div className="container">
+            <div className="page-container">
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/upload" element={<Upload />} />
@@ -28,8 +30,9 @@ function App() {
                     <Route path="/algorithm" element={<AlgoResult />} />
                 </Routes>
             </div>
-        </>
-    )
+        </div>
+    );
 }
 
-export default App
+export default App;
+
