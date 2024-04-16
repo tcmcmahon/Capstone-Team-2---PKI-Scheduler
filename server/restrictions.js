@@ -98,7 +98,6 @@ export var final = [];//Array for final assignment
 */
 
 let leftOver = [];
-let lowP = [];
 
 function sort(v)
 {
@@ -109,12 +108,7 @@ function sort(v)
             let e = [];
             for(let j = 0; j < v.length; j++)
             {   
-                if(v[j].days == "MWF" || v[j].days == "MTWRF")
-                {
-                    lowP.push(v[j]);
-                    v.splice(j, 1);
-                }
-                else if(v[j].maxEnrollment <= seatNumbers[i] && !t.includes(v[j].startTime.slice(0,2)) && !e.includes(v[j].startTime.slice(0,2)))
+                if(v[j].maxEnrollment <= seatNumbers[i] && !t.includes(v[j].startTime.slice(0,2)) && !e.includes(v[j].startTime.slice(0,2)))
                 {
                     v[j].room = z[i];
                     t.push(v[j].startTime.slice(0,2));
@@ -142,6 +136,8 @@ export var nonFinal = [];//Structure for all classes with room, first pass throu
  * @memberof Restrictions
  */
 
+let lowP = [];
+
 function firstAssign(totalRooms)
 {   
     let k = 0;//room counter
@@ -168,19 +164,21 @@ function firstAssign(totalRooms)
         {
             continue;
         }
-        else if(   o == "MW"     || o == "M"
-                || o == "WF"     || o == "T"
-                || o == "MTWRF"  || o == "W"
-                || o == "TR"     || o == "R"
-                || o == "MWF"    || o == "F")//Store each class for each day slot
+        else if(o == "MW" || o == "M" || o == "WF" || o == "T"
+                || o == "W"  || o == "TR" || o == "R" || o == "F")//Store each class for each day slot
                 {    
                     //Push class with information
                     nonFinal.push({room: totalRooms[k], class: (classData[i].name + " Section " + classData[i].sectionNumber), days: o, startTime: u, endTime: d, maxEnrollment: m});
                 }
+        else if(o == "MWF" || o == "MTWRF")
+        {
+            lowP.push({room: totalRooms[k], class: (classData[i].name + " Section " + classData[i].sectionNumber), days: o, startTime: u, endTime: d, maxEnrollment: m});
+        }
         k++;//Increment to next room number
     }
     formatNonFinal();//Reformat times to 24hr format
     sort(nonFinal);
+    // sort(lowP);
     storeAssigninCalendar();
 }
 
