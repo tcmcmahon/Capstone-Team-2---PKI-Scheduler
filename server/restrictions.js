@@ -16,6 +16,7 @@ import rooms from './uploads/rooms.json' assert {type: 'json'};
 import { finalForCalendar, formatNonFinal, storeAssigninCalendar} from './calendarFormat.js';
 import { exit } from 'process';
 import { link } from 'fs/promises';
+import { all } from 'axios';
 
 //Set up express/cors
 const ex = express();
@@ -96,6 +97,42 @@ export var final = [];//Array for final assignment
  * @memberof Restrictions
 */
 
+let leftOver = [];
+let lowP = [];
+
+function sort(v)
+{
+    if(v.length > 0)
+    {
+        for(let i = 0; i < z.length; i++)
+        {   let t = [];
+            let e = [];
+            for(let j = 0; j < v.length; j++)
+            {   
+                if(v[j].days == "MWF" || v[j].days == "MTWRF")
+                {
+                    lowP.push(v[j]);
+                    v.splice(j, 1);
+                }
+                else if(v[j].maxEnrollment <= seatNumbers[i] && !t.includes(v[j].startTime.slice(0,2)) && !e.includes(v[j].startTime.slice(0,2)))
+                {
+                    v[j].room = z[i];
+                    t.push(v[j].startTime.slice(0,2));
+                    e.push(v[j].endTime.slice(0,2));
+                    final.push(v[j]);
+                    v.splice(j, 1);
+                }
+            }
+        }
+        leftOver = nonFinal.filter(a => !final.find(b => (a.class === b.class)));
+        sort(leftOver);
+    }
+    else
+    {
+        return final;
+    }
+}
+
 export var nonFinal = [];//Structure for all classes with room, first pass through
 
 /**
@@ -104,6 +141,7 @@ export var nonFinal = [];//Structure for all classes with room, first pass throu
  * @returns {void} Stores unsorted assignment in array nonFinal
  * @memberof Restrictions
  */
+
 function firstAssign(totalRooms)
 {   
     let k = 0;//room counter
@@ -142,6 +180,8 @@ function firstAssign(totalRooms)
         k++;//Increment to next room number
     }
     formatNonFinal();//Reformat times to 24hr format
+    sort(nonFinal);
+    storeAssigninCalendar();
 }
 
 // global variables 
@@ -231,10 +271,7 @@ async function main()// main function, is async because fs.createReadStream()
     await readCSVData();
     storeParsedData();
     firstAssign(z);
-    let x = [];
-    // x = final.filter(a => final.find(b => (a.room === b.room && a.class !== b.class && a.startTime === b.startTime && a.endTime === b.endTime && a.days === b.days)));
-    // console.log(x.length);
-    //storeAssigninCalendar();//Store assignment data in object to send to the calendar
+    console.log(final.length);
 } // end of main
 
 main();// launch main
