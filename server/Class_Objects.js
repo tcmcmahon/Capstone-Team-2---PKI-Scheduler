@@ -78,9 +78,9 @@ export class CourseDescription {
 
 /* linked list of classroom data */
 export class ClassroomTimeSlot {
-    constructor(_class, next=null) {
+    constructor(_class=null, next=null) {
         this.class = _class;
-        this.nextClass = next;
+        this.next = next;
     }
 }
 
@@ -96,12 +96,12 @@ export class ClassroomTimeData {
                          'IS&T': null};   // {bool, bool} {IS&T, CoE}
         this.roomSize = -1;
         this.isLab = null;     
-        this.monClasses = null;           // monday classes in order
-        this.tueClasses = null;           // tuesday classes in order
-        this.wedClasses = null;           // wednesday classes in order
-        this.thuClasses = null;           // thursday classes in order
-        this.friClasses = null;           // friday classes in order
-        this.s_sClasses = null;           // s classes in order
+        this.monClasses = new ClassroomTimeSlot();           // monday classes in order
+        this.tueClasses = new ClassroomTimeSlot();           // tuesday classes in order
+        this.wedClasses = new ClassroomTimeSlot();           // wednesday classes in order
+        this.thuClasses = new ClassroomTimeSlot();           // thursday classes in order
+        this.friClasses = new ClassroomTimeSlot();           // friday classes in order
+        this.s_sClasses = new ClassroomTimeSlot();           // s classes in order
     }
     checkTimeConflicts() {
         var days = [this.monClasses, this.tueClasses, this.wedClasses, this.thuClasses, this.friClasses];

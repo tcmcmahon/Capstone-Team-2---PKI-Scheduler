@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/jacobfinley/Documents/classes/2024Spring/OS/Homework/Preprojects/Preproj6/src",
+      "program": "/Users/jacobfinley/Documents/classes/2024Spring/OS/Homework/Preprojects/Preproj6/src/build/Debug/outDebug"
+    }
+  ]
+}

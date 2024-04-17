@@ -1,9 +1,8 @@
 /* import data */
 import {CourseDescription, ClassroomTimeData, PriorityQueue, ClassroomTimeSlot} from './Class_Objects.js';
-import fs, { read } from 'fs';
+import fs from 'fs';
 import { parse } from 'csv-parse';
 import rooms from "./uploads/rooms.json" assert {type: "json"};
-import { setUncaughtExceptionCaptureCallback } from 'process';
 
 
 /* global variables */
@@ -44,9 +43,9 @@ const unassignableClassesSections =[['1', '2', '3', '4'],
                                     ['1', '2', '3', '4'],
                                     ['2', '4'],
                                     ['2', '3'],
-                                    ['2']]
+                                    ['2']];
 const meetOnS = ["ECEN 891 - SPECIAL TOPICS IN ELECTRIC AND COMPUTER ENGINEERING IV",
-                "ECEN 491 - SPECIAL TOPICS IN ELECTRIC AND COMPUTER ENGINEERING IV"]
+                "ECEN 491 - SPECIAL TOPICS IN ELECTRIC AND COMPUTER ENGINEERING IV"];
 var roomsList = [];
 var classDayFrequencies = {'M': {},'T': {},'W': {},'R': {},'F': {},'S': {}}
 var classDayTotals = {'M': 0,'T': 0,'W': 0,'R': 0,'F': 0,'S': 0}
@@ -63,11 +62,12 @@ function readCSVData(file_path) {
         ) 
         .on('data', function (row) { // iterates through each row in csv file
             var cd = new CourseDescription(); // creates object to store class data
-            if (row[34] !== '' && cd.checkIfCrossListed([row[6], row[7]], row[34], crossListedCoursesToCheck)) { /* cross listed */ }
+            if (row[34] !== '' && cd.checkIfCrossListed([row[6], row[7]], row[34], crossListedCoursesToCheck)) { /* cross listed / class is already in classData */ }
+            else if (Number(row[7]) >= 800) { /* bad section number */ } 
             else if (row[0] === '' 
                     && unassignableClasses.includes(prevClassName) 
-                    && unassignableClassesSections[unassignableClasses.indexOf(prevClassName)].includes(row[7])) { }
-            else if (row[29] > 60 || row[35] > 60) {}
+                    && unassignableClassesSections[unassignableClasses.indexOf(prevClassName)].includes(row[7])) { /* class is unassignable with bad section number */ }
+            else if (row[29] > 60 || row[35] > 60) { /* too many students to sit */ }
             else if (row[0] === '') {
                 cd.setCourseName(prevClassName);
                 cd.setSectionNum(row[7]);
@@ -83,6 +83,7 @@ function readCSVData(file_path) {
             } // end of if statement
         })
         .on('end', function() {
+            console.log(classData.length);
             resolve(classData); // saves the data for classData
         }) // end of fs read
     }); // end of return
@@ -146,23 +147,23 @@ function compareMeetingDates(date1, date2) {
                         'endHour': null,
                         'endMin': null};
     // splice the start hours
-    var date1split = date1.startTime.slice(0, -2).split(":");
-    var date2split = date2.startTime.slice(0, -2).split(":");
+    var date1split = date1.start.slice(0, -2).split(":");
+    var date2split = date2.start.slice(0, -2).split(":");
     // set start hours
-    parsedDate1.startHour = date1.startTime.includes("pm") && parseInt(date1split[0]) !== 12 
+    parsedDate1.startHour = date1.start.includes("pm") && parseInt(date1split[0]) !== 12 
                             ? parseInt(date1split[0]) + 12 : parseInt(date1split[0]);
-    parsedDate2.startHour = date2.startTime.includes("pm") && parseInt(date2split[0]) !== 12 
+    parsedDate2.startHour = date2.start.includes("pm") && parseInt(date2split[0]) !== 12 
                             ? parseInt(date2split[0]) + 12 : parseInt(date2split[0]);
     // set start minutes 
     parsedDate1.startMin = isNaN(parseInt(date1split[1])) ? 0 : parseInt(date1split[1]);
     parsedDate2.startMin = isNaN(parseInt(date2split[1])) ? 0 : parseInt(date2split[1]);
     // splice the end hours
-    date1split = date1.endTime.slice(0, -2).split(":");
-    date2split = date2.endTime.slice(0, -2).split(":");
+    date1split = date1.end.slice(0, -2).split(":");
+    date2split = date2.end.slice(0, -2).split(":");
     // set end hours
-    parsedDate1.endHour = date1.endTime.includes("pm") && parseInt(date1split[0]) !== 12 
+    parsedDate1.endHour = date1.end.includes("pm") && parseInt(date1split[0]) !== 12 
                             ? parseInt(date1split[0]) + 12 : parseInt(date1split[0]);
-    parsedDate2.endHour = date2.endTime.includes("pm") && parseInt(date2split[0]) !== 12 
+    parsedDate2.endHour = date2.end.includes("pm") && parseInt(date2split[0]) !== 12 
                             ? parseInt(date2split[0]) + 12 : parseInt(date2split[0]);
     // set start minutes 
     parsedDate1.endMin = isNaN(parseInt(date1split[1])) ? 0 : parseInt(date1split[1]);
@@ -179,7 +180,6 @@ function compareMeetingDates(date1, date2) {
 
 
 function canBeAssigned(_class, room) {
-    var found = true;
     var roomClone = structuredClone(room); // backup in case room isn't available
     var currClass, prevClass = null;
     var classDays = [];
@@ -208,29 +208,32 @@ function canBeAssigned(_class, room) {
                 console.log("WE HAVE A PROBLEM");
         }
     }
-    for (var classDay of classDays) {
-        if (classDay === null) {
-            classDay = new ClassroomTimeSlot(_class);
+    for (var i in classDays) {
+        if (classDays[i].class === null) {
+            classDays[i].class = _class;
             continue;
         }
-        currClass = classDay;
-        timeDiff = compareMeetingDates(_class.MeetingDates, currClass.class.meetingDates);
+        currClass = classDays[i];
+        timeDiff = compareMeetingDates(_class.meetingDates, currClass.class.meetingDates);
         while (currClass !== null) {
-            if (timeDiff === 1) {
+            if (timeDiff > 0) {
                 prevClass = currClass;
-                currClass = currClass.next
+                currClass = currClass.next;
             }
             else if (timeDiff === 0) {
-                found = false;
                 room = roomClone;
-                return found;
+                return false;
             }
             else if (timeDiff < 0) {
                 prevClass.next = new ClassroomTimeSlot(_class, currClass);
             }
         }
+        if (currClass === null) {
+            prevClass.next = new ClassroomTimeSlot(_class, currClass);
+        }
     }
-    return found;
+    
+    return true;
 }
 
 
@@ -238,9 +241,10 @@ function canBeAssigned(_class, room) {
 function assignRooms() {
     // add courses to queue first
     // var test_limit = [0, 1, 14, 42, 50, 69, 73, 80, 115, 142, 143, 160];
-    var test_limit = [0];
+    var test_limit = [0, 31, 32, 36];  // 0, 3
     var test_data = [];
-    for (var i = 0; i < QUEUE.queue.length; i++) {
+    var len = QUEUE.queue.length;
+    for (var i = 0; i < len; i++) {
         test_data.push(QUEUE.dequeue());
         if (!test_limit.includes(i)) {
             test_data.pop()
@@ -249,7 +253,7 @@ function assignRooms() {
     var i = 0;
     var _class = test_data.shift();
     while (_class !== undefined) {
-        console.log(i++);
+        console.log("\n\n" + i++);
         console.log("\Assigning class: " + _class[0].name);
         // console.log(_class[0]);
         var assignedRoom = false // boolean value to tell if class has already been assigned
@@ -273,9 +277,9 @@ function assignRooms() {
             numRoomsChecked++;
         }
         console.log(assignedRoom ? "\tAssigned: " + _class[0].name + "\n\tto: " + roomsList[--numRoomsChecked].roomNumber + "\n\n" : "\tCouldn't find a classroom for " + _class[0].name + "\n\n");
+        // console.log(roomsList[numRoomsChecked]);
         _class = test_data.shift();
     }
-    console.log(roomsList[5]);
 }
 
 
@@ -334,10 +338,12 @@ export async function mainRestrictions(path) {
     createRoomData();
     howManyClassesPerDay();
     Queueify();
-    // console.log(QUEUE.queue.length);
-    // console.log(QUEUE.queue[0][0]);
-    // console.log(QUEUE.queue[3][0]);
-    assignRooms();
+    console.log(QUEUE.queue[0][0]);
+    console.log(QUEUE.queue[31][0]);
+    console.log(QUEUE.queue[32][0]);
+    console.log(QUEUE.queue[36][0]);
+    // assignRooms();
+    // console.log(roomsList[5]);
 } // end of main
 
 
