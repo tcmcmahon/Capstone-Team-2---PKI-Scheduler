@@ -13,7 +13,7 @@ import express from 'express';
 import cors from 'cors';
 import mysql from 'mysql2';
 import rooms from './uploads/rooms.json' assert {type: 'json'};
-import { finalForCalendar, formatNonFinal, storeAssigninCalendar} from './calendarFormat.js';
+import { finalForCalendar, formatTimes, storeAssigninCalendar} from './calendarFormat.js';
 import { exit } from 'process';
 import { link } from 'fs/promises';
 import { all } from 'axios';
@@ -88,17 +88,18 @@ export var final = [];//Array for final assignment
 */
 
 let leftOver = [];
-
+let t1 = [];
+let e1 = [];
 function sort(v)
 {
-    if(v.length > 0)
-    {
+    // if(v.length > 0)
+    // {
         for(let i = 0; i < z.length; i++)
         {   let t = [];
             let e = [];
             for(let j = 0; j < v.length; j++)
             {   
-                if(v[j].maxEnrollment <= seatNumbers[i] && !t.includes(v[j].startTime.slice(0,2)) && !e.includes(v[j].startTime.slice(0,2)))
+                if(v[j].maxEnrollment <= seatNumbers[i] && !e.includes(v[j].endTime.slice(0,2)) && !t.includes(v[j].startTime.slice(0,2)) && !e.includes(v[j].startTime.slice(0,2)))
                 {
                     v[j].room = z[i];
                     t.push(v[j].startTime.slice(0,2));
@@ -107,13 +108,35 @@ function sort(v)
                     v.splice(j, 1);
                 }
             }
+            t1.push(t);
+            e1.push(e);
         }
+        
         leftOver = nonFinal.filter(a => !final.find(b => (a.class === b.class)));
-        sort(leftOver);
-    }
-    else
+    //     sort(leftOver);
+    // }
+    // else
+    // {
+    //     return final;
+    // }
+    finish();
+}
+
+function finish()
+{
+    for(let i = 0; i < z.length; i++)
     {
-        return final;
+        for(let j = 0; j < leftOver.length; j++)
+        {
+            if(leftOver[j].maxEnrollment <= seatNumbers[i] && !e1[i].includes(leftOver[j].endTime.slice(0,2)) && t1[i].includes(leftOver[j].startTime.slice(0,2)) && !t.includes(v[j].endTime.slice(0,2)))
+            {
+                leftOver[j].room = z[i];
+                t1[i].push(leftOver[j].startTime.slice(0,2));
+                e1[i].push(leftOver[j].endTime.slice(0,2));
+                final.push(leftOver[j]);
+                leftOver.splice(j,1);
+            }
+        }
     }
 }
 
@@ -153,18 +176,18 @@ function firstAssign(totalRooms)
         {
             continue;
         }
-        else if(o == "MW" || o == "M" || o == "WF" || o == "T" || o == "W"  || o == "TR" || o == "R" || o == "F")//Store each class for each high priority day slot
+        else if(o == "MW" || o == "TR")//Store each class for each high priority day slot
         {    
             //Push class with information
             nonFinal.push({room: totalRooms[k], class: (classData[i].name + " Section " + classData[i].sectionNumber), days: o, startTime: u, endTime: d, maxEnrollment: m});
         }
-        else if(o == "MWF" || o == "MTWRF")
+        else if(o == "MWF" || o == "MTWRF" || o == "WF" || o == "M" || o == "T" || o == "W" || o == "R" || o == "F")
         {
             lowP.push({room: totalRooms[k], class: (classData[i].name + " Section " + classData[i].sectionNumber), days: o, startTime: u, endTime: d, maxEnrollment: m});
         }
         k++;//Increment to next room number
     }
-    formatNonFinal();//Reformat times to 24hr format
+    formatTimes(nonFinal);//Reformat times to 24hr format
     sort(nonFinal);
     // sort(lowP);
     storeAssigninCalendar();
@@ -257,7 +280,16 @@ async function main()// main function, is async because fs.createReadStream()
     await readCSVData();
     storeParsedData();
     firstAssign(z);
-    console.log(final.slice(0,24));
+    for(let i = 0; i < z.length; i++)
+    {
+        for(let j = 0; j < final.length; j++)
+        {
+            if(final[j].room == z[i] && (final[j].days == "TR"))
+            {
+                console.log(final[j]);
+            }
+        }
+    }
 } // end of main
 
 main();// launch main

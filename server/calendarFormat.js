@@ -81,171 +81,175 @@ export function storeAssigninCalendar()//Stores final assignment data into final
     }
 }
 
-export function formatNonFinal()//Reformats time and date information to work with the calendar page
+export function formatTimes(v)//Reformats time and date information to work with the calendar page
 {   
-    for(let i = 0; i < nonFinal.length; i++)//For all calendar data, reformat startTime from 12hr to 24hr format
+    for(let i = 0; i < v.length; i++)//For all calendar data, reformat startTime from 12hr to 24hr format
     {
-        if(nonFinal[i].startTime.startsWith("1:") == true)
+        if(v[i].startTime.startsWith("1:") == true)
         {
-            nonFinal[i].startTime = nonFinal[i].startTime.replace("1:", "13:");
+            v[i].startTime = v[i].startTime.replace("1:", "13:");
         }
-        else if(nonFinal[i].startTime.startsWith("2:") == true)
+        else if(v[i].startTime.startsWith("2:") == true)
         {
-            nonFinal[i].startTime = nonFinal[i].startTime.replace("2:", "14:");
+            v[i].startTime = v[i].startTime.replace("2:", "14:");
         }
-        else if(nonFinal[i].startTime.startsWith("3:") == true)
+        else if(v[i].startTime.startsWith("3:") == true)
         {
-            nonFinal[i].startTime = nonFinal[i].startTime.replace("3:", "15:");
+            v[i].startTime = v[i].startTime.replace("3:", "15:");
         }
-        else if(nonFinal[i].startTime.startsWith("4:") == true)
+        else if(v[i].startTime.startsWith("4:") == true)
         {
-            nonFinal[i].startTime = nonFinal[i].startTime.replace("4:", "16:");
+            v[i].startTime = v[i].startTime.replace("4:", "16:");
         }
-        else if(nonFinal[i].startTime.startsWith("5:") == true)
+        else if(v[i].startTime.startsWith("5:") == true)
         {
-            nonFinal[i].startTime = nonFinal[i].startTime.replace("5:", "17:");
+            v[i].startTime = v[i].startTime.replace("5:", "17:");
         }
-        else if(nonFinal[i].startTime.startsWith("6:") == true)
+        else if(v[i].startTime.startsWith("6:") == true)
         {
-            nonFinal[i].startTime = nonFinal[i].startTime.replace("6:", "18:");
+            v[i].startTime = v[i].startTime.replace("6:", "18:");
         }
-        else if(nonFinal[i].startTime.startsWith("9:") == true)
+        else if(v[i].startTime.startsWith("9:") == true)
         {
-            nonFinal[i].startTime = nonFinal[i].startTime.replace("9:", "09:");
+            v[i].startTime = v[i].startTime.replace("9:", "09:");
         }
-        else if(nonFinal[i].startTime == ("9pm"))
+        else if(v[i].startTime == ("9pm"))
         {
-            nonFinal[i].startTime = nonFinal[i].startTime.replace("9", "21:00");
+            v[i].startTime = v[i].startTime.replace("9", "21:00");
         }
-        else if(nonFinal[i].startTime == ("9am"))
+        else if(v[i].startTime == ("9am"))
         {
-            nonFinal[i].startTime = nonFinal[i].startTime.replace("9", "09:00");
+            v[i].startTime = v[i].startTime.replace("9", "09:00");
         }
-        else if(nonFinal[i].startTime == ("8pm"))
+        else if(v[i].startTime == ("8pm"))
         {
-            nonFinal[i].startTime = nonFinal[i].startTime.replace("8", "20:00");
+            v[i].startTime = v[i].startTime.replace("8", "20:00");
         }
-        else if(nonFinal[i].startTime == ("8am"))
+        else if(v[i].startTime == ("8am"))
         {
-            nonFinal[i].startTime = nonFinal[i].startTime.replace("8", "08:00");
+            v[i].startTime = v[i].startTime.replace("8", "08:00");
         }
-        else if(nonFinal[i].startTime == ("3pm"))
+        else if(v[i].startTime == ("3pm"))
         {
-            nonFinal[i].startTime = nonFinal[i].startTime.replace("3", "15:00");
+            v[i].startTime = v[i].startTime.replace("3", "15:00");
         }
-        else if(nonFinal[i].startTime == ("4pm"))
+        else if(v[i].startTime == ("4pm"))
         {
-            nonFinal[i].startTime = nonFinal[i].startTime.replace("4", "16:00");
+            v[i].startTime = v[i].startTime.replace("4", "16:00");
         }
-        else if(nonFinal[i].startTime == ("6pm"))
+        else if(v[i].startTime == ("6pm"))
         {
-            nonFinal[i].startTime = nonFinal[i].startTime.replace("6", "18:00");
+            v[i].startTime = v[i].startTime.replace("6", "18:00");
         }
-        else if(nonFinal[i].startTime == ("7pm"))
+        else if(v[i].startTime == ("7pm"))
         {
-            nonFinal[i].startTime = nonFinal[i].startTime.replace("7", "19:00");
+            v[i].startTime = v[i].startTime.replace("7", "19:00");
         }
-        else if(nonFinal[i].startTime == ("11am"))
+        else if(v[i].startTime == ("11am"))
         {
-            nonFinal[i].startTime = nonFinal[i].startTime.replace("11", "11:00");
+            v[i].startTime = v[i].startTime.replace("11", "11:00");
         }
-        else if(nonFinal[i].startTime == ("10am"))
+        else if(v[i].startTime == ("10am"))
         {
-            nonFinal[i].startTime = nonFinal[i].startTime.replace("10", "10:00");
+            v[i].startTime = v[i].startTime.replace("10", "10:00");
         }
-        else if(nonFinal[i].startTime == ("1pm"))
+        else if(v[i].startTime == ("1pm"))
         {
-            nonFinal[i].startTime = nonFinal[i].startTime.replace("1", "13:00");
+            v[i].startTime = v[i].startTime.replace("1", "13:00");
         }
-        else if(nonFinal[i].startTime == ("12pm"))
+        else if(v[i].startTime == ("12pm"))
         {
-            nonFinal[i].startTime = nonFinal[i].startTime.replace("12", "12:00");
+            v[i].startTime = v[i].startTime.replace("12", "12:00");
         }
     }
-    for(let i = 0; i < nonFinal.length; i++)//For all calendar data, reformat endTime from 12hr to 24hr format
+    for(let i = 0; i < v.length; i++)//For all calendar data, reformat endTime from 12hr to 24hr format
     {
-        if(nonFinal[i].endTime.startsWith("1:") == true)
+        if(v[i].endTime.startsWith("1:") == true)
         {
-            nonFinal[i].endTime = nonFinal[i].endTime.replace("1:", "13:");
+            v[i].endTime = v[i].endTime.replace("1:", "13:");
         }
-        else if(nonFinal[i].endTime.startsWith("2:") == true)
+        else if(v[i].endTime.startsWith("2:") == true)
         {
-            nonFinal[i].endTime = nonFinal[i].endTime.replace("2:", "14:");
+            v[i].endTime = v[i].endTime.replace("2:", "14:");
         }
-        else if(nonFinal[i].endTime.startsWith("3:") == true)
+        else if(v[i].endTime.startsWith("3:") == true)
         {
-            nonFinal[i].endTime = nonFinal[i].endTime.replace("3:", "15:");
+            v[i].endTime = v[i].endTime.replace("3:", "15:");
         }
-        else if(nonFinal[i].endTime.startsWith("4:") == true)
+        else if(v[i].endTime.startsWith("4:") == true)
         {
-            nonFinal[i].endTime = nonFinal[i].endTime.replace("4:", "16:");
+            v[i].endTime = v[i].endTime.replace("4:", "16:");
         }
-        else if(nonFinal[i].endTime.startsWith("5:") == true)
+        else if(v[i].endTime.startsWith("5:") == true)
         {
-            nonFinal[i].endTime = nonFinal[i].endTime.replace("5:", "17:");
+            v[i].endTime = v[i].endTime.replace("5:", "17:");
         }
-        else if(nonFinal[i].endTime.startsWith("6:") == true)
+        else if(v[i].endTime.startsWith("6:") == true)
         {
-            nonFinal[i].endTime = nonFinal[i].endTime.replace("6:", "18:");
+            v[i].endTime = v[i].endTime.replace("6:", "18:");
         }
-        else if(nonFinal[i].endTime.startsWith("7:") == true)
+        else if(v[i].endTime.startsWith("7:") == true)
         {
-            nonFinal[i].endTime = nonFinal[i].endTime.replace("7:", "19:");
+            v[i].endTime = v[i].endTime.replace("7:", "19:");
         }
-        else if(nonFinal[i].endTime.startsWith("8:") == true && nonFinal[i].endTime.endsWith("pm") == true)
+        else if(v[i].endTime.startsWith("8:") == true && v[i].endTime.endsWith("pm") == true)
         {
-            nonFinal[i].endTime = nonFinal[i].endTime.replace("8:", "20:");
+            v[i].endTime = v[i].endTime.replace("8:", "20:");
         }
-        else if(nonFinal[i].endTime.startsWith("8:") == true && nonFinal[i].endTime.endsWith("am") == true)
+        else if(v[i].endTime.startsWith("8:") == true && v[i].endTime.endsWith("am") == true)
         {
-            nonFinal[i].endTime = nonFinal[i].endTime.replace("8:", "08:");
+            v[i].endTime = v[i].endTime.replace("8:", "08:");
         }
-        else if(nonFinal[i].endTime.startsWith("9:") == true && nonFinal[i].endTime.endsWith("pm") == true)
+        else if(v[i].endTime.startsWith("9:") == true && v[i].endTime.endsWith("pm") == true)
         {
-            nonFinal[i].endTime = nonFinal[i].endTime.replace("9:", "21:");
+            v[i].endTime = v[i].endTime.replace("9:", "21:");
         }
-        else if(nonFinal[i].endTime == ("1pm"))
+        else if(v[i].endTime.startsWith("9:") == true && v[i].endTime.endsWith("am") == true)
         {
-            nonFinal[i].endTime = nonFinal[i].endTime.replace("1", "01:00");
+            v[i].endTime = v[i].endTime.replace("9:", "09:");
         }
-        else if(nonFinal[i].endTime == ("12pm"))
+        else if(v[i].endTime == ("1pm"))
         {
-            nonFinal[i].endTime = nonFinal[i].endTime.replace("12", "12:00");
+            v[i].endTime = v[i].endTime.replace("1", "13:00");
         }
-        else if(nonFinal[i].endTime == ("10pm"))
+        else if(v[i].endTime == ("12pm"))
         {
-            nonFinal[i].endTime = nonFinal[i].endTime.replace("10", "10:00");
+            v[i].endTime = v[i].endTime.replace("12", "12:00");
         }
-        else if(nonFinal[i].endTime == ("10am"))
+        else if(v[i].endTime == ("10pm"))
         {
-            nonFinal[i].endTime = nonFinal[i].endTime.replace("10", "10:00");
+            v[i].endTime = v[i].endTime.replace("10", "10:00");
         }
-        else if(nonFinal[i].endTime == ("5pm"))
+        else if(v[i].endTime == ("10am"))
         {
-            nonFinal[i].endTime = nonFinal[i].endTime.replace("5", "05:00");
+            v[i].endTime = v[i].endTime.replace("10", "10:00");
         }
-        else if(nonFinal[i].endTime == ("11am"))
+        else if(v[i].endTime == ("5pm"))
         {
-            nonFinal[i].endTime = nonFinal[i].endTime.replace("11", "11:00");
+            v[i].endTime = v[i].endTime.replace("5", "17:00");
+        }
+        else if(v[i].endTime == ("11am"))
+        {
+            v[i].endTime = v[i].endTime.replace("11", "11:00");
         }
     }
-    for(let i = 0; i < nonFinal.length; i++)//For all calendar data, if startTime or endTime has pm or am in the time, remove it
+    for(let i = 0; i < v.length; i++)//For all calendar data, if startTime or endTime has pm or am in the time, remove it
     {
-        if(nonFinal[i].startTime.includes("pm"))
+        if(v[i].startTime.includes("pm"))
         {
-            nonFinal[i].startTime = nonFinal[i].startTime.replaceAll("pm", "");
+            v[i].startTime = v[i].startTime.replaceAll("pm", "");
         }
-        if(nonFinal[i].endTime.includes("pm"))
+        if(v[i].endTime.includes("pm"))
         {
-            nonFinal[i].endTime = nonFinal[i].endTime.replaceAll("pm", "");
+            v[i].endTime = v[i].endTime.replaceAll("pm", "");
         }
-        if(nonFinal[i].startTime.includes("am"))
+        if(v[i].startTime.includes("am"))
         {
-            nonFinal[i].startTime = nonFinal[i].startTime.replaceAll("am", "");
+            v[i].startTime = v[i].startTime.replaceAll("am", "");
         }
-        if(nonFinal[i].endTime.includes("am"))
+        if(v[i].endTime.includes("am"))
         {
-            nonFinal[i].endTime = nonFinal[i].endTime.replaceAll("am", "");
+            v[i].endTime = v[i].endTime.replaceAll("am", "");
         }
     }
 }
