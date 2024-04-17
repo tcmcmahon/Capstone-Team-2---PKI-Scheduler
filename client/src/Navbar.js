@@ -4,9 +4,8 @@
  * @namespace Navbar
  */
 
-import { Link } from "react-router-dom";
-import "./Navbar.css"; // Import the Navbar.css file for styling
-
+import { useImperativeHandle } from "react"
+import { Link, useMatch, useResolvedPath } from "react-router-dom"
 
 /**
  * Function for configuring the Navigation Bar
@@ -15,31 +14,34 @@ import "./Navbar.css"; // Import the Navbar.css file for styling
  */
 export default function Navbar() {
     return (
-        <nav className="navbar">
-            <Link to="/" className="navbar-brand">
+        <nav className="nav">
+            <Link to="/" className="site-title">
                 PKI Class Scheduler
             </Link>
-            <ul className="navbar-nav">
-                <NavItem to="/upload">Upload</NavItem>
-                <NavItem to="/calendar">Calendar</NavItem>
-                <NavItem to="/algorithm">Algorithm Results</NavItem>
+            <ul>
+                <CustomLink to="/upload">Upload</CustomLink>
+                <CustomLink to="/calendar">Calendar</CustomLink>
+                <CustomLink to="/algorithm">Algorithm Results</CustomLink>
             </ul>
         </nav>
-    );
+    )
 }
+
 /**
  * Function for setting up a custom link in the Navigation Bar
- * @param param0 input for configuring a Nav Item for the Navigation Bar
+ * @param param0 input for configuring a custom link for the Navigation Bar
  * @returns {html} new custom link for Navigation Bar
  * @memberof Navbar
  */
-function NavItem({ to, children }) {
+function CustomLink({ to, children, ...props }) {
+    const resolvedPath = useResolvedPath(to)
+    const isActive = useMatch({ path: resolvedPath.pathname, end:true })
+
     return (
-        <li className="nav-item">
-            <Link to={to} className="nav-link">
+        <li className={isActive ? "active" : ""}>
+            <Link to={to} {...props}>
                 {children}
             </Link>
         </li>
-    );
+    )
 }
-

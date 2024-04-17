@@ -8,8 +8,6 @@
 import React, { useState } from 'react';
 import img from '../resources/O-UNO_Type_Color_White.png';
 import img2 from '../resources/photo-1606761568499-6d2451b23c66.avif';
-import "./Upload.css";
-
 
 /**
  * Function for displaying the upload page
@@ -45,22 +43,20 @@ export default function Upload() {
       }
     } catch (error) {
       console.error('Error uploading file:', error);
-      alert('Error uploading file: ' + error.message);
+      alert('Error uploading file: ' + error.message); // Log the error message received from the server
     }
   };
 
   return (
-    <div className="upload-container">
-      <header className="upload-header">
-        <img src={img} alt="Logo" className="upload-logo" />
-        <h1 className="upload-title">Upload a CSV File Below</h1>
-      </header>
-      <div className="upload-content">
-        <input type="file" accept=".csv" id="fileInput" className="upload-input" onChange={handleFileChange} />
-        <label htmlFor="fileInput" className="upload-label">Choose File</label>
-        {file && <p>Selected file: {file.name}</p>}
-        <button onClick={handleUpload} className="upload-button">Upload</button>
-      </div>
+    <div className="App">
+      <body style={{backgroundImage: `url(${img2})`, height: "85vh", width: "100%", display: "block", margin: "auto"}}>
+      <h1 style={{backgroundImage: `url(${img})`, backgroundSize: "cover", height: "110px", backgroundColor: "black"}}></h1>
+      <h2 style={{textAlign: "center", margin: "auto", backgroundColor: "black", color: "white", width: "22%", marginBottom: "5px"}}>Upload a CSV File below:</h2>
+      <p style={{margin: "auto", textAlign: "center", backgroundColor: "black", color: "white", width: "25%", padding: "5px"}}>
+        <input type="file" accept=".csv" onChange={handleFileChange} />
+        <button onClick={handleUpload}>Upload</button>
+      </p>
+      </body>
     </div>
   );
 }
