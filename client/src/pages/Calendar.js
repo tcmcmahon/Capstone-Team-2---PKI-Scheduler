@@ -30,85 +30,91 @@ import "./Upload.css"; // Import the Upload.css styles
 var cData = [];
 let response;
 let result;
-let t = [];
+//let t = [];
 
-const res = [
-  {
-    startDate: "2024-01-02T14:45",
-    endDate: "2024-01-02T17:15",
-    title: "AREN 8920 - INDIVIDUAL INSTRUCTION IN ARCHITECTURAL ENGINEERING Section 2",
-    room: 252
-  },
-  {
-    startDate: "2024-01-01T114:45",
-    endDate: "2024-01-01T15:15",
-    title: "CNST 225 - INTRODUCTION TO BUILDING INFORMATION MODELING Section 2",
-    room: 256
-  },
-  {
-    startDate: "2024-01-03T14:45",
-    endDate: "2024-01-03T15:15",
-    title: "CNST 225 - INTRODUCTION TO BUILDING INFORMATION MODELING Section 2",
-    room: 256
-  },
-  {
-    startDate: "2024-01-02T09:00",
-    endDate: "2024-01-02T09:50",
-    title: "AREN 9970 - RESEARCH OTHER THAN THESIS Section 8",
-    room: 263
-  },
-  {
-    startDate: "2024-01-04T09:00",
-    endDate: "2024-01-04T09:50",
-    title: "AREN 9970 - RESEARCH OTHER THAN THESIS Section 8",
-    room: 263
-  },
-  {
-    startDate: "2024-01-02T12:00",
-    endDate: "2024-01-02T13:00",
-    title: "BIOI 4980 - SENIOR PROJECT IN BIOINFORMATICS II Section 1",
-    room: 276
-  },
-  {
-    startDate: "2024-01-04T12:00",
-    endDate: "2024-01-04T13:00",
-    title: "BIOI 4980 - SENIOR PROJECT IN BIOINFORMATICS II Section 1",
-    room: 276
-  },
-  {
-    startDate: "2024-01-01T11:00",
-    endDate: "2024-01-01T12:00",
-    title: "BMI 8000 - ADVANCES IN BIOMEDICAL INFORMATICS Section 1",
-    room: 278
-  },
-  {
-    startDate: "2024-01-03T11:00",
-    endDate: "2024-01-03T12:00",
-    title: "BMI 8000 - ADVANCES IN BIOMEDICAL INFORMATICS Section 1",
-    room: 278
-  },
-  {
-    startDate: "2024-01-02T9",
-    endDate: "2024-01-02T11:30",
-    title: "ECEN 194 - SPECIAL TOPICS IN ELECTRICAL AND COMPUTER ENGINEERING I Section 2",
-    room: 279
-  },
-  {
-    startDate: "2024-01-04T09:00",
-    endDate: "2024-01-04T11:30",
-    title: "ECEN 194 - SPECIAL TOPICS IN ELECTRICAL AND COMPUTER ENGINEERING I Section 2",
-    room: 279
-  }
-];
+//const res = [
+//  {
+//    startDate: "2024-01-02T14:45",
+//    endDate: "2024-01-02T17:15",
+//    title: "AREN 8920 - INDIVIDUAL INSTRUCTION IN ARCHITECTURAL ENGINEERING Section 2",
+//    room: 252
+//  },
+//  {
+//    startDate: "2024-01-01T114:45",
+//    endDate: "2024-01-01T15:15",
+//    title: "CNST 225 - INTRODUCTION TO BUILDING INFORMATION MODELING Section 2",
+//    room: 256
+//  },
+//  {
+//    startDate: "2024-01-03T14:45",
+//    endDate: "2024-01-03T15:15",
+//    title: "CNST 225 - INTRODUCTION TO BUILDING INFORMATION MODELING Section 2",
+//    room: 256
+//  },
+//  {
+//    startDate: "2024-01-02T09:00",
+//    endDate: "2024-01-02T09:50",
+//    title: "AREN 9970 - RESEARCH OTHER THAN THESIS Section 8",
+//    room: 263
+//  },
+//  {
+//    startDate: "2024-01-04T09:00",
+//    endDate: "2024-01-04T09:50",
+//    title: "AREN 9970 - RESEARCH OTHER THAN THESIS Section 8",
+//    room: 263
+//  },
+//  {
+//    startDate: "2024-01-02T12:00",
+//    endDate: "2024-01-02T13:00",
+//    title: "BIOI 4980 - SENIOR PROJECT IN BIOINFORMATICS II Section 1",
+//    room: 276
+//  },
+//  {
+//    startDate: "2024-01-04T12:00",
+//    endDate: "2024-01-04T13:00",
+//    title: "BIOI 4980 - SENIOR PROJECT IN BIOINFORMATICS II Section 1",
+//    room: 276
+//  },
+//  {
+//    startDate: "2024-01-01T11:00",
+//    endDate: "2024-01-01T12:00",
+//    title: "BMI 8000 - ADVANCES IN BIOMEDICAL INFORMATICS Section 1",
+//    room: 278
+//  },
+//  {
+//    startDate: "2024-01-03T11:00",
+//    endDate: "2024-01-03T12:00",
+//    title: "BMI 8000 - ADVANCES IN BIOMEDICAL INFORMATICS Section 1",
+//    room: 278
+//  },
+//  {
+//    startDate: "2024-01-02T9",
+//    endDate: "2024-01-02T11:30",
+//    title: "ECEN 194 - SPECIAL TOPICS IN ELECTRICAL AND COMPUTER ENGINEERING I Section 2",
+//    room: 279
+//  },
+//  {
+//    startDate: "2024-01-04T09:00",
+//    endDate: "2024-01-04T11:30",
+//    title: "ECEN 194 - SPECIAL TOPICS IN ELECTRICAL AND COMPUTER ENGINEERING I Section 2",
+//    room: 279
+//  }
+//];
 
 response = await axios.get("http://localhost:3001/Data");
 
 result = response.data;
 cData = (JSON.stringify(result));
-cData = JSON.parse(cData);
-// t = JSON.parse(res);
+cData = JSON.parse(cData, function (key, value) {
+  if (key == "room") {
+    return +value; //parse to int
+  } else {
+    return value;
+  }
+});
 
 const currentDate = '2024-01-01';
+//Add all the classrooms
 const rooms = [
   {text: 'Room 108', id: 108},
   {text: 'Room 145', id: 145},
@@ -146,7 +152,7 @@ export default class Demo extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      data: res,
+      data: cData,
       resources: [{
         fieldName: 'room',
         title: 'Classroom',
