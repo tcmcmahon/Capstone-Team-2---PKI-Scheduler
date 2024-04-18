@@ -87,69 +87,35 @@ export var final = [];//Array for final assignment
  * @memberof Restrictions
 */
 
-let leftOver = [];
-// let t1 = [];
-// let e1 = [];
+let leftOver = [];//unassigned classes after each sort
+
 function sort(v)
 {
-    if(v.length > 0)
+    if(v.length > 0)//if array length is > 0
     {
-        for(let i = 0; i < z.length; i++)
-        {   let t = [];
-            let e = [];
-            for(let j = 0; j < v.length; j++)
+        for(let i = 0; i < z.length; i++)//for all rooms
+        {   let t = [];//start times
+            let e = [];//end times
+            for(let j = 0; j < v.length; j++)//for all classes
             {   
-                if(v[j].maxEnrollment <= seatNumbers[i] && !e.includes(v[j].endTime.slice(0,2)) && !t.includes(v[j].startTime.slice(0,2)) && !e.includes(v[j].startTime.slice(0,2)))
+                if(v[j].maxEnrollment <= seatNumbers[i] && !e.includes(v[j].endTime.slice(0,2)) && !t.includes(v[j].startTime.slice(0,2)) && !e.includes(v[j].startTime.slice(0,2)))//constraints for size and times
                 {
-                    v[j].room = z[i];
-                    t.push(v[j].startTime.slice(0,2));
-                    e.push(v[j].endTime.slice(0,2));
-                    final.push(v[j]);
-                    v.splice(j, 1);
+                    v[j].room = z[i];//assign room number if no constraint is violated
+                    t.push(v[j].startTime.slice(0,2));//add start time to array t
+                    e.push(v[j].endTime.slice(0,2));//add end time to array e
+                    final.push(v[j]);//push to final assignment array
+                    v.splice(j, 1);//remove assigned class
                 }
             }
-            // t1.push(t);
-            // e1.push(e);
         }
-        leftOver = nonFinal.filter(a => final.find(b => (a.class === b.class)));
-        console.log(leftOver.length);
-        sort(leftOver);
+        leftOver = nonFinal.filter(a => final.find(b => (a.class === b.class)));//filter out assigned classes
+        sort(leftOver);//keep sorting while we have classes
     }
     else
     {
-        return final;
+        return final;//return final assignment and end
     }
-    // finish();
 }
-
-// function finish()
-// {
-//     if(leftOver.length > 0)
-//     {
-//         for(let i = 0; i < z.length; i++)
-//         {
-//             for(let j = 0; j < leftOver.length; j++)
-//             {
-//                 if(leftOver[j].maxEnrollment <= seatNumbers[i] && !e1[i].includes(leftOver[j].endTime.slice(0,2)) && t1[i].includes(leftOver[j].startTime.slice(0,2)) && !t.includes(v[j].endTime.slice(0,2)))
-//                 {
-//                     leftOver[j].room = z[i];
-//                     t1[i].push(leftOver[j].startTime.slice(0,2));
-//                     e1[i].push(leftOver[j].endTime.slice(0,2));
-//                     final.push(leftOver[j]);
-//                     leftOver.splice(j,1);
-//                 }
-//             }
-//         }
-        
-//         leftOver = leftOver.filter(a => final.find(b => (a.class === b.class)));
-//         console.log(leftOver.length)
-//         finish();
-//     }
-//     else
-//     {
-//         return final;
-//     }
-// }
 
 export var nonFinal = [];//Structure for all classes with room, first pass through
 
@@ -160,7 +126,7 @@ export var nonFinal = [];//Structure for all classes with room, first pass throu
  * @memberof Restrictions
  */
 
-let lowP = [];
+let lowP = [];//low priority classes
 
 function firstAssign(totalRooms)
 {   
@@ -200,8 +166,6 @@ function firstAssign(totalRooms)
     }
     formatTimes(nonFinal);//Reformat times to 24hr format
     sort(nonFinal);
-    // formatTimes(lowP);
-    // sort(lowP);
     storeAssigninCalendar();
 }
 
@@ -292,17 +256,6 @@ async function main()// main function, is async because fs.createReadStream()
     await readCSVData();
     storeParsedData();
     firstAssign(z);
-    for(let i = 0; i < z.length; i++)
-    {
-        for(let j = 0; j < final.length; j++)
-        {
-            if(final[j].room == z[i] && (final[j].days == "MW"))
-            {
-                console.log(final[j]);
-            }
-        }
-    }
-    console.log(final.length);
 } // end of main
 
 main();// launch main
