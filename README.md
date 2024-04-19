@@ -21,9 +21,6 @@ https://tcmcmahon.github.io/Capstone-Team2-PKI-Scheduler/
   MILESTONE 3:
   For Milestone 3, we integrated a Navigation bar to move back and forth between pages, we created an algorithm for assigning classes that resolves all time conflicts, and fed the calendar page with the output from that algorithm. Each class on the calendar can be clicked on to view its information, and you can choose day or week view, and move between different dates. Minor changes made to the look of each page, and an additional page for display of the raw algorithm output results.
 
-  MILESTONE 4:
-  For Milestone 4, we added room grouping to the calendar and integrated that with our data. We made style changes to modernize and improve the web pages, and began finalizing the algorithm for assignment.
-
 ### APPLICATION ACCESS:
   #### IF NOT USING APP/TOOL SUCH AS FORK/GITHUB DESKTOP:
     1. Go to repository, tcmcmahon/Capstone-Team2-PKI-Scheduler
