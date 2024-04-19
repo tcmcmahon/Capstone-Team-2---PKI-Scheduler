@@ -129,53 +129,62 @@ function howManyClassesPerDay() {
 
 
 /* Will compare two meeting dates, return types:
-    -2 if date2 is null
-    -1 if date1 is earlier
+    -2 if stable is null
+    -1 if test is earlier
     0  if during the same time 
-    1  if date2 is earlier
+    1  if stable is earlier
 */
-function compareMeetingDates(date1, date2) { 
-    if (date2 === null) {
+function compareMeetingDates(test, stable) { 
+    if (stable === null) {
         return -2;
     }
-    var parsedDate1 = {'startHour': null,
+    var parsedTest = {'startHour': null,
                         'startMin': null,
                         'endHour': null,
-                        'endMin': null};
-    var parsedDate2 = {'startHour': null,
+                        'endMin': null,
+                        'startTotal': null,
+                        'endTotal': null};
+    var parsedStable = {'startHour': null,
                         'startMin': null,
                         'endHour': null,
-                        'endMin': null};
+                        'endMin': null,
+                        'startTotal': null,
+                        'endTotal': null};
     // splice the start hours
-    var date1split = date1.start.slice(0, -2).split(":");
-    var date2split = date2.start.slice(0, -2).split(":");
+    var testSplit = test.start.slice(0, -2).split(":");
+    var stableSplit = stable.start.slice(0, -2).split(":");
     // set start hours
-    parsedDate1.startHour = date1.start.includes("pm") && parseInt(date1split[0]) !== 12 
-                            ? parseInt(date1split[0]) + 12 : parseInt(date1split[0]);
-    parsedDate2.startHour = date2.start.includes("pm") && parseInt(date2split[0]) !== 12 
-                            ? parseInt(date2split[0]) + 12 : parseInt(date2split[0]);
+    parsedTest.startHour = test.start.includes("pm") && parseInt(testSplit[0]) !== 12 
+                            ? parseInt(testSplit[0]) + 12 : parseInt(testSplit[0]);
+    parsedStable.startHour = stable.start.includes("pm") && parseInt(stableSplit[0]) !== 12 
+                            ? parseInt(stableSplit[0]) + 12 : parseInt(stableSplit[0]);
     // set start minutes 
-    parsedDate1.startMin = isNaN(parseInt(date1split[1])) ? 0 : parseInt(date1split[1]);
-    parsedDate2.startMin = isNaN(parseInt(date2split[1])) ? 0 : parseInt(date2split[1]);
+    parsedTest.startMin = isNaN(parseInt(testSplit[1])) ? 0 : parseInt(testSplit[1]);
+    parsedStable.startMin = isNaN(parseInt(stableSplit[1])) ? 0 : parseInt(stableSplit[1]);
     // splice the end hours
-    date1split = date1.end.slice(0, -2).split(":");
-    date2split = date2.end.slice(0, -2).split(":");
+    testSplit = test.end.slice(0, -2).split(":");
+    stableSplit = stable.end.slice(0, -2).split(":");
     // set end hours
-    parsedDate1.endHour = date1.end.includes("pm") && parseInt(date1split[0]) !== 12 
-                            ? parseInt(date1split[0]) + 12 : parseInt(date1split[0]);
-    parsedDate2.endHour = date2.end.includes("pm") && parseInt(date2split[0]) !== 12 
-                            ? parseInt(date2split[0]) + 12 : parseInt(date2split[0]);
+    parsedTest.endHour = test.end.includes("pm") && parseInt(testSplit[0]) !== 12 
+                            ? parseInt(testSplit[0]) + 12 : parseInt(testSplit[0]);
+    parsedStable.endHour = stable.end.includes("pm") && parseInt(stableSplit[0]) !== 12 
+                            ? parseInt(stableSplit[0]) + 12 : parseInt(stableSplit[0]);
     // set start minutes 
-    parsedDate1.endMin = isNaN(parseInt(date1split[1])) ? 0 : parseInt(date1split[1]);
-    parsedDate2.endMin = isNaN(parseInt(date2split[1])) ? 0 : parseInt(date2split[1]);
+    parsedTest.endMin = isNaN(parseInt(testSplit[1])) ? 0 : parseInt(testSplit[1]);
+    parsedStable.endMin = isNaN(parseInt(stableSplit[1])) ? 0 : parseInt(stableSplit[1]);
+    // set totals
+    parsedTest.endTotal = parsedTest.endHour*60+parsedTest.endMin;
+    parsedTest.startTotal = parsedTest.startHour*60+parsedTest.startMin;
+    parsedStable.endTotal = parsedStable.endHour*60+parsedStable.endMin;
+    parsedStable.startTotal = parsedStable.startHour*60+parsedStable.startMin;
     // during the same time
-    if (parsedDate2.startHour <= parsedDate1.startHour && parsedDate1.startHour < parsedDate2.endHour ||
-        parsedDate1.startHour <= parsedDate2.startHour && parsedDate2.startHour < parsedDate1.endHour) { return 0 }
+    if (parsedStable.startTotal <= parsedTest.startTotal && parsedTest.startTotal < parsedStable.endTotal ||
+        parsedTest.startTotal <= parsedStable.startTotal && parsedStable.startTotal < parsedTest.endTotal) { return 0 }
     // date1 is earlier
-    else if (parsedDate1.endHour*60 + parsedDate1.endMin <= parsedDate2.startHour*60 + parsedDate2.startMin) { return -1 }
+    else if (parsedTest.endHour*60 + parsedTest.endMin <= parsedStable.startHour*60 + parsedStable.startMin) { return -1 }
     // date2 is earlier
-    else if (parsedDate2.endHour*60 + parsedDate2.endMin <= parsedDate1.startHour*60 + parsedDate1.startMin) { return 1 }
-    else { return "ERROR: could handle date comparison" }
+    else if (parsedStable.endHour*60 + parsedStable.endMin <= parsedTest.startHour*60 + parsedTest.startMin) { return 1 }
+    else { return null }
 }
 
 
@@ -214,34 +223,47 @@ function canBeAssigned(_class, room) {
             continue;
         }
         currClass = classDays[i];
-        timeDiff = compareMeetingDates(_class.meetingDates, currClass.class.meetingDates);
+        
         while (currClass !== null) {
-            if (timeDiff > 0) {
+            timeDiff = compareMeetingDates(_class.meetingDates, currClass.class.meetingDates);
+            if (timeDiff === null) {
+                process.exit();
+            }
+            else if (timeDiff > 0) {
                 prevClass = currClass;
-                currClass = currClass.next;
+                currClass = currClass.getNext()
             }
             else if (timeDiff === 0) {
                 room = roomClone;
                 return false;
             }
             else if (timeDiff < 0) {
-                prevClass.next = new ClassroomTimeSlot(_class, currClass);
+                if (prevClass === null) {
+                    currClass.setNext(new ClassroomTimeSlot(currClass.getClass(), currClass.getNext()));
+                    currClass.setClass(_class);
+                }
+                else {
+                    prevClass.setNext(new ClassroomTimeSlot(_class, currClass));
+                }
+                break;
             }
         }
         if (currClass === null) {
-            prevClass.next = new ClassroomTimeSlot(_class, currClass);
+            prevClass.setNext(new ClassroomTimeSlot(_class, currClass));
         }
     }
-    
     return true;
 }
 
 
+// TODO: Implement some sort of "points" system so that classes can be assigned
+//       at the best times and in the best rooms
 /* assign the actual rooms */
 function assignRooms() {
     // add courses to queue first
     // var test_limit = [0, 1, 14, 42, 50, 69, 73, 80, 115, 142, 143, 160];
-    var test_limit = [0, 31, 32, 36];  // 0, 3
+    var test_limit = [0];  // 0, 31, 32, 36
+    var possibleRooms = {}; // {points : [room, room, ...], points : [room, room, ...], ...} is also stored in order in memory
     var test_data = [];
     var len = QUEUE.queue.length;
     for (var i = 0; i < len; i++) {
@@ -252,13 +274,14 @@ function assignRooms() {
     }
     var i = 0;
     var _class = test_data.shift();
+    console.log(_class);
     while (_class !== undefined) {
-        console.log("\n\n" + i++);
+        console.log(i++);
         console.log("\Assigning class: " + _class[0].name);
-        // console.log(_class[0]);
         var assignedRoom = false // boolean value to tell if class has already been assigned
         var numRoomsChecked = 0; // number of classes we have looped through
-        while (!assignedRoom) {
+        while (numRoomsChecked < roomsList.length) {
+        // while (!assignedRoom) {
             if (numRoomsChecked >= roomsList.length) { break } // checked everyroom and couldn't find a slot
             // console.log("\t\tChecking room: ", roomsList[numRoomsChecked].roomNumber);
             if (!roomsList[numRoomsChecked].colleges[_class[0].campus]) { 
@@ -271,13 +294,29 @@ function assignRooms() {
                 // console.log("\t\t\tSmall Size");
             }
             else if (!canBeAssigned(_class[0], roomsList[numRoomsChecked])) { 
+                // possibleRooms.push(roomsList[numRoomsChecked]);
                 // console.log("\t\t\tNo Rooms Available");
             }
-            else { assignedRoom = true }
+            // else { assignedRoom = true}
+            else { 
+                var points = roomsList[numRoomsChecked].roomSize - _class[0].maximumEnrollments;
+                if (possibleRooms[points] !== undefined) {
+                    possibleRooms[points].push(roomsList[numRoomsChecked])
+                }
+                else {
+                    possibleRooms[points] = [roomsList[numRoomsChecked]];
+                }
+            }
             numRoomsChecked++;
         }
-        console.log(assignedRoom ? "\tAssigned: " + _class[0].name + "\n\tto: " + roomsList[--numRoomsChecked].roomNumber + "\n\n" : "\tCouldn't find a classroom for " + _class[0].name + "\n\n");
-        // console.log(roomsList[numRoomsChecked]);
+        if (!assignedRoom && possibleRooms.length > 0) {
+            // reassign
+        }
+        console.log(assignedRoom ? "\tAssigned: " + _class[0].name + "\n\tto: " + roomsList[--numRoomsChecked].roomNumber : "\tCouldn't find a classroom for " + _class[0].name);
+        for (var key in possibleRooms) {
+            console.log("\n\n" + key);
+            console.log(possibleRooms[key]);
+        }
         _class = test_data.shift();
     }
 }
@@ -338,11 +377,7 @@ export async function mainRestrictions(path) {
     createRoomData();
     howManyClassesPerDay();
     Queueify();
-    console.log(QUEUE.queue[0][0]);
-    console.log(QUEUE.queue[31][0]);
-    console.log(QUEUE.queue[32][0]);
-    console.log(QUEUE.queue[36][0]);
-    // assignRooms();
+    assignRooms();
     // console.log(roomsList[5]);
 } // end of main
 

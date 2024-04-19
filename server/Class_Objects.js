@@ -82,6 +82,10 @@ export class ClassroomTimeSlot {
         this.class = _class;
         this.next = next;
     }
+    getNext() { return this.next }
+    setNext(next) { this.next = next }
+    getClass() { return this.class }
+    setClass(_class) {this.class = _class }
 }
 
 
