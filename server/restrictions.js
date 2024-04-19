@@ -375,6 +375,41 @@ function Queueify() {
 }
 
 
+/* writes roomsList into readable from */
+function writeToCSV() {
+    var data = "";
+    var days;
+    var daysLetter = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Sat/Sun"];
+    var currClass;
+    var counter = 0;
+    // loop through each room
+    for (var r of roomsList) {
+        data += `${r.roomNumber}, \n`;
+        days = [r.monClasses, r.tueClasses, r.wedClasses, r.thuClasses, r.friClasses, r.s_sClasses];
+        // loop through each of the classes
+        for (var i in days) {
+            data += " , " + daysLetter[i] + ", ";
+            // loop through each class
+            currClass = days[i];
+            while (currClass !== null && currClass.getClass() !== null) {
+                data += currClass.getClass().meetingDates.start + "-" + currClass.getClass().meetingDates.end + ", ";
+                currClass = currClass.getNext();
+                counter++;
+            }
+            data += "\n"; 
+        }
+    }
+
+    // write to file
+    fs.writeFile("./server/uploads/output.csv", data, (err) => {
+        if (err) {
+            console.log(err);
+        }
+    });
+    console.log(counter);
+}
+
+
 /* main function, is async because fs.createReadStream() */
 export async function mainRestrictions(path) {
     await readCSVData(path);
@@ -382,9 +417,8 @@ export async function mainRestrictions(path) {
     howManyClassesPerDay();
     Queueify();
     assignRooms();
-    // console.log(roomsList[5]);
+    writeToCSV();
 } // end of main
-
 
 
 /* launch main */
