@@ -388,7 +388,7 @@ export async function mainRestrictions(path) {
 
 
 /* launch main */
-var test_path = './server/uploads/test.csv';
+var test_path = './uploads/test.csv';
 mainRestrictions(test_path);
 
 
