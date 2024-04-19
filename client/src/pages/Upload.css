@@ -1,0 +1,57 @@
+/* Upload.css */
+
+.upload-container {
+    padding: 20px;
+    text-align: center;
+}
+
+.upload-header {
+    background-color: #282c34;
+    color: white;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.upload-title {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.upload-content {
+    margin-bottom: 20px;
+}
+
+.upload-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.upload-button:hover {
+    background-color: #0056b3;
+}
+
+.upload-input {
+    display: none;
+}
+
+.upload-label {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.upload-label:hover {
+    background-color: #0056b3;
+}
+
+.upload-logo {
+    max-width: 600px; /* Limit the maximum width of the image */
+    margin-bottom: 30px; /* Add margin to separate the image from the title */
+}
+

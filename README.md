@@ -8,6 +8,7 @@ https://tcmcmahon.github.io/Capstone-Team2-PKI-Scheduler/
 
 ### RELEASE NOTES:
   MILESTONE 1:
+    MILESTONE 1:
   In the current version as of now, we have created the front-end and styled it, and created the back-end with basic parsing functionality. The front-end allows for uploading of a CSV file, and the back-end takes the file and outputs the contents of the file to the command line.
   We have multiple branches, each showing the work done by each person. We named each branch as first initial/lastname/point of branch. Frederic's branch (fshope) created the database definitions for the upcoming milestone. This is not merged to main for Milestone 1, but will be merged in Milestone 2.
   Josh's branch (jshadbolt) first created the basic web app and the basic backend. 
