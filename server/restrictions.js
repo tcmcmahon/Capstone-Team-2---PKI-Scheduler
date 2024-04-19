@@ -256,32 +256,28 @@ function canBeAssigned(_class, room) {
 }
 
 
-// TODO: Implement some sort of "points" system so that classes can be assigned
-//       at the best times and in the best rooms
 /* assign the actual rooms */
 function assignRooms() {
     // add courses to queue first
     // var test_limit = [0, 1, 14, 42, 50, 69, 73, 80, 115, 142, 143, 160];
-    var test_limit = [0];  // 0, 31, 32, 36
-    var possibleRooms = {}; // {points : [room, room, ...], points : [room, room, ...], ...} is also stored in order in memory
+    // var test_limit = [0];  // 0, 31, 32, 36
     var test_data = [];
     var len = QUEUE.queue.length;
     for (var i = 0; i < len; i++) {
         test_data.push(QUEUE.dequeue());
-        if (!test_limit.includes(i)) {
-            test_data.pop()
-        }
+        // if (!test_limit.includes(i)) {
+        //     test_data.pop()
+        // }
     }
     var i = 0;
     var _class = test_data.shift();
-    console.log(_class);
     while (_class !== undefined) {
+        var possibleRooms = {}; // {points : [room, room, ...], points : [room, room, ...], ...} is also stored in order in memory
         console.log(i++);
         console.log("\Assigning class: " + _class[0].name);
         var assignedRoom = false // boolean value to tell if class has already been assigned
         var numRoomsChecked = 0; // number of classes we have looped through
         while (numRoomsChecked < roomsList.length) {
-        // while (!assignedRoom) {
             if (numRoomsChecked >= roomsList.length) { break } // checked everyroom and couldn't find a slot
             // console.log("\t\tChecking room: ", roomsList[numRoomsChecked].roomNumber);
             if (!roomsList[numRoomsChecked].colleges[_class[0].campus]) { 
@@ -293,11 +289,6 @@ function assignRooms() {
             else if (_class[0].maximumEnrollments > roomsList[numRoomsChecked].roomSize) { 
                 // console.log("\t\t\tSmall Size");
             }
-            else if (!canBeAssigned(_class[0], roomsList[numRoomsChecked])) { 
-                // possibleRooms.push(roomsList[numRoomsChecked]);
-                // console.log("\t\t\tNo Rooms Available");
-            }
-            // else { assignedRoom = true}
             else { 
                 var points = roomsList[numRoomsChecked].roomSize - _class[0].maximumEnrollments;
                 if (possibleRooms[points] !== undefined) {
@@ -309,16 +300,29 @@ function assignRooms() {
             }
             numRoomsChecked++;
         }
-        if (!assignedRoom && possibleRooms.length > 0) {
-            // reassign
+        var r;
+        for (const [points, rooms] of Object.entries(possibleRooms)) {
+            for (var room of rooms) {
+                if (!canBeAssigned(_class[0], room)) {
+                    // console.log("\t\t\tNo Rooms Available");
+                }
+                else {
+                    // console.log(points);
+                    // console.log(room);
+                    assignedRoom = true;
+                    r = room;
+                    break;
+                }
+            }
+            if (assignedRoom) {
+                break;
+            }
         }
-        console.log(assignedRoom ? "\tAssigned: " + _class[0].name + "\n\tto: " + roomsList[--numRoomsChecked].roomNumber : "\tCouldn't find a classroom for " + _class[0].name);
-        for (var key in possibleRooms) {
-            console.log("\n\n" + key);
-            console.log(possibleRooms[key]);
-        }
+        // console.log(assignedRoom ? "\tAssigned: " + _class[0].name + "\n\tto: " + roomsList[--numRoomsChecked].roomNumber : "\tCouldn't find a classroom for " + _class[0].name);
+        console.log(assignedRoom ? "\tAssigned: " + _class[0].name + "\n\tto: " + r.roomNumber : "\tCouldn't find a classroom for " + _class[0].name);
         _class = test_data.shift();
     }
+    return null;
 }
 
 
@@ -380,6 +384,7 @@ export async function mainRestrictions(path) {
     assignRooms();
     // console.log(roomsList[5]);
 } // end of main
+
 
 
 /* launch main */
