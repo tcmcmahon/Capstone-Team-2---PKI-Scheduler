@@ -8,11 +8,21 @@ https://tcmcmahon.github.io/Capstone-Team2-PKI-Scheduler/
 
 ### RELEASE NOTES:
   MILESTONE 1:
+    MILESTONE 1:
   In the current version as of now, we have created the front-end and styled it, and created the back-end with basic parsing functionality. The front-end allows for uploading of a CSV file, and the back-end takes the file and outputs the contents of the file to the command line.
   We have multiple branches, each showing the work done by each person. We named each branch as first initial/lastname/point of branch. Frederic's branch (fshope) created the database definitions for the upcoming milestone. This is not merged to main for Milestone 1, but will be merged in Milestone 2.
   Josh's branch (jshadbolt) first created the basic web app and the basic backend. 
   Travis's (tmcmahon) branch branched off of Josh's, and styled the web app and outputted the CSV file contents to the command line.
   Josh's branch (updated) then put the parsing code in a function, and added some changes to the overall parsing structure.
+  
+  MILESTONE 2:
+  For Milestone 2, we made a calendar page and fed it test data to show its potential functionality. We bundled the client and server together so that once the client is built, we execute one command in the server and this starts both the client and the server at the same time. We extracted the classroom CSV data from our parsed version, and stored it in the MySQL database. 
+  
+  MILESTONE 3:
+  For Milestone 3, we integrated a Navigation bar to move back and forth between pages, we created an algorithm for assigning classes that resolves all time conflicts, and fed the calendar page with the output from that algorithm. Each class on the calendar can be clicked on to view its information, and you can choose day or week view, and move between different dates. Minor changes made to the look of each page, and an additional page for display of the raw algorithm output results.
+
+  MILESTONE 4:
+  For Milestone 4, we added room grouping to the calendar and integrated that with our data. We made style changes to modernize and improve the web pages, and began finalizing the algorithm for assignment.
 
 ### APPLICATION ACCESS:
   #### IF NOT USING APP/TOOL SUCH AS FORK/GITHUB DESKTOP:
