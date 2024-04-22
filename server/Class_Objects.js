@@ -19,6 +19,10 @@ export class CourseDescription {
         this.campus = null;                     // 17 - if class is CoE or IS
         this.maximumEnrollments = null;         // 29 - room cap
         this.crossListedWith = [];              // self created - will have all courses class is cross listed with
+
+        
+        this.neighbors = []
+        this.possibleRooms = []
     }   
     setCourseName(courseString) {
         this.name = courseString;
@@ -47,6 +51,9 @@ export class CourseDescription {
     }
     setCampus(campusString) {
         this.campus = (campusString == "UNO-IS") ? "IS&T" : "CoE";
+    }
+    setPossibleRooms(possibleRooms){
+        this.possibleRooms = possibleRooms 
     }
     setClassSize(classSize, crossListedSize) {
         if (this.crossListedWith) {

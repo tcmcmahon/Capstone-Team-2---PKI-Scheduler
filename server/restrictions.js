@@ -89,7 +89,7 @@ export var final = [];//Array for final assignment
 
 let leftOver = [];//unassigned classes after each sort
 
-function sort(v)
+export function sort(v)
 {
     if(v.length > 0)//if array length is > 0
     {
@@ -170,7 +170,7 @@ function firstAssign(totalRooms)
 }
 
 // global variables 
-var classData = []; // will hold instances of classDescription, will end up with the data for all of the classes
+export var classData = []; // will hold instances of classDescription, will end up with the data for all of the classes
 var crossListedCoursesToCheck = []; // will temporarily hold classes that are cross listed and skip them if listed
 
 /**
@@ -178,7 +178,7 @@ var crossListedCoursesToCheck = []; // will temporarily hold classes that are cr
  * @returns {array} Array classData with parsed classroom information from uploaded .CSV file
  * @memberof Restrictions
  */
-function readCSVData()// read data from the csv file 
+export function readCSVData()// read data from the csv file 
 {
     return new Promise((resolve) => {
         var prevClassName; // holds the previous class stated in csv file
@@ -253,7 +253,7 @@ function storeParsedData()// Store parsed data in db
 
 async function main()// main function, is async because fs.createReadStream() 
 {
-    await readCSVData();
+    // await readCSVData();
     storeParsedData();
     firstAssign(z);
 } // end of main

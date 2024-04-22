@@ -1,11 +1,21 @@
-class Course {
-    constructor(name, timeslots, possibleRooms) {
-        this.name = name
-        this.timeslots = timeslots
-        this.neighbors = []
-        this.possibleRooms = possibleRooms
+import { classData, readCSVData } from "./restrictions.js"
+import rooms from "./uploads/rooms.json" assert {type: "json"}
+
+await readCSVData()
+
+let allRooms = Object.keys(rooms)
+
+classData.forEach(course => {course.setPossibleRooms(allRooms)})
+
+//Following code removes any classes with non-unique names from the list
+const uniqueNames = {};
+let uniqueClassData = classData.filter(obj => {
+    if (!uniqueNames[obj.name]) {
+        uniqueNames[obj.name] = true;
+        return true;
     }
-}
+    return false;
+});
 
 class CourseAssignCSP {
     constructor(courses, allRooms, arcs) {
@@ -15,31 +25,10 @@ class CourseAssignCSP {
     }
 }
 
-allRooms = [101, 102, 103]
-
-CourseWA = new Course("WA", [], allRooms)
-CourseNT = new Course("NT", [], allRooms)
-CourseSA = new Course("SA", [], allRooms)
-CourseQLI = new Course('QLI', [], allRooms)
-CourseNSW = new Course('NSW', [], allRooms)
-CourseVIC = new Course('VIC', [], allRooms)
-CourseT = new Course('T', [], [102])
-
-CourseWA.neighbors = [CourseNT, CourseSA]
-CourseNT.neighbors = [CourseWA, CourseSA, CourseQLI]
-CourseSA.neighbors = [CourseWA, CourseNT, CourseQLI, CourseNSW, CourseVIC]
-CourseQLI.neighbors = [CourseNT, CourseSA, CourseNSW]
-CourseNSW.neighbors = [CourseSA, CourseQLI, CourseVIC]
-CourseVIC.neighbors = [CourseSA, CourseNSW]
-
-CSPProblem_Courses = [CourseWA, CourseNT, CourseSA, CourseQLI, CourseNSW, CourseVIC, CourseT]
-
-CSPProblem = new CourseAssignCSP(CSPProblem_Courses, allRooms)
+let CSPProblem = new CourseAssignCSP(uniqueClassData, allRooms)
 
 //Hardcoding these before I can simply get them from checking the entered courses
-CSPProblem.arcs = [[CourseWA, CourseNT], [CourseWA, CourseSA], [CourseNT, CourseSA], [CourseNT, CourseQLI],
-[CourseSA, CourseQLI], [CourseSA, CourseNSW], [CourseSA, CourseVIC],
-[CourseQLI, CourseNSW], [CourseNSW, CourseVIC]]
+CSPProblem.arcs = []
 
 //Assignment functions begin here
 
@@ -75,7 +64,6 @@ function recursiveBacktrackingSearch(assignment, csp) {
 }
 
 function isComplete(assignment, csp) {
-    console.log(assignment)
     return Object.keys(assignment).length === csp.courses.length
 }
 
@@ -120,9 +108,9 @@ function isConsistent(course, room, assignment, csp) {
 
 function arc_consistency(assignment, csp) {
 
-    queue = []
+    let queue = []
 
-    for (arc in csp.arcs) {
+    for (let arc in csp.arcs) {
         queue.push(csp.arcs[arc])
     }
 
@@ -149,7 +137,7 @@ function revise(courseA, courseB, assignment, csp) {
 
     let revised = false
 
-    for (room in courseA.possibleRooms) {
+    for (let room in courseA.possibleRooms) {
 
         if (!(courseB.possibleRooms.some(otherRoom => isConsistent(courseB, otherRoom, assignment, csp)))) {
             courseA.possibleRooms.splice(room, 1)
@@ -160,4 +148,4 @@ function revise(courseA, courseB, assignment, csp) {
     return revised
 }
 
-console.log(backtrackingSearch(CSPProblem))
+console.log(Object.keys(backtrackingSearch(CSPProblem)).length)
