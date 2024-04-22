@@ -49,6 +49,7 @@ const meetOnS = ["ECEN 891 - SPECIAL TOPICS IN ELECTRIC AND COMPUTER ENGINEERING
 var roomsList = [];
 var classDayFrequencies = {'M': {},'T': {},'W': {},'R': {},'F': {},'S': {}}
 var classDayTotals = {'M': 0,'T': 0,'W': 0,'R': 0,'F': 0,'S': 0}
+var unassignedClasses = [];
 const QUEUE = new PriorityQueue();
 
 
@@ -259,15 +260,10 @@ function canBeAssigned(_class, room) {
 /* assign the actual rooms */
 function assignRooms() {
     // add courses to queue first
-    // var test_limit = [0, 1, 14, 42, 50, 69, 73, 80, 115, 142, 143, 160];
-    // var test_limit = [0];  // 0, 31, 32, 36
     var test_data = [];
     var len = QUEUE.queue.length;
     for (var i = 0; i < len; i++) {
         test_data.push(QUEUE.dequeue());
-        // if (!test_limit.includes(i)) {
-        //     test_data.pop()
-        // }
     }
     var i = 0;
     var _class = test_data.shift();
@@ -317,6 +313,9 @@ function assignRooms() {
             if (assignedRoom) {
                 break;
             }
+        }
+        if (!assignedRoom) {
+            unassignedClasses.push(_class[0]);
         }
         // console.log(assignedRoom ? "\tAssigned: " + _class[0].name + "\n\tto: " + roomsList[--numRoomsChecked].roomNumber : "\tCouldn't find a classroom for " + _class[0].name);
         console.log(assignedRoom ? "\tAssigned: " + _class[0].name + "\n\tto: " + r.roomNumber : "\tCouldn't find a classroom for " + _class[0].name);
@@ -375,6 +374,43 @@ function Queueify() {
 }
 
 
+/* writes roomsList into readable from */
+function writeToCSV() {
+    var data = "";
+    var days;
+    var daysLetter = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Sat/Sun"];
+    var currClass;
+    var counter = 0;
+    // loop through each room
+    for (var r of roomsList) {
+        data += `${r.roomNumber}, \n`;
+        days = [r.monClasses, r.tueClasses, r.wedClasses, r.thuClasses, r.friClasses, r.s_sClasses];
+        // loop through each of the classes
+        for (var i in days) {
+            data += " , " + daysLetter[i] + ", ";
+            // loop through each class
+            currClass = days[i];
+            while (currClass !== null && currClass.getClass() !== null) {
+                data += currClass.getClass().meetingDates.start + "-" + currClass.getClass().meetingDates.end + ", ";
+                currClass = currClass.getNext();
+                counter++;
+            }
+            data += "\n"; 
+        }
+    }
+
+    // write to file
+    fs.writeFile("./server/uploads/output.csv", data, (err) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            console.log("Data has been written to output.csv");
+        }
+    });
+}
+
+
 /* main function, is async because fs.createReadStream() */
 export async function mainRestrictions(path) {
     await readCSVData(path);
@@ -382,9 +418,16 @@ export async function mainRestrictions(path) {
     howManyClassesPerDay();
     Queueify();
     assignRooms();
-    // console.log(roomsList[5]);
+    writeToCSV();
+    if (unassignedClasses.length > 0) {
+        for (var i in unassignedClasses) {
+            console.log(`#${i+1} : ${unassignedClasses[i].name}`);
+        }
+    }
+    else {
+        console.log("Number of unassigned classes: " + unassignedClasses.length);
+    }
 } // end of main
-
 
 
 /* launch main */
