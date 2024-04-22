@@ -432,6 +432,8 @@ export async function mainRestrictions(path) {
 
 /* launch main */
 var test_path = './server/uploads/test.csv';
+// TODO: output should look like input but replace the rooms
+// TODO: create an audit log file
 mainRestrictions(test_path);
 
 
