@@ -3,6 +3,9 @@ import {CourseDescription, ClassroomTimeData, PriorityQueue, ClassroomTimeSlot} 
 import fs from 'fs';
 import { parse } from 'csv-parse';
 import rooms from "./uploads/rooms.json" assert {type: "json"};
+import winston from "winston";
+const { combine, timestamp, printf, colorize, align } = winston.format;
+
 
 
 /* global variables */
@@ -51,6 +54,20 @@ var classDayFrequencies = {'M': {},'T': {},'W': {},'R': {},'F': {},'S': {}}
 var classDayTotals = {'M': 0,'T': 0,'W': 0,'R': 0,'F': 0,'S': 0}
 var unassignedClasses = [];
 const QUEUE = new PriorityQueue();
+const logger = winston.createLogger({
+    level: process.env.LOG_LEVEL || 'info',
+    format: combine(
+        timestamp({
+          format: 'YYYY-MM-DD hh:mm:ss.SSS A',
+        }),
+        printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`)
+      ),
+    transports: [
+      new winston.transports.File({
+        filename: 'server/uploads/information.log',
+      }),
+    ],
+  });
 
 
 /* read data from the csv file */
@@ -84,7 +101,6 @@ function readCSVData(file_path) {
             } // end of if statement
         })
         .on('end', function() {
-            console.log(classData.length);
             resolve(classData); // saves the data for classData
         }) // end of fs read
     }); // end of return
@@ -269,8 +285,8 @@ function assignRooms() {
     var _class = test_data.shift();
     while (_class !== undefined) {
         var possibleRooms = {}; // {points : [room, room, ...], points : [room, room, ...], ...} is also stored in order in memory
-        console.log(i++);
-        console.log("\Assigning class: " + _class[0].name);
+        logger.info("Course #" + ++i);
+        logger.info("Assigning class: " + _class[0].name);
         var assignedRoom = false // boolean value to tell if class has already been assigned
         var numRoomsChecked = 0; // number of classes we have looped through
         while (numRoomsChecked < roomsList.length) {
@@ -316,9 +332,13 @@ function assignRooms() {
         }
         if (!assignedRoom) {
             unassignedClasses.push(_class[0]);
+            logger.warn("Couldn't find a classroom for " + _class[0].name);
+        }
+        else {
+            logger.info("Assigned: " + _class[0].name + " to PKI room #" + r.roomNumber)
         }
         // console.log(assignedRoom ? "\tAssigned: " + _class[0].name + "\n\tto: " + roomsList[--numRoomsChecked].roomNumber : "\tCouldn't find a classroom for " + _class[0].name);
-        console.log(assignedRoom ? "\tAssigned: " + _class[0].name + "\n\tto: " + r.roomNumber : "\tCouldn't find a classroom for " + _class[0].name);
+        // console.log(assignedRoom ? "\tAssigned: " + _class[0].name + "\n\tto PKI room #" + r.roomNumber : "\tCouldn't find a classroom for " + _class[0].name);
         _class = test_data.shift();
     }
     return null;
@@ -398,14 +418,10 @@ function writeToCSV() {
             data += "\n"; 
         }
     }
-
     // write to file
     fs.writeFile("./server/uploads/output.csv", data, (err) => {
         if (err) {
-            console.log(err);
-        }
-        else {
-            console.log("Data has been written to output.csv");
+            logger.error(err);
         }
     });
 }
@@ -414,26 +430,31 @@ function writeToCSV() {
 /* main function, is async because fs.createReadStream() */
 export async function mainRestrictions(path) {
     await readCSVData(path);
+    logger.info("Class data has been read");
     createRoomData();
+    logger.info("Room information has been read");
     howManyClassesPerDay();
+    logger.info("Number of classes per day has been calculated");
     Queueify();
+    logger.info("Class data has been queued");
     assignRooms();
+    logger.info("Finished assigning rooms");
     writeToCSV();
+    logger.info("Data has been outputted");
     if (unassignedClasses.length > 0) {
-        var i = 0;
         for (var _class of unassignedClasses) {
-            console.log(`#${++i}\t: ${_class.name}`);
+            logger.warn(`Class ${_class.name} section ${_class.sectionNumber} was not assigned a room`)
         }
     }
     else {
-        console.log("Number of unassigned classes: " + unassignedClasses.length);
+        logger.info("All classes have been assigned");
     }
 } // end of main
 
 
 /* launch main */
 var test_path;
-var _switch = 2; // used in switch statement to switch between test files
+var _switch = 0; // used in switch statement to switch between test files
 // TODO: output should look like input but replace the rooms
 // TODO: create an audit log file
 switch (_switch) {
@@ -451,6 +472,5 @@ switch (_switch) {
         break;
 }
 mainRestrictions(test_path);
-
 
 export default {mainRestrictions};
