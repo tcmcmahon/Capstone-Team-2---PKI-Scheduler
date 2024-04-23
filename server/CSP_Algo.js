@@ -5,7 +5,7 @@ await readCSVData()
 
 let allRooms = Object.keys(rooms)
 
-classData.forEach(course => {course.setPossibleRooms(allRooms)})
+classData.forEach(course => { course.setPossibleRooms(allRooms) })
 
 //Following code removes any classes with non-unique names from the list
 const uniqueNames = {};
@@ -20,22 +20,22 @@ let uniqueClassData = classData.filter(obj => {
 function convertTimeToHHMM(timeString) {
     // Split the time string into hours and minutes
     const [hourString, minuteString] = timeString.split(/:|(?=[ap]m)/i);
-  
+
     // Convert hours to 24-hour format
     let hour = parseInt(hourString);
     const isPM = /pm/i.test(timeString);
     if (isPM && hour !== 12) {
-      hour += 12;
+        hour += 12;
     } else if (!isPM && hour === 12) {
-      hour = 0;
+        hour = 0;
     }
-  
+
     // Pad minutes with leading zero if necessary
     const minute = minuteString ? minuteString.padStart(2, '0') : '00';
-  
+
     // Return the formatted time
     return `${hour.toString().padStart(2, '0')}:${minute}`;
-  }
+}
 
 class CourseAssignCSP {
     constructor(courses, allRooms) {
@@ -44,10 +44,10 @@ class CourseAssignCSP {
         this.allRooms = allRooms
     }
 
-    buildArcs(){
+    buildArcs() {
 
-        for (let i = 0; i < this.courses.length; i++){
-            for (let j = 1; j < this.courses.length; j++){
+        for (let i = 0; i < this.courses.length; i++) {
+            for (let j = 1; j < this.courses.length; j++) {
 
                 let courseA = this.courses[i]
                 let courseB = this.courses[j]
@@ -57,7 +57,7 @@ class CourseAssignCSP {
                 let courseBStartTime = convertTimeToHHMM(courseB.meetingDates[0].startTime)
                 let courseBEndTime = convertTimeToHHMM(courseB.meetingDates[0].endTime)
 
-                if (courseBStartTime < courseAEndTime && courseAStartTime < courseBEndTime){
+                if (courseBStartTime < courseAEndTime && courseAStartTime < courseBEndTime) {
                     courseA.neighbors.push(courseB)
                     courseB.neighbors.push(courseA)
                     this.arcs.push([courseA, courseB])
@@ -85,19 +85,19 @@ function recursiveBacktrackingSearch(assignment, csp) {
     const selectedCourse = selectCourseMRV(assignment, csp)
     const orderedRooms = orderDomainValues(selectedCourse, selectedCourse.possibleRooms, assignment, csp)
 
-    for (let room in orderedRooms) {
+    for (let room of orderedRooms) {
 
-        if (isConsistent(selectedCourse, selectedCourse.possibleRooms[room], assignment, csp)) {
-            assignment[selectedCourse.name] = selectedCourse.possibleRooms[room]
+        if (isConsistent(selectedCourse, room, assignment, csp)) {
+            assignment[selectedCourse.name] = room
 
             if (arc_consistency(assignment, csp)) {
                 let result = recursiveBacktrackingSearch(assignment, csp)
-                if (result !== null) {
+                if (result) {
                     return result
                 }
             }
 
-            delete assignment[selectedCourse.n]
+            delete assignment[selectedCourse.name]
         }
     }
 
@@ -128,8 +128,8 @@ function countConflicts(course, room, assignment, csp) {
 
     let count = 0
 
-    for (const neighbor of course.neighbors) {
-        if (neighbor.name in assignment && assignment[neighbor] == room) {
+    for (let neighbor of course.neighbors) {
+        if (neighbor.name in assignment && assignment[neighbor.name] == room) {
             count++
         }
     }
@@ -138,8 +138,8 @@ function countConflicts(course, room, assignment, csp) {
 }
 
 function isConsistent(course, room, assignment, csp) {
-    for (let neighbor in course.neighbors) {
-        let courseName = course.neighbors[neighbor].name
+    for (const neighbor of course.neighbors) {
+        let courseName = neighbor.name
         if (courseName in assignment && assignment[courseName] == room) {
             return false
         }
