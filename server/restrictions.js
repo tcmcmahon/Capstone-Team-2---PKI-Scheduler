@@ -420,8 +420,9 @@ export async function mainRestrictions(path) {
     assignRooms();
     writeToCSV();
     if (unassignedClasses.length > 0) {
-        for (var i in unassignedClasses) {
-            console.log(`#${i+1} : ${unassignedClasses[i].name}`);
+        var i = 0;
+        for (var _class of unassignedClasses) {
+            console.log(`#${++i}\t: ${_class.name}`);
         }
     }
     else {
@@ -431,9 +432,24 @@ export async function mainRestrictions(path) {
 
 
 /* launch main */
-var test_path = './server/uploads/test.csv';
+var test_path;
+var _switch = 2; // used in switch statement to switch between test files
 // TODO: output should look like input but replace the rooms
 // TODO: create an audit log file
+switch (_switch) {
+    case 0:
+        test_path = './server/uploads/test.csv';
+        break;
+    case 1:
+        test_path = './server/uploads/testShort.csv';
+        break;
+    case 2:
+        test_path = './server/uploads/testLong.csv';
+        break;
+    case 3:
+        test_path = './server/uploads/testSame.csv';
+        break;
+}
 mainRestrictions(test_path);
 
 
