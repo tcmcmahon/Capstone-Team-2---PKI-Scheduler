@@ -4,7 +4,7 @@ import fs from 'fs';
 import { parse } from 'csv-parse';
 import rooms from "./uploads/rooms.json" assert {type: "json"};
 import winston from "winston";
-const { combine, timestamp, printf, colorize, align } = winston.format;
+const { combine, timestamp, printf } = winston.format;
 
 
 
@@ -72,13 +72,24 @@ const logger = winston.createLogger({
 
 /* read data from the csv file */
 function readCSVData(file_path) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         var prevClassName; // holds the previous class stated in csv file
-        fs.createReadStream(file_path)
-        .pipe(
-            parse({from_line: 4}) // starts reading at line 4 with "AREN 1030 - DESIGN AND SIMULATION STUDIO I"
-        ) 
-        .on('data', function (row) { // iterates through each row in csv file
+        if (!fs.existsSync(file_path)) {
+            logger.err("File not found");
+            reject(new Error("File not found."));
+            return;
+        }
+        const fileStream = fs.createReadStream(file_path);
+        const parser = fileStream.pipe(parse({from_line: 4}));
+        fileStream.on('error', (err) => {
+            logger.err(err);
+            reject(err);
+        });
+        parser.on('error', (err) => {
+            logger.err(err);
+            reject(err);
+        });
+        parser.on('data', (row) => {
             var cd = new CourseDescription(); // creates object to store class data
             if (row[34] !== '' && cd.checkIfCrossListed([row[6], row[7]], row[34], crossListedCoursesToCheck)) { /* cross listed / class is already in classData */ }
             else if (Number(row[7]) >= 800) { /* bad section number */ } 
@@ -99,10 +110,10 @@ function readCSVData(file_path) {
             else { // will save the previous class name for the next row
                 prevClassName = row[0];
             } // end of if statement
+        });
+        parser.on('end', () => {
+            resolve(classData);
         })
-        .on('end', function() {
-            resolve(classData); // saves the data for classData
-        }) // end of fs read
     }); // end of return
 } // end of readCSVData
 
