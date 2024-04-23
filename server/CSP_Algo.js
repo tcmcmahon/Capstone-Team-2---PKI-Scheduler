@@ -17,18 +17,59 @@ let uniqueClassData = classData.filter(obj => {
     return false;
 });
 
+function convertTimeToHHMM(timeString) {
+    // Split the time string into hours and minutes
+    const [hourString, minuteString] = timeString.split(/:|(?=[ap]m)/i);
+  
+    // Convert hours to 24-hour format
+    let hour = parseInt(hourString);
+    const isPM = /pm/i.test(timeString);
+    if (isPM && hour !== 12) {
+      hour += 12;
+    } else if (!isPM && hour === 12) {
+      hour = 0;
+    }
+  
+    // Pad minutes with leading zero if necessary
+    const minute = minuteString ? minuteString.padStart(2, '0') : '00';
+  
+    // Return the formatted time
+    return `${hour.toString().padStart(2, '0')}:${minute}`;
+  }
+
 class CourseAssignCSP {
-    constructor(courses, allRooms, arcs) {
+    constructor(courses, allRooms) {
         this.courses = courses
-        this.arcs = arcs
+        this.arcs = []
         this.allRooms = allRooms
+    }
+
+    buildArcs(){
+
+        for (let i = 0; i < this.courses.length; i++){
+            for (let j = 1; j < this.courses.length; j++){
+
+                let courseA = this.courses[i]
+                let courseB = this.courses[j]
+
+                let courseAStartTime = convertTimeToHHMM(courseA.meetingDates[0].startTime)
+                let courseAEndTime = convertTimeToHHMM(courseA.meetingDates[0].endTime)
+                let courseBStartTime = convertTimeToHHMM(courseB.meetingDates[0].startTime)
+                let courseBEndTime = convertTimeToHHMM(courseB.meetingDates[0].endTime)
+
+                if (courseBStartTime < courseAEndTime && courseAStartTime < courseBEndTime){
+                    courseA.neighbors.push(courseB)
+                    courseB.neighbors.push(courseA)
+                    this.arcs.push([courseA, courseB])
+                }
+            }
+        }
     }
 }
 
 let CSPProblem = new CourseAssignCSP(uniqueClassData, allRooms)
 
-//Hardcoding these before I can simply get them from checking the entered courses
-CSPProblem.arcs = []
+CSPProblem.buildArcs()
 
 //Assignment functions begin here
 
@@ -56,7 +97,7 @@ function recursiveBacktrackingSearch(assignment, csp) {
                 }
             }
 
-            delete assignment[selectedCourse]
+            delete assignment[selectedCourse.n]
         }
     }
 
@@ -64,6 +105,7 @@ function recursiveBacktrackingSearch(assignment, csp) {
 }
 
 function isComplete(assignment, csp) {
+    console.log(Object.keys(assignment).length)
     return Object.keys(assignment).length === csp.courses.length
 }
 
@@ -122,7 +164,7 @@ function arc_consistency(assignment, csp) {
                 return false
             }
 
-            for (course in arc[0].neighbors) {
+            for (let course in arc[0].neighbors) {
                 if (arc[0].neighbors[course] != arc[1]) {
                     queue.push([arc[0].neighbors[course], arc[0]])
                 }
@@ -148,4 +190,9 @@ function revise(courseA, courseB, assignment, csp) {
     return revised
 }
 
-console.log(Object.keys(backtrackingSearch(CSPProblem)).length)
+let start = performance.now()
+console.log(backtrackingSearch(CSPProblem))
+let end = performance.now()
+
+let result = end - start
+console.log(end)
