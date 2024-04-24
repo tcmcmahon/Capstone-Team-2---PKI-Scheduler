@@ -9,7 +9,8 @@ const { combine, timestamp, printf } = winston.format;
 
 
 /* global variables */
-var classData = []; // will hold instances of classDescription, will end up with the data for all of the classes
+var unassignedClassData = []; // will hold instances of classDescription, will end up with the data for all of the classes
+var assignedClassData = []; // will hold instances of classDescription for classes that are assigned
 var crossListedCoursesToCheck = []; // will temporarily hold classes that are cross listed and skip them if listed
 const unassignableClasses =["AREN 3030 - AE DESIGN AND SIMULATION STUDIO III",
                             "CIVE 334 - INTRODUCTION TO GEOTECHNICAL ENGINEERING",
@@ -52,7 +53,7 @@ const meetOnS = ["ECEN 891 - SPECIAL TOPICS IN ELECTRIC AND COMPUTER ENGINEERING
 var roomsList = [];
 var classDayFrequencies = {'M': {},'T': {},'W': {},'R': {},'F': {},'S': {}}
 var classDayTotals = {'M': 0,'T': 0,'W': 0,'R': 0,'F': 0,'S': 0}
-var unassignedClasses = [];
+var finalUnassignedClasses = [];
 const QUEUE = new PriorityQueue();
 const logger = winston.createLogger({
     level: process.env.LOG_LEVEL || 'info',
@@ -67,7 +68,7 @@ const logger = winston.createLogger({
         filename: 'server/uploads/information.log',
       }),
     ],
-  });
+});
 
 
 /* read data from the csv file */
@@ -106,14 +107,19 @@ function readCSVData(file_path) {
                 cd.setSession(row[16]);
                 cd.setCampus(row[17]);
                 cd.setClassSize(row[29], row[35])
-                classData.push(cd);
+                if (cd.room === null) {
+                    unassignedClassData.push(cd);
+                }
+                else {
+                    assignedClassData.push([cd, -1]);
+                }
             }
             else { // will save the previous class name for the next row
                 prevClassName = row[0];
             } // end of if statement
         });
         parser.on('end', () => {
-            resolve(classData);
+            resolve(unassignedClassData);
         })
     }); // end of return
 } // end of readCSVData
@@ -137,7 +143,7 @@ function createRoomData() {
 function howManyClassesPerDay() {
     var total_count = 0;
     // loop through each class
-    for (var _class of classData) {
+    for (var _class of unassignedClassData) {
         // loop through each of the meeting dates
         for (var ses of _class.meetingDates) {
             // loop through each day of the meeting dates
@@ -290,6 +296,11 @@ function assignRooms() {
     // add courses to queue first
     var test_data = [];
     var len = QUEUE.queue.length;
+    // prioritize assigned rooms
+    for (var _class of assignedClassData) {
+        test_data.push(_class);
+    }
+    // push unassigned rooms
     for (var i = 0; i < len; i++) {
         test_data.push(QUEUE.dequeue());
     }
@@ -301,6 +312,9 @@ function assignRooms() {
         logger.info("Assigning class: " + _class[0].name);
         var assignedRoom = false // boolean value to tell if class has already been assigned
         var numRoomsChecked = 0; // number of classes we have looped through
+        if (_class[0].room !== null) {
+            //TODO: do more stuff
+        }
         while (numRoomsChecked < roomsList.length) {
             if (numRoomsChecked >= roomsList.length) { break } // checked everyroom and couldn't find a slot
             // console.log("\t\tChecking room: ", roomsList[numRoomsChecked].roomNumber);
@@ -343,7 +357,7 @@ function assignRooms() {
             }
         }
         if (!assignedRoom) {
-            unassignedClasses.push(_class[0]);
+            finalUnassignedClasses.push(_class[0]);
             logger.warn("Couldn't find a classroom for " + _class[0].name);
         }
         else {
@@ -364,7 +378,7 @@ function Queueify() {
     var start, end, startSplit, endSplit;
     var i;
     // loop through each class
-    for (var _class of classData) {
+    for (var _class of unassignedClassData) {
         classBusyness = 0;
         i = 0;
         // loop through each meeting time
@@ -453,8 +467,8 @@ export async function mainRestrictions(path) {
     logger.info("Finished assigning rooms");
     writeToCSV();
     logger.info("Data has been outputted");
-    if (unassignedClasses.length > 0) {
-        for (var _class of unassignedClasses) {
+    if (finalUnassignedClasses.length > 0) {
+        for (var _class of finalUnassignedClasses) {
             logger.warn(`Class ${_class.name} section ${_class.sectionNumber} was not assigned a room`)
         }
     }
@@ -484,5 +498,6 @@ switch (_switch) {
         break;
 }
 mainRestrictions(test_path);
+
 
 export default {mainRestrictions};
