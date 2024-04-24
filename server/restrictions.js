@@ -102,6 +102,7 @@ function readCSVData(file_path) {
                 cd.setSectionNum(row[7]);
                 cd.setLab(row[9]);
                 cd.spliceTime(row[11]);
+                cd.setRoom(row[14]);
                 cd.setSession(row[16]);
                 cd.setCampus(row[17]);
                 cd.setClassSize(row[29], row[35])
