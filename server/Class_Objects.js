@@ -37,6 +37,12 @@ export class CourseDescription {
         }
         return this.meetingDates;
     }
+    setRoom(roomString) {
+        var pkiLen = "Peter Kiewit Institute ".length;
+        if (roomString !== "") {
+            this.room = roomString.substr(pkiLen, 3);
+        }
+    }
     setSession(sessionString) {
         this.session = sessionString;
     }
