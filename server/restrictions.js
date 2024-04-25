@@ -316,6 +316,12 @@ function assignRooms() {
             //TODO: do more stuff
         }
         while (numRoomsChecked < roomsList.length) {
+            if (_class[0].room === roomsList[numRoomsChecked]) {
+                if(canBeAssigned(_class[0], roomsList[numRoomsChecked])) {
+                    assignedRoom = true;
+                }
+                break;
+            }
             if (numRoomsChecked >= roomsList.length) { break } // checked everyroom and couldn't find a slot
             // console.log("\t\tChecking room: ", roomsList[numRoomsChecked].roomNumber);
             if (!roomsList[numRoomsChecked].colleges[_class[0].campus]) { 
@@ -339,21 +345,23 @@ function assignRooms() {
             numRoomsChecked++;
         }
         var r;
-        for (const [points, rooms] of Object.entries(possibleRooms)) {
-            for (var room of rooms) {
-                if (!canBeAssigned(_class[0], room)) {
-                    // console.log("\t\t\tNo Rooms Available");
+        if (assignedRoom) {
+            for (const [points, rooms] of Object.entries(possibleRooms)) {
+                for (var room of rooms) {
+                    if (!canBeAssigned(_class[0], room)) {
+                        // console.log("\t\t\tNo Rooms Available");
+                    }
+                    else {
+                        // console.log(points);
+                        // console.log(room);
+                        assignedRoom = true;
+                        r = room;
+                        break;
+                    }
                 }
-                else {
-                    // console.log(points);
-                    // console.log(room);
-                    assignedRoom = true;
-                    r = room;
+                if (assignedRoom) {
                     break;
                 }
-            }
-            if (assignedRoom) {
-                break;
             }
         }
         if (!assignedRoom) {
