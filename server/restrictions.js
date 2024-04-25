@@ -3,8 +3,35 @@ import {CourseDescription, ClassroomTimeData, PriorityQueue, ClassroomTimeSlot} 
 import fs from 'fs';
 import { parse } from 'csv-parse';
 import rooms from "./uploads/rooms.json" assert {type: "json"};
+import { formatTimes } from "./formatTime.js";
+import express from 'express';
+import cors from 'cors';
 
+//Set up express/cors
+const ex = express();
+ex.use(express.json());
+ex.use(cors());
 
+/** Send calendar data when /Data path is GET requested
+ * @function
+ * @returns {void} Sends finalForCalendar object to requester
+ * @memberof Restrictions
+ */
+ex.get("/Data", (req, res) => {res.json(finalForCalendar);});//Send data in json
+
+/** Send final assignment data when /Algo path is GET requested
+ * @function
+ * @returns {void} Sends final object to requester
+ * @memberof Restrictions
+ */
+ex.get("/Algo", (req, res) => {res.json(ft);});//Send data in json
+
+/** Start server listener on port 3001 for data requests 
+ * @function
+ * @returns {void} Starts a listener for data on http://localhost:3001
+ * @memberof Restrictions
+ */
+ex.listen(3001, () => console.log("Server is up"));//Listen on port 3001 for data requests to /Data and /Algo 
 /* global variables */
 var classData = []; // will hold instances of classDescription, will end up with the data for all of the classes
 var crossListedCoursesToCheck = []; // will temporarily hold classes that are cross listed and skip them if listed
@@ -373,7 +400,6 @@ function Queueify() {
     // QUEUE.displayContents();
 }
 
-
 /* writes roomsList into readable from */
 function writeToCSV() {
     var data = "";
@@ -398,9 +424,8 @@ function writeToCSV() {
             data += "\n"; 
         }
     }
-
     // write to file
-    fs.writeFile("./server/uploads/output.csv", data, (err) => {
+    fs.writeFile("./uploads/output.csv", data, (err) => {
         if (err) {
             console.log(err);
         }
@@ -410,6 +435,116 @@ function writeToCSV() {
     });
 }
 
+let ft = [];
+let finalForCalendar = [];
+
+function calendarFormat()
+{
+    var days;
+    var currClass;
+    var counter = 0;
+    var name = [];
+    // loop through each room
+    for (var r of roomsList) {
+        days = [r.monClasses, r.tueClasses, r.wedClasses, r.thuClasses, r.friClasses];
+        // loop through each of the classes
+        for (var i in days) {
+            // loop through each class
+            currClass = days[i];
+            if(!(name.includes(currClass.name)))
+            {
+                name.push(currClass.name);
+                while (currClass !== null && currClass.getClass() !== null) {
+                    ft.push({startTime: currClass.getClass().meetingDates.start, endTime: currClass.getClass().meetingDates.end, days: currClass.getClass().meetingDates.days, title: currClass.name, room: r.roomNumber})
+                    currClass = currClass.getNext();
+                    counter++;
+                }
+            }
+            else
+            {
+                continue;
+            } 
+        }
+    }
+    // for(let i = 0; i < roomsList.length; i++)
+    // {
+    //     if(roomsList[i].monClasses.getClass() !== null)
+    //     {
+    //         ft.push({startTime: roomsList[i].monClasses.getClass().meetingDates.start, endTime: roomsList[i].monClasses.getClass().meetingDates.end, days: roomsList[i].monClasses.getClass().meetingDates.days, title: roomsList[i].monClasses.getClass().name, room: roomsList[i].roomNumber})
+    //     }
+    //     if(roomsList[i].tueClasses.getClass() !== null)
+    //     {
+    //         ft.push({startTime: roomsList[i].tueClasses.getClass().meetingDates.start, endTime: roomsList[i].tueClasses.getClass().meetingDates.end, days: roomsList[i].tueClasses.getClass().meetingDates.days, title: roomsList[i].tueClasses.getClass().name, room: roomsList[i].roomNumber})
+    //     }
+    //     if(roomsList[i].wedClasses.getClass() !== null)
+    //     {
+    //         ft.push({startTime: roomsList[i].wedClasses.getClass().meetingDates.start, endTime: roomsList[i].wedClasses.getClass().meetingDates.end, days: roomsList[i].wedClasses.getClass().meetingDates.days, title: roomsList[i].wedClasses.getClass().name, room: roomsList[i].roomNumber})
+    //     }
+    //     if(roomsList[i].thuClasses.getClass() !== null)
+    //     {
+    //         ft.push({startTime: roomsList[i].thuClasses.getClass().meetingDates.start, endTime: roomsList[i].thuClasses.getClass().meetingDates.end, days: roomsList[i].thuClasses.getClass().meetingDates.days, title: roomsList[i].thuClasses.getClass().name, room: roomsList[i].roomNumber})
+    //     }
+    //     if(roomsList[i].friClasses.getClass() !== null)
+    //     {
+    //         ft.push({startTime: roomsList[i].friClasses.getClass().meetingDates.start, endTime: roomsList[i].friClasses.getClass().meetingDates.end, days: roomsList[i].friClasses.getClass().meetingDates.days, title: roomsList[i].friClasses.getClass().name, room: roomsList[i].roomNumber})
+    //     }
+    // }
+    console.log(ft.length);
+    formatTimes(ft);
+    let dates = ["2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04", "2024-01-05"];
+    for(let i = 0; i < ft.length; i++)
+    {
+        if(ft[i].days == "MW")
+        {
+            finalForCalendar.push({startDate: (dates[0] + "T" + ft[i].startTime), endTime: (dates[0] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
+            finalForCalendar.push({startDate: (dates[2] + "T" + ft[i].startTime), endTime: (dates[2] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
+        }
+        else if(ft[i].days == "M")
+        {
+            finalForCalendar.push({startDate: (dates[0] + "T" + ft[i].startTime), endTime: (dates[0] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
+        }
+        else if(ft[i].days == "MWF")
+        {
+            finalForCalendar.push({startDate: (dates[0] + "T" + ft[i].startTime), endTime: (dates[0] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
+            finalForCalendar.push({startDate: (dates[2] + "T" + ft[i].startTime), endTime: (dates[2] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
+            finalForCalendar.push({startDate: (dates[4] + "T" + ft[i].startTime), endTime: (dates[4] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
+        }
+        else if(ft[i].days == "MTWRF")
+        {
+            finalForCalendar.push({startDate: (dates[0] + "T" + ft[i].startTime), endTime: (dates[0] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
+            finalForCalendar.push({startDate: (dates[1] + "T" + ft[i].startTime), endTime: (dates[1] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
+            finalForCalendar.push({startDate: (dates[2] + "T" + ft[i].startTime), endTime: (dates[2] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
+            finalForCalendar.push({startDate: (dates[3] + "T" + ft[i].startTime), endTime: (dates[3] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
+            finalForCalendar.push({startDate: (dates[4] + "T" + ft[i].startTime), endTime: (dates[4] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
+        }
+        if(ft[i].days == "TR")
+        {
+            finalForCalendar.push({startDate: (dates[1] + "T" + ft[i].startTime), endTime: (dates[1] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
+            finalForCalendar.push({startDate: (dates[3] + "T" + ft[i].startTime), endTime: (dates[3] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
+        }
+        else if(ft[i].days == "T")
+        {
+            finalForCalendar.push({startDate: (dates[0] + "T" + ft[i].startTime), endTime: (dates[0] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
+        }
+        if(ft[i].days == "WF")
+        {
+            finalForCalendar.push({startDate: (dates[2] + "T" + ft[i].startTime), endTime: (dates[2] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
+            finalForCalendar.push({startDate: (dates[4] + "T" + ft[i].startTime), endTime: (dates[4] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
+        }
+        else if(ft[i].days == "W")
+        {
+            finalForCalendar.push({startDate: (dates[2] + "T" + ft[i].startTime), endTime: (dates[2] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
+        }
+        if(ft[i].days == "R")
+        {
+            finalForCalendar.push({startDate: (dates[3] + "T" + ft[i].startTime), endTime: (dates[3] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
+        }
+        if(ft[i].days == "F")
+        {
+            finalForCalendar.push({startDate: (dates[4] + "T" + ft[i].startTime), endTime: (dates[4] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
+        }
+    }
+}
 
 /* main function, is async because fs.createReadStream() */
 export async function mainRestrictions(path) {
@@ -418,21 +553,24 @@ export async function mainRestrictions(path) {
     howManyClassesPerDay();
     Queueify();
     assignRooms();
+ 
     writeToCSV();
-    if (unassignedClasses.length > 0) {
+    if (unassignedClasses.length > 0) 
+    {
         for (var i in unassignedClasses) {
             console.log(`#${i+1} : ${unassignedClasses[i].name}`);
         }
     }
-    else {
+    else 
+    {
         console.log("Number of unassigned classes: " + unassignedClasses.length);
     }
+    calendarFormat();
 } // end of main
 
 
 /* launch main */
 var test_path = './uploads/test.csv';
 mainRestrictions(test_path);
-
 
 export default {mainRestrictions};
