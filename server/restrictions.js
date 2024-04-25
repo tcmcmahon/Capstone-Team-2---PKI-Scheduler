@@ -76,18 +76,18 @@ function readCSVData(file_path) {
     return new Promise((resolve, reject) => {
         var prevClassName; // holds the previous class stated in csv file
         if (!fs.existsSync(file_path)) {
-            logger.err("File not found");
+            logger.error("File not found");
             reject(new Error("File not found."));
             return;
         }
         const fileStream = fs.createReadStream(file_path);
         const parser = fileStream.pipe(parse({from_line: 4}));
         fileStream.on('error', (err) => {
-            logger.err(err);
+            logger.error(err);
             reject(err);
         });
         parser.on('error', (err) => {
-            logger.err(err);
+            logger.error(err);
             reject(err);
         });
         parser.on('data', (row) => {
@@ -352,8 +352,6 @@ function assignRooms() {
                         // console.log("\t\t\tNo Rooms Available");
                     }
                     else {
-                        // console.log(points);
-                        // console.log(room);
                         assignedRoom = true;
                         r = room;
                         break;
@@ -371,8 +369,6 @@ function assignRooms() {
         else {
             logger.info("Assigned: " + _class[0].name + " to PKI room #" + r.roomNumber)
         }
-        // console.log(assignedRoom ? "\tAssigned: " + _class[0].name + "\n\tto: " + roomsList[--numRoomsChecked].roomNumber : "\tCouldn't find a classroom for " + _class[0].name);
-        // console.log(assignedRoom ? "\tAssigned: " + _class[0].name + "\n\tto PKI room #" + r.roomNumber : "\tCouldn't find a classroom for " + _class[0].name);
         _class = test_data.shift();
     }
     return null;
@@ -455,7 +451,7 @@ function writeToCSV() {
     // write to file
     fs.writeFile("./server/uploads/output.csv", data, (err) => {
         if (err) {
-            logger.error(err);
+            logger.erroror(err);
         }
     });
 }
