@@ -320,7 +320,7 @@ function assignRooms() {
                 if(canBeAssigned(_class[0], roomsList[numRoomsChecked])) {
                     assignedRoom = true;
                 }
-                break;
+                numRoomsChecked = roomsList.length;
             }
             if (numRoomsChecked >= roomsList.length) { break } // checked everyroom and couldn't find a slot
             // console.log("\t\tChecking room: ", roomsList[numRoomsChecked].roomNumber);
