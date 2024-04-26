@@ -3,9 +3,20 @@ export class CourseDescription {
     // TODO : move functions from restrictrions.js to here to reduce clutter there
     constructor() {
         this.name = null;                       // 0 - course code and title
+        this.term = null;                       // 1
+        this.termCode = null;                   // 2
+        this.deptCode = null;                   // 3
+        this.subjCode = null;                   // 4
+        this.catNumber = null;                  // 5
+        this.course = null;                     // 5
         this.sectionNumber = null;              // 7 - section number of course
+        this.courseTitle = null;                // 8
         this.isLab = null;                      // 9 - if lab or not lab
-        this.meetingDates = {days: null, start: null, end: null};                 // 11 - will hold ClassroomTimeSlot object  
+        this.topic = null;                      // 10
+        this.meetingDates = {days: null, start: null, end: null}; // 11 - will hold ClassroomTimeSlot object 
+        this.meetingPattern = null;             // 11 
+        this.meetings = null;                   // 12
+        this.instructor = null;                 // 13
         this.room = null;                       // 14 - keep null, will assign later
         this.session = null;                    // 16 - if class is regular session or 6 weeks - May not be needed
         this.campus = null;                     // 17 - if class is CoE or IS

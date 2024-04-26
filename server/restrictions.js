@@ -250,7 +250,7 @@ function canBeAssigned(_class, room) {
                 classDays.push(room.s_sClasses);
                 break;
             default:
-                console.log("WE HAVE A PROBLEM");
+                logger.warn("Please check the days of class " + _class.name);
         }
     }
     for (var i in classDays) {
@@ -301,7 +301,7 @@ function assignRooms() {
     for (var _class of assignedClassData) {
         test_data.push([_class, -1]);
     }
-    // push unassigned rooms
+    // push unassigned rooms by priority
     for (var i = 0; i < len; i++) {
         test_data.push(QUEUE.dequeue());
     }
@@ -313,11 +313,8 @@ function assignRooms() {
         logger.info("Assigning class: " + _class[0].name);
         var assignedRoom = false // boolean value to tell if class has already been assigned
         var numRoomsChecked = 0; // number of classes we have looped through
-        if (_class[0].room !== null) {
-            //TODO: do more stuff
-        }
         while (numRoomsChecked < roomsList.length) {
-            if (_class[0].room === roomsList[numRoomsChecked].roomNumber) {
+            if (_class[0] !== null && _class[0].room === roomsList[numRoomsChecked].roomNumber) {
                 if(canBeAssigned(_class[0], roomsList[numRoomsChecked])) {
                     assignedRoom = true;
                 }
@@ -347,20 +344,22 @@ function assignRooms() {
         }
         var r;
         if (assignedRoom) {
-            for (const [points, rooms] of Object.entries(possibleRooms)) {
-                for (var room of rooms) {
-                    if (!canBeAssigned(_class[0], room)) {
-                        // console.log("\t\t\tNo Rooms Available");
-                    }
-                    else {
-                        assignedRoom = true;
-                        r = room;
-                        break;
-                    }
+            _class = test_data.shift();
+            continue;
+        }
+        for (const [points, rooms] of Object.entries(possibleRooms)) {
+            for (var room of rooms) {
+                if (!canBeAssigned(_class[0], room)) {
+                    // console.log("\t\t\tNo Rooms Available");
                 }
-                if (assignedRoom) {
+                else {
+                    assignedRoom = true;
+                    r = room;
                     break;
                 }
+            }
+            if (assignedRoom) {
+                break;
             }
         }
         if (!assignedRoom) {
@@ -471,6 +470,7 @@ export async function mainRestrictions(path) {
         for (var _class of finalUnassignedClasses) {
             logger.warn(`Class ${_class.name} section ${_class.sectionNumber} was not assigned a room`)
         }
+        logger.warn(`A total number of ${finalUnassignedClasses.length} have not been assigned`);
     }
     else {
         logger.info("All classes have been assigned");
@@ -480,7 +480,7 @@ export async function mainRestrictions(path) {
 
 /* launch main */
 var test_path;
-var _switch = 1; // used in switch statement to switch between test files
+var _switch = 2; // used in switch statement to switch between test files
 // TODO: output should look like input but replace the rooms
 // TODO: create an audit log file
 switch (_switch) {
