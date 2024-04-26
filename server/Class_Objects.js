@@ -5,7 +5,7 @@ export class CourseDescription {
         this.name = null;                       // 0 - course code and title
         this.sectionNumber = null;              // 7 - section number of course
         this.isLab = null;                      // 9 - if lab or not lab
-        this.meetingDates = [];                 // 11 - will hold ClassroomTimeSlot object  
+        this.meetingDates = {days: null, start: null, end: null};                 // 11 - will hold ClassroomTimeSlot object  
         this.room = null;                       // 14 - keep null, will assign later
         this.session = null;                    // 16 - if class is regular session or 6 weeks - May not be needed
         this.campus = null;                     // 17 - if class is CoE or IS
@@ -21,21 +21,12 @@ export class CourseDescription {
     setLab(sectionString) {
         this.isLab = (sectionString === "Laboratory") ? true : false;
     }
-    spliceTime(timeString) { // e.g. "MW 10:30am-11:45am; F 12:00pm-1:15pm"
-        var timeDaySplit;
-        var startEndSplit;
-        var timeSlot = {days: null, start: null, end: null};
-        var days = timeString.split("; "); // ["MW 10:30am-11:45am", "F 12:00pm-1:15pm"]
-        for (var day in days) {
-            var tmp_timeSlot = structuredClone(timeSlot);
-            timeDaySplit = days[day].split(' '); // ["MW", "10:30am-11:45am"] : ["F", "12:00pm-1:15pm"]
-            startEndSplit = timeDaySplit[1].split('-'); // ["10:30am", "11:45am"] : ["12:00pm", "1:15pm"]
-            tmp_timeSlot.days = timeDaySplit[0];
-            tmp_timeSlot.start = startEndSplit[0];
-            tmp_timeSlot.end = startEndSplit[1];
-            this.meetingDates.push(tmp_timeSlot);
-        }
-        return this.meetingDates;
+    spliceTime(timeString) { // e.g. "MW 10:30am-11:45am
+        var timeDaySplit = timeString.split(' ');
+        var startEndSplit = timeDaySplit[1].split('-');
+        this.meetingDates.days = timeDaySplit[0];
+        this.meetingDates.start = startEndSplit[0];
+        this.meetingDates.end = startEndSplit[1];
     }
     setRoom(roomString) {
         var pkiLen = "Peter Kiewit Institute ".length;
@@ -134,15 +125,16 @@ export class PriorityQueue {
     constructor() {
         this.queue = [];
     }
-    enqueue(_class, classDay, courseTime) {
+    enqueue(_class, classDay, totalCourseTime) {
         var i = 0;
-        _class.meetingDates = _class.meetingDates[classDay];
-        while (i < this.queue.length) {
-            if (this.queue[i][1] < courseTime) { break }
-            else if (this.queue[i][1] === courseTime && this.queue[i][0].meetingDates.days.length < _class.meetingDates.days.length) { break }
-            else { i++ }
+        if (_class.room === null) {
+            while (i < this.queue.length) {
+                if (this.queue[i][1] < totalCourseTime) { break }
+                else if (this.queue[i][1] === totalCourseTime && this.queue[i][0].meetingDates.days.length < _class.meetingDates.days.length) { break }
+                else { i++ }
+            }
         }
-        this.queue.splice(i, 0, [_class, courseTime]);
+        this.queue.splice(i, 0, [_class, totalCourseTime]);
     }
     dequeue(i=0) {
         return this.queue.shift();

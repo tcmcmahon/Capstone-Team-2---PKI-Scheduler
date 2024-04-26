@@ -98,6 +98,9 @@ function readCSVData(file_path) {
                     && unassignableClasses.includes(prevClassName) 
                     && unassignableClassesSections[unassignableClasses.indexOf(prevClassName)].includes(row[7])) { /* class is unassignable with bad section number */ }
             else if (row[29] > 60 || row[35] > 60) { /* too many students to sit */ }
+            else if (row[11].includes(";")) {
+                logger.warn(`Cannot assign ${prevClassName} sect. ${row[7]} due to irregular meetig time. Please assign mannually`);
+            }
             else if (row[0] === '') {
                 cd.setCourseName(prevClassName);
                 cd.setSectionNum(row[7]);
@@ -111,7 +114,7 @@ function readCSVData(file_path) {
                     unassignedClassData.push(cd);
                 }
                 else {
-                    assignedClassData.push([cd, -1]);
+                    assignedClassData.push(cd);
                 }
             }
             else { // will save the previous class name for the next row
@@ -143,21 +146,19 @@ function createRoomData() {
 function howManyClassesPerDay() {
     var total_count = 0;
     // loop through each class
-    for (var _class of unassignedClassData) {
-        // loop through each of the meeting dates
-        for (var ses of _class.meetingDates) {
-            // loop through each day of the meeting dates
-            var days = ses.days.split("");
-            for (var day of days) {
-                if (ses.start in classDayFrequencies[day]) {
-                    classDayFrequencies[day][ses.start]++;
-                }
-                else {
-                    classDayFrequencies[day][ses.start] = 1;
-                }
-                classDayTotals[day]++;
+    for (var _class of unassignedClassData.concat(assignedClassData)) {
+        // loop through each day of the meeting dates
+        var days = _class.meetingDates.days.split("");
+        for (var day of days) {
+            if (_class.meetingDates.start in classDayFrequencies[day]) {
+                classDayFrequencies[day][_class.meetingDates.start]++;
             }
+            else {
+                classDayFrequencies[day][_class.meetingDates.start] = 1;
+            }
+            classDayTotals[day]++;
         }
+        
         total_count++;
     }
 }
@@ -298,7 +299,7 @@ function assignRooms() {
     var len = QUEUE.queue.length;
     // prioritize assigned rooms
     for (var _class of assignedClassData) {
-        test_data.push(_class);
+        test_data.push([_class, -1]);
     }
     // push unassigned rooms
     for (var i = 0; i < len; i++) {
@@ -316,11 +317,11 @@ function assignRooms() {
             //TODO: do more stuff
         }
         while (numRoomsChecked < roomsList.length) {
-            if (_class[0].room === roomsList[numRoomsChecked]) {
+            if (_class[0].room === roomsList[numRoomsChecked].roomNumber) {
                 if(canBeAssigned(_class[0], roomsList[numRoomsChecked])) {
                     assignedRoom = true;
                 }
-                numRoomsChecked = roomsList.length;
+                break;
             }
             if (numRoomsChecked >= roomsList.length) { break } // checked everyroom and couldn't find a slot
             // console.log("\t\tChecking room: ", roomsList[numRoomsChecked].roomNumber);
@@ -380,45 +381,40 @@ function Queueify() {
     var totalCourseTime;
     var classBusyness;
     var start, end, startSplit, endSplit;
-    var i;
     // loop through each class
     for (var _class of unassignedClassData) {
         classBusyness = 0;
-        i = 0;
         // loop through each meeting time
-        for (var date of _class.meetingDates) {
-            // loop through each day
-            totalCourseTime = 0;
-            // loop through each day of the individual meeting date
-            for (var day of date.days) { 
-                classBusyness += classDayFrequencies[day][date.start];
-                startSplit = date.start.split(":");
-                endSplit = date.end.split(":");
-                if (date.start.includes("pm") && !date.start.includes("12")) {
-                    start = startSplit.length > 1 
-                            ? 12*60 + parseInt(startSplit[0])*60 + parseInt(startSplit[1])
-                            : 12*60 + parseInt(startSplit[0])*60;
-                }
-                else {
-                    start = startSplit.length > 1 
-                            ? parseInt(startSplit[0])*60 + parseInt(startSplit[1])
-                            : parseInt(startSplit[0])*60;
-                }
-                if (date.end.includes("pm") && !date.end.includes("12")) {
-                    end = endSplit.length > 1 
-                            ? 12*60 + parseInt(endSplit[0])*60 + parseInt(endSplit[1])
-                            : 12*60 + parseInt(endSplit[0])*60;
-                }
-                else {
-                    end = endSplit.length > 1 
-                            ? parseInt(endSplit[0])*60 + parseInt(endSplit[1])
-                            : parseInt(endSplit[0])*60;
-                }
-                totalCourseTime += end - start;
+        totalCourseTime = 0;
+        var date = _class.meetingDates;
+        // loop through each day of the individual meeting date
+        for (var day of date.days.split("")) { 
+            classBusyness += classDayFrequencies[day][date.start];
+            startSplit = date.start.split(":");
+            endSplit = date.end.split(":");
+            if (date.start.includes("pm") && !date.start.includes("12")) {
+                start = startSplit.length > 1 
+                        ? 12*60 + parseInt(startSplit[0])*60 + parseInt(startSplit[1])
+                        : 12*60 + parseInt(startSplit[0])*60;
             }
-            QUEUE.enqueue(structuredClone(_class), i, totalCourseTime);
-            i++;
+            else {
+                start = startSplit.length > 1 
+                        ? parseInt(startSplit[0])*60 + parseInt(startSplit[1])
+                        : parseInt(startSplit[0])*60;
+            }
+            if (date.end.includes("pm") && !date.end.includes("12")) {
+                end = endSplit.length > 1 
+                        ? 12*60 + parseInt(endSplit[0])*60 + parseInt(endSplit[1])
+                        : 12*60 + parseInt(endSplit[0])*60;
+            }
+            else {
+                end = endSplit.length > 1 
+                        ? parseInt(endSplit[0])*60 + parseInt(endSplit[1])
+                        : parseInt(endSplit[0])*60;
+            }
+            totalCourseTime += end - start;
         }
+        QUEUE.enqueue(structuredClone(_class), totalCourseTime);
     }
     // QUEUE.displayContents();
 }
@@ -484,7 +480,7 @@ export async function mainRestrictions(path) {
 
 /* launch main */
 var test_path;
-var _switch = 0; // used in switch statement to switch between test files
+var _switch = 1; // used in switch statement to switch between test files
 // TODO: output should look like input but replace the rooms
 // TODO: create an audit log file
 switch (_switch) {
