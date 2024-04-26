@@ -103,13 +103,50 @@ function readCSVData(file_path) {
             }
             else if (row[0] === '') {
                 cd.setCourseName(prevClassName);
+                cd.term = row[1];
+                cd.termCode = row[2];
+                cd.deptCode = row[3];
+                cd.subjCode = row[4];
+                cd.catNumber = row[5];
+                cd.course = row[6];
                 cd.setSectionNum(row[7]);
+                cd.courseTitle = row[8];
                 cd.setLab(row[9]);
+                cd.topic = row[10];
                 cd.spliceTime(row[11]);
+                cd.meetingPattern = row[11];
+                cd.meetings = row[12];
+                cd.instructor = row[13];
                 cd.setRoom(row[14]);
+                cd.status = row[15];
                 cd.setSession(row[16]);
                 cd.setCampus(row[17]);
+                cd.instMethod = row[18];
+                cd.integPartner = row[19];
+                cd.schedulePrint = row[20];
+                cd.consent = row[21];
+                cd.creditHrsMin = row[22];
+                cd.creditHrs = row[23];
+                cd.gradeMode = row[24];
+                cd.attributes = row[25];
+                cd.courseAttributes = row[26];
+                cd.roomAttributes = row[27];
+                cd.enrollment = row[28];
+                cd.maxEnrollments = row[29];
+                cd.priorEnrollment = row[30];
+                cd.projEnrollment = row[31];
+                cd.waitCap = row[32];
+                cd.rmCapRequest = row[33];
+                cd.crossListings = row[34];
                 cd.setClassSize(row[29], row[35])
+                cd.crossListMax = row[35];
+                cd.crossListProj = row[36];
+                cd.crossListWaitCap = row[37];
+                cd.crossListRmCapReq = row[38];
+                cd.linkTo = row[39];
+                cd.comments = row[40];
+                cd.notes1 = row[41];
+                cd.notes2 = row[42];
                 if (cd.room === null) {
                     unassignedClassData.push(cd);
                 }
@@ -455,6 +492,7 @@ function writeToCSV() {
 /* main function, is async because fs.createReadStream() */
 export async function mainRestrictions(path) {
     await readCSVData(path);
+    console.log(unassignedClassData.length + assignedClassData.length);
     logger.info("Class data has been read");
     createRoomData();
     logger.info("Room information has been read");
@@ -480,7 +518,7 @@ export async function mainRestrictions(path) {
 
 /* launch main */
 var test_path;
-var _switch = 2; // used in switch statement to switch between test files
+var _switch = 0; // used in switch statement to switch between test files
 // TODO: output should look like input but replace the rooms
 // TODO: create an audit log file
 switch (_switch) {

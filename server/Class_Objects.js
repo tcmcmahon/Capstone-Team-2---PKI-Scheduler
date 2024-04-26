@@ -8,7 +8,7 @@ export class CourseDescription {
         this.deptCode = null;                   // 3
         this.subjCode = null;                   // 4
         this.catNumber = null;                  // 5
-        this.course = null;                     // 5
+        this.course = null;                     // 6
         this.sectionNumber = null;              // 7 - section number of course
         this.courseTitle = null;                // 8
         this.isLab = null;                      // 9 - if lab or not lab
@@ -18,10 +18,36 @@ export class CourseDescription {
         this.meetings = null;                   // 12
         this.instructor = null;                 // 13
         this.room = null;                       // 14 - keep null, will assign later
+        this.status = null;                     // 15
         this.session = null;                    // 16 - if class is regular session or 6 weeks - May not be needed
         this.campus = null;                     // 17 - if class is CoE or IS
+        this.instMethod = null;                 // 18
+        this.integPartner = null;               // 19
+        this.schedulePrint = null;              // 20
+        this.consent = null;                    // 21
+        this.creditHrsMin = null;               // 22
+        this.creditHrs = null;                  // 23
+        this.gradeMode = null;                  // 24
+        this.attributes = null;                 // 25
+        this.courseAttributes = null;           // 26
+        this.roomAttributes = null;             // 27
+        this.enrollment = null;                 // 28
         this.maximumEnrollments = null;         // 29 - room cap
+        this.maxEnrollments = null;             // 29
+        this.priorEnrollment = null;            // 30
+        this.projEnrollment = null;             // 31
+        this.waitCap = null;                    // 32
+        this.rmCapRequest = null;               // 33
+        this.crossListings = null;              // 34
         this.crossListedWith = [];              // self created - will have all courses class is cross listed with
+        this.crossListMax = null;               // 35
+        this.crossListProj = null;              // 36
+        this.crossListWaitCap = null;           // 37
+        this.crossListRmCapReq = null;          // 38
+        this.linkTo = null;                     // 39
+        this.comments = null;                   // 40
+        this.notes1 = null;                     // 41
+        this.notes2 = null;                     // 42
     }   
     setCourseName(courseString) {
         this.name = courseString;
