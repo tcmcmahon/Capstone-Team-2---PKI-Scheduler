@@ -111,6 +111,7 @@ function readCSVData(file_path) {
                 cd.course = row[6];
                 cd.setSectionNum(row[7]);
                 cd.courseTitle = row[8];
+                cd.sectionType = row[9];
                 cd.setLab(row[9]);
                 cd.topic = row[10];
                 cd.spliceTime(row[11]);
@@ -120,6 +121,7 @@ function readCSVData(file_path) {
                 cd.setRoom(row[14]);
                 cd.status = row[15];
                 cd.setSession(row[16]);
+                cd.campusCode = row[17];
                 cd.setCampus(row[17]);
                 cd.instMethod = row[18];
                 cd.integPartner = row[19];
@@ -458,30 +460,82 @@ function Queueify() {
 
 /* writes roomsList into readable from */
 function writeToCSV() {
+    var header = 'Spring 2023,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\n"Generated 5/5/2023, 2:12:22 PM",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\n,Term,Term Code,Department Code,Subject Code,Catalog Number,Course,Section #,Course Title,Section Type,Title/Topic,Meeting Pattern,Meetings,Instructor,Room,Status,Session,Campus,Inst. Method,Integ. Partner,Schedule Print,Consent,Credit Hrs Min,Credit Hrs,Grade Mode,Attributes,Course Attributes,Room Attributes,Enrollment,Maximum Enrollment,Prior Enrollment,Projected Enrollment,Wait Cap,Rm Cap Request,Cross-listings,Cross-list Maximum,Cross-list Projected,Cross-list Wait Cap,Cross-list Rm Cap Request,Link To,Comments,Notes#1,Notes#2\n';
     var data = "";
+    var title_row = ",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\n";
     var days;
     var daysLetter = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Sat/Sun"];
     var currClass;
-    var counter = 0;
+    var roomCoursesNames;
+    var roomCoursesData;
     // loop through each room
     for (var r of roomsList) {
-        data += `${r.roomNumber}, \n`;
+        roomCoursesNames = [];
+        roomCoursesData = [];
         days = [r.monClasses, r.tueClasses, r.wedClasses, r.thuClasses, r.friClasses, r.s_sClasses];
         // loop through each of the classes
         for (var i in days) {
-            data += " , " + daysLetter[i] + ", ";
             // loop through each class
             currClass = days[i];
             while (currClass !== null && currClass.getClass() !== null) {
-                data += currClass.getClass().meetingDates.start + "-" + currClass.getClass().meetingDates.end + ", ";
+                // console.log(currClass);
+                if (!roomCoursesNames.includes(currClass.getClass().name)) {
+                    roomCoursesNames.push(currClass.getClass().name);
+                    roomCoursesData.push(currClass.getClass());
+                }
                 currClass = currClass.getNext();
-                counter++;
             }
-            data += "\n"; 
+        }
+        console.log(roomCoursesNames);
+        for (var _class of roomCoursesData) {
+            data += _class.name + title_row;
+            data += ",";
+            data += _class.term + ",";
+            data += _class.termCode + ",";
+            data += _class.deptCode + ",";
+            data += _class.subjCode + ",";
+            data += _class.catNumber + ",";
+            data += _class.course + ",";
+            data += _class.sectionNumber + ",";
+            data += _class.courseTitle + ",";
+            data += _class.sectionType + ",";
+            data += _class.topic + ",";
+            data += _class.meetingPattern + ",";
+            data += _class.meetings + ",";
+            data += _class.instructor + ",";
+            data += _class.room + ",";
+            data += _class.status + ",";
+            data += _class.session + ",";
+            data += _class.campusCode + ",";
+            data += _class.instMethod + ",";
+            data += _class.integPartner + ",";
+            data += _class.schedulePrint + ",";
+            data += _class.consent + ",";
+            data += _class.creditHRsMin + ",";
+            data += _class.creditHrs + ",";
+            data += _class.gradeMode + ",";
+            data += _class.attributes + ",";
+            data += _class.courseAttributes + ",";
+            data += _class.roomAttributes + ",";    // TODO: this will need to be edited
+            data += _class.enrollment + ",";
+            data += _class.maxEnrollments + ",";
+            data += _class.priorEnrollment + ",";
+            data += _class.projEnrollment + ",";
+            data += _class.waitCap + ",";
+            data += _class.rmCapRequest + ",";
+            data += _class.crossListings + ",";
+            data += _class.crossListMax + ",";
+            data += _class.crossListProj + ",";
+            data += _class.crossListWaitCap + ",";
+            data += _class.crossListRmCapReq + ",";
+            data += _class.linkTo + ",";
+            data += _class.comments + ",";
+            data += _class.notes1 + ",";
+            data += _class.notes2 + "\n";
         }
     }
     // write to file
-    fs.writeFile("./server/uploads/output.csv", data, (err) => {
+    fs.writeFile("./server/uploads/output.csv", header + data, (err) => {
         if (err) {
             logger.erroror(err);
         }

@@ -11,6 +11,7 @@ export class CourseDescription {
         this.course = null;                     // 6
         this.sectionNumber = null;              // 7 - section number of course
         this.courseTitle = null;                // 8
+        this.sectionType = null;                // 9
         this.isLab = null;                      // 9 - if lab or not lab
         this.topic = null;                      // 10
         this.meetingDates = {days: null, start: null, end: null}; // 11 - will hold ClassroomTimeSlot object 
@@ -20,6 +21,7 @@ export class CourseDescription {
         this.room = null;                       // 14 - keep null, will assign later
         this.status = null;                     // 15
         this.session = null;                    // 16 - if class is regular session or 6 weeks - May not be needed
+        this.campusCode = null;                 // 17
         this.campus = null;                     // 17 - if class is CoE or IS
         this.instMethod = null;                 // 18
         this.integPartner = null;               // 19
