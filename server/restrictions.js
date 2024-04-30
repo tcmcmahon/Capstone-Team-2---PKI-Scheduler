@@ -102,6 +102,9 @@ function readCSVData(file_path) {
                 logger.warn(`Cannot assign ${prevClassName} sect. ${row[7]} due to irregular meetig time. Please assign mannually`);
             }
             else if (row[0] === '') {
+                // if (row[34] !== '' && cd.checkIfCrossListed([row[6], row[7]], row[34], crossListedCoursesToCheck)) {
+
+                // }
                 cd.setCourseName(prevClassName);
                 cd.term = row[1];
                 cd.termCode = row[2];
@@ -392,6 +395,7 @@ function assignRooms() {
                     // console.log("\t\t\tNo Rooms Available");
                 }
                 else {
+                    _class[0].room = room.roomNumber;
                     assignedRoom = true;
                     r = room;
                     break;
@@ -486,7 +490,6 @@ function writeToCSV() {
                 currClass = currClass.getNext();
             }
         }
-        console.log(roomCoursesNames);
         for (var _class of roomCoursesData) {
             data += _class.name + title_row;
             data += ",";
@@ -502,8 +505,8 @@ function writeToCSV() {
             data += _class.topic + ",";
             data += _class.meetingPattern + ",";
             data += _class.meetings + ",";
-            data += _class.instructor + ",";
-            data += _class.room + ",";
+            data += JSON.stringify(_class.instructor) + ",";
+            data += "Peter Kiewit Institute " + _class.room + ",";
             data += _class.status + ",";
             data += _class.session + ",";
             data += _class.campusCode + ",";
@@ -546,7 +549,6 @@ function writeToCSV() {
 /* main function, is async because fs.createReadStream() */
 export async function mainRestrictions(path) {
     await readCSVData(path);
-    console.log(unassignedClassData.length + assignedClassData.length);
     logger.info("Class data has been read");
     createRoomData();
     logger.info("Room information has been read");
