@@ -333,6 +333,7 @@ function assignRooms() {
                 else {
                     // console.log(points);
                     // console.log(room);
+                    _class[0].room = room.roomNumber;
                     assignedRoom = true;
                     r = room;
                     break;
@@ -447,13 +448,13 @@ function calendarFormat()
 
     // loop through each room
     for (var r of roomsList) {
-        days = [r.monClasses, r.tueClasses, r.wedClasses, r.thuClasses, r.friClasses];
+        days = [r.monClasses, r.tueClasses, r.wedClasses, r.thuClasses, r.friClasses, r.s_sClasses];
         // loop through each of the classes
         for (var i in days) {
             // loop through each class
             currClass = days[i];
             while (currClass !== null && currClass.getClass() !== null) {
-                ft.push({startTime: currClass.getClass().meetingDates.start, endTime: currClass.getClass().meetingDates.end, days: currClass.getClass().meetingDates.days, title: currClass.getClass().name, room: r.roomNumber})
+                ft.push({startTime: currClass.getClass().meetingDates.start, endTime: currClass.getClass().meetingDates.end, days: currClass.getClass().meetingDates.days, title: currClass.getClass().name, room: currClass.getClass().room, section: currClass.getClass().sectionNumber})
                 currClass = currClass.getNext();
                 counter++;
             }
