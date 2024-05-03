@@ -91,9 +91,9 @@ function readCSVData(file_path) {
             reject(err);
         });
         parser.on('data', (row) => {
+            var crossListed;
             var cd = new CourseDescription(); // creates object to store class data
-            if (row[34] !== '' && cd.checkIfCrossListed([row[6], row[7]], row[34], crossListedCoursesToCheck)) { /* cross listed / class is already in classData */ }
-            else if (Number(row[7]) >= 800) { /* bad section number */ } 
+            if (Number(row[7]) >= 800) { /* bad section number */ } 
             else if (row[0] === '' 
                     && unassignableClasses.includes(prevClassName) 
                     && unassignableClassesSections[unassignableClasses.indexOf(prevClassName)].includes(row[7])) { /* class is unassignable with bad section number */ }
@@ -102,9 +102,7 @@ function readCSVData(file_path) {
                 logger.warn(`Cannot assign ${prevClassName} sect. ${row[7]} due to irregular meetig time. Please assign mannually`);
             }
             else if (row[0] === '') {
-                // if (row[34] !== '' && cd.checkIfCrossListed([row[6], row[7]], row[34], crossListedCoursesToCheck)) {
-
-                // }
+                var crossListed = row[34] !== '' && cd.checkIfCrossListed([row[6], row[7]], row[34], crossListedCoursesToCheck);
                 cd.setCourseName(prevClassName);
                 cd.term = row[1];
                 cd.termCode = row[2];
@@ -143,7 +141,7 @@ function readCSVData(file_path) {
                 cd.waitCap = row[32];
                 cd.rmCapRequest = row[33];
                 cd.crossListings = row[34];
-                cd.setClassSize(row[29], row[35])
+                cd.setClassSize(row[29], row[35]);
                 cd.crossListMax = row[35];
                 cd.crossListProj = row[36];
                 cd.crossListWaitCap = row[37];
@@ -152,6 +150,11 @@ function readCSVData(file_path) {
                 cd.comments = row[40];
                 cd.notes1 = row[41];
                 cd.notes2 = row[42];
+                if (crossListed) {
+                    for (var _class of crossListedCoursesToCheck) {
+                        
+                    }
+                }
                 if (cd.room === null) {
                     unassignedClassData.push(cd);
                 }
