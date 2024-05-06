@@ -1,32 +1,30 @@
-// const express = require('express');
+/**
+ * @file Handles starting of the server to listen for uploads and stores the upload
+ * @author Jacob Finley
+ * @namespace ServerIndex
+ */
+
 import express from 'express';
-// const cors = require('cors')
 import cors from 'cors';
-// const multer = require('multer');
 import multer from 'multer';
-// const path = require('path');
-import path from 'path';
-// const readCSVData = require('./restrictions');
 import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-
-import {mainRestrictions} from './restrictions.js';
+import path from 'path';
+import fs from 'fs';
+import { parse } from 'csv-parse';
 
 const app = express();
-const PORT = 3001;
-
-// const fs = require("fs");
-import fs from 'fs';
-// const { parse } = require("csv-parse");
-import { parse } from 'csv-parse';
+const PORT = 3000;
 
 // Enable CORS for all routes
 app.use(cors());
 
 // Multer configuration
+/**
+ * Stores the uploaded .CSV file into the uploads folder
+ * @function storage 
+ * @returns {void} Stores the uploaded .CSV file in uploads
+ * @memberof ServerIndex
+ */
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/');
@@ -38,26 +36,49 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Serve the React app
-app.use(express.static(path.join(__dirname, 'client/build')));
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+/** Serve the React app
+ * @function
+ * @returns {void} Serves the react app
+ * @memberof ServerIndex
+ */ 
+app.use(express.static(path.join(__dirname, '../client/build')));
 
 // Handle file upload
+/**
+ * handles the uploading of a file and outputs the status
+ * @function post 
+ * @returns {String} status of upload
+ * @memberof ServerIndex
+ */
 app.post('/upload', upload.single('file'), (req, res) => {
   if (!req.file) {
     return res.status(400).send('No files were uploaded.');
   }
 
   console.log('Uploaded file:', req.file.originalname);
-  // printCSVtoCLI("./uploads/" + req.file.filename)
-  mainRestrictions("./uploads/" + req.file.filename);
+  printCSVtoCLI("./uploads/" + req.file.filename)
   res.send('File uploaded successfully.');
 });
 
 // Start the server
+/**
+ * Starts a server listener to get uploaded files
+ * @function listen 
+ * @memberof ServerIndex
+ * @returns {String} status of server
+ */
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
 
+/**
+ * Outputs uploaded CSV to console
+ * @param {String} filePath Path to uploaded file
+ * @returns {void} prints CSV file data to the console
+ * @memberof ServerIndex
+ */
 function printCSVtoCLI(filePath) {
   fs.createReadStream(filePath)
     .pipe(parse({ delimiter: ",", from_line: 2 }))

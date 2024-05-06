@@ -25,9 +25,9 @@ function App() {
             <div className="page-container">
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/upload" element={<Upload />} />
-                    <Route path="/calendar" element={<Calendar />} />
-                    <Route path="/algorithm" element={<AlgoResult />} />
+                    <Route path="/Upload" element={<Upload />} />
+                    <Route path="/Calendar" element={<Calendar />} />
+                    <Route path="/Algorithm" element={<AlgoResult />} />
                 </Routes>
             </div>
         </div>
