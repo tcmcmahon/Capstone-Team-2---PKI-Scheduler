@@ -333,6 +333,7 @@ function assignRooms() {
                 else {
                     // console.log(points);
                     // console.log(room);
+                    _class[0].room = room.roomNumber;
                     assignedRoom = true;
                     r = room;
                     break;
@@ -447,81 +448,54 @@ function calendarFormat()
 
     // loop through each room
     for (var r of roomsList) {
-        days = [r.monClasses, r.tueClasses, r.wedClasses, r.thuClasses, r.friClasses];
+        days = [r.monClasses, r.tueClasses, r.wedClasses, r.thuClasses, r.friClasses, r.s_sClasses];
         // loop through each of the classes
         for (var i in days) {
             // loop through each class
             currClass = days[i];
             while (currClass !== null && currClass.getClass() !== null) {
-                ft.push({startTime: currClass.getClass().meetingDates.start, endTime: currClass.getClass().meetingDates.end, days: currClass.getClass().meetingDates.days, title: currClass.getClass().name, room: r.roomNumber})
+                ft.push({startTime: currClass.getClass().meetingDates.start,
+                        endTime: currClass.getClass().meetingDates.end, 
+                        days: currClass.getClass().meetingDates.days, 
+                        title: currClass.getClass().name, 
+                        section: currClass.getClass().sectionNumber,
+                        room: currClass.getClass().room})
                 currClass = currClass.getNext();
                 counter++;
             }
         }
     }
     formatTimes(ft);
-    let dates = ["2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04", "2024-01-05"];
-    let y = [];
+    let datesSymbol = {"M": "2024-01-01", 
+                        "T": "2024-01-02", 
+                        "W": "2024-01-03",
+                        "R": "2024-01-04",
+                        "F": "2024-01-05",
+                        "S": "2024-01-06"}
+    let y = {};
     for(let i = 0; i < ft.length; i++)
     {
-        if(ft[i].days === "MW" && !y.includes(ft[i].title))
-        {   
-            y.push(ft[i].title);
-            finalForCalendar.push({startDate: (dates[0] + "T" + ft[i].startTime), endDate: (dates[0] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
-            finalForCalendar.push({startDate: (dates[2] + "T" + ft[i].startTime), endDate: (dates[2] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
+        if (y[ft[i].title] !== undefined && y[ft[i].title].includes(ft[i].section)) {
+            console.log("Found a baddy: " + [ft[i].title, ft[i].section]);
+            continue 
         }
-        else if(ft[i].days === "MWF" && !y.includes(ft[i].title))
-        {
-            y.push(ft[i].title);
-            finalForCalendar.push({startDate: (dates[0] + "T" + ft[i].startTime), endDate: (dates[0] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
-            finalForCalendar.push({startDate: (dates[2] + "T" + ft[i].startTime), endDate: (dates[2] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
-            finalForCalendar.push({startDate: (dates[4] + "T" + ft[i].startTime), endDate: (dates[4] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
+        console.log("We addin:  " + [ft[i].title, ft[i].section]);
+        if (y[ft[i].title] === undefined) {
+            y[ft[i].title] = [ft[i].section];
         }
-        else if(ft[i].days === "MTWRF" && !y.includes(ft[i].title))
-        {
-            y.push(ft[i].title);
-            finalForCalendar.push({startDate: (dates[0] + "T" + ft[i].startTime), endDate: (dates[0] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
-            finalForCalendar.push({startDate: (dates[1] + "T" + ft[i].startTime), endDate: (dates[1] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
-            finalForCalendar.push({startDate: (dates[2] + "T" + ft[i].startTime), endDate: (dates[2] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
-            finalForCalendar.push({startDate: (dates[3] + "T" + ft[i].startTime), endDate: (dates[3] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
-            finalForCalendar.push({startDate: (dates[4] + "T" + ft[i].startTime), endDate: (dates[4] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
+        else {
+            y[ft[i].title].push(ft[i].section);
         }
-        else if(ft[i].days === "TR" && !y.includes(ft[i].title))
-        {
-            y.push(ft[i].title);
-            finalForCalendar.push({startDate: (dates[1] + "T" + ft[i].startTime), endDate: (dates[1] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
-            finalForCalendar.push({startDate: (dates[3] + "T" + ft[i].startTime), endDate: (dates[3] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
-        }
-        else if(ft[i].days === "WF" && !y.includes(ft[i].title))
-        {
-            y.push(ft[i].title);
-            finalForCalendar.push({startDate: (dates[2] + "T" + ft[i].startTime), endDate: (dates[2] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
-            finalForCalendar.push({startDate: (dates[4] + "T" + ft[i].startTime), endDate: (dates[4] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
-        }
-        else if(ft[i].days === "M" && !y.includes(ft[i].title))
-        {
-            y.push(ft[i].title);
-            finalForCalendar.push({startDate: (dates[0] + "T" + ft[i].startTime), endDate: (dates[0] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
-        }
-        else if(ft[i].days === "T" && !y.includes(ft[i].title))
-        {
-            y.push(ft[i].title);
-            finalForCalendar.push({startDate: (dates[1] + "T" + ft[i].startTime), endDate: (dates[1] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
-        }
-        else if(ft[i].days === "W" && !y.includes(ft[i].title))
-        {
-            y.push(ft[i].title);
-            finalForCalendar.push({startDate: (dates[2] + "T" + ft[i].startTime), endDate: (dates[2] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
-        }
-        else if(ft[i].days === "R" && !y.includes(ft[i].title))
-        {
-            y.push(ft[i].title);
-            finalForCalendar.push({startDate: (dates[3] + "T" + ft[i].startTime), endDate: (dates[3] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
-        }
-        else if(ft[i].days === "F" && !y.includes(ft[i].title))
-        {
-            y.push(ft[i].title);
-            finalForCalendar.push({startDate: (dates[4] + "T" + ft[i].startTime), endDate: (dates[4] + "T" + ft[i].endTime), title: ft[i].title, room: ft[i].room});
+        console.log(ft[i].title);
+        console.log(y[ft[i].title]);
+        console.log("\n\n");
+        for (var d in ft[i].days) {
+            finalForCalendar.push({
+                startDate: (datesSymbol[ft[i].days[d]] + "T" + ft[i].startTime),
+                endDate: (datesSymbol[ft[i].days[d]] + "T" + ft[i].endTime),
+                title: ft[i].title,
+                room: ft[i].room
+            });
         }
     }
 }
