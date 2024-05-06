@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/static/css/main.d710915a.css",
-    "main.js": "/static/js/main.237f139e.js",
+    "main.js": "/static/js/main.91f507bd.js",
     "static/media/O-UNO_Type_Color_White.png": "/static/media/O-UNO_Type_Color_White.5279980fafe5c30b5572.png",
     "static/media/photo-1606761568499-6d2451b23c66.avif": "/static/media/photo-1606761568499-6d2451b23c66.23a90ea48d15c0c95276.avif",
     "index.html": "/index.html",
     "main.d710915a.css.map": "/static/css/main.d710915a.css.map",
-    "main.237f139e.js.map": "/static/js/main.237f139e.js.map"
+    "main.91f507bd.js.map": "/static/js/main.91f507bd.js.map"
   },
   "entrypoints": [
     "static/css/main.d710915a.css",
-    "static/js/main.237f139e.js"
+    "static/js/main.91f507bd.js"
   ]
 }
