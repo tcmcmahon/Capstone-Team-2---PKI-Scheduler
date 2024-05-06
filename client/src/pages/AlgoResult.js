@@ -39,7 +39,7 @@ export default function AlgoResult() {
         <h1 className="algo-title">Algorithm Results</h1>
       </header>
       <div className="algo-content">
-        <p className="algo-data">{algoResult}</p>
+        <p className="algo-data" style={{textAlign: 'left'}}>{algoResult}</p>
       </div>
     </div>
   );
