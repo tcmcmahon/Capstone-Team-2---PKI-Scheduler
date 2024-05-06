@@ -1,12 +1,13 @@
 /* import data */
-import {CourseDescription, ClassroomTimeData, PriorityQueue, ClassroomTimeSlot} from './Class_Objects.js';
+import { CourseDescription, ClassroomTimeData, PriorityQueue } from './Class_Objects.js';
 import fs from 'fs';
 import { parse } from 'csv-parse';
 import rooms from "./uploads/rooms.json" assert {type: "json"};
-import { formatTimes } from "./formatTime.js";
 import express from 'express';
 import cors from 'cors';
-import { calendarFormat, finalForCalendar, ft } from './formatCalendar.js';
+import { finalForCalendar, ft } from './formatCalendar.js';
+import { calendarFormat } from './formatCalendar.js';
+import { assignRooms, Queueify, writeToCSV } from './assignment.js';
 
 //Set up express/cors
 const ex = express();
@@ -35,7 +36,7 @@ ex.get("/Algo", (req, res) => {res.json(ft);});//Send data in json
 ex.listen(3001, () => console.log("Server is up"));//Listen on port 3001 for data requests to /Data and /Algo 
 
 /* global variables */
-var classData = []; // will hold instances of classDescription, will end up with the data for all of the classes
+export var classData = []; // will hold instances of classDescription, will end up with the data for all of the classes
 var crossListedCoursesToCheck = []; // will temporarily hold classes that are cross listed and skip them if listed
 const unassignableClasses =["AREN 3030 - AE DESIGN AND SIMULATION STUDIO III",
                             "CIVE 334 - INTRODUCTION TO GEOTECHNICAL ENGINEERING",
@@ -76,10 +77,10 @@ const unassignableClassesSections =[['1', '2', '3', '4'],
 const meetOnS = ["ECEN 891 - SPECIAL TOPICS IN ELECTRIC AND COMPUTER ENGINEERING IV",
                 "ECEN 491 - SPECIAL TOPICS IN ELECTRIC AND COMPUTER ENGINEERING IV"];
 export var roomsList = [];
-var classDayFrequencies = {'M': {},'T': {},'W': {},'R': {},'F': {},'S': {}}
-var classDayTotals = {'M': 0,'T': 0,'W': 0,'R': 0,'F': 0,'S': 0}
-var unassignedClasses = [];
-const QUEUE = new PriorityQueue();
+export var classDayFrequencies = {'M': {},'T': {},'W': {},'R': {},'F': {},'S': {}}
+export var classDayTotals = {'M': 0,'T': 0,'W': 0,'R': 0,'F': 0,'S': 0}
+export var unassignedClasses = [];
+export const QUEUE = new PriorityQueue();
 
 /* read data from the csv file */
 function readCSVData(file_path) {
@@ -112,7 +113,6 @@ function readCSVData(file_path) {
             } // end of if statement
         })
         .on('end', function() {
-            console.log(classData.length);
             resolve(classData); // saves the data for classData
         }) // end of fs read
     }); // end of return
@@ -160,7 +160,7 @@ function howManyClassesPerDay() {
     0  if during the same time 
     1  if stable is earlier
 */
-function compareMeetingDates(test, stable) { 
+export function compareMeetingDates(test, stable) { 
     if (stable === null) {
         return -2;
     }
@@ -213,224 +213,6 @@ function compareMeetingDates(test, stable) {
     else { return null }
 }
 
-function canBeAssigned(_class, room) {
-    var roomClone = structuredClone(room); // backup in case room isn't available
-    var currClass, prevClass = null;
-    var classDays = [];
-    var timeDiff;
-    for (var day of _class.meetingDates.days.split("")) {
-        switch (day) {
-            case 'M':
-                classDays.push(room.monClasses);
-                break;
-            case 'T':
-                classDays.push(room.tueClasses);
-                break;
-            case 'W':
-                classDays.push(room.wedClasses);
-                break;
-            case 'R':
-                classDays.push(room.thuClasses);
-                break;
-            case 'F':
-                classDays.push(room.friClasses);
-                break;
-            case 'S':
-                classDays.push(room.s_sClasses);
-                break;
-            default:
-                console.log("WE HAVE A PROBLEM");
-        }
-    }
-    for (var i in classDays) {
-        if (classDays[i].class === null) {
-            classDays[i].class = _class;
-            continue;
-        }
-        currClass = classDays[i];
-        
-        while (currClass !== null) {
-            timeDiff = compareMeetingDates(_class.meetingDates, currClass.class.meetingDates);
-            if (timeDiff === null) {
-                process.exit();
-            }
-            else if (timeDiff > 0) {
-                prevClass = currClass;
-                currClass = currClass.getNext()
-            }
-            else if (timeDiff === 0) {
-                room = roomClone;
-                return false;
-            }
-            else if (timeDiff < 0) {
-                if (prevClass === null) {
-                    currClass.setNext(new ClassroomTimeSlot(currClass.getClass(), currClass.getNext()));
-                    currClass.setClass(_class);
-                }
-                else {
-                    prevClass.setNext(new ClassroomTimeSlot(_class, currClass));
-                }
-                break;
-            }
-        }
-        if (currClass === null) {
-            prevClass.setNext(new ClassroomTimeSlot(_class, currClass));
-        }
-    }
-    return true;
-}
-
-/* assign the actual rooms */
-function assignRooms() {
-    // add courses to queue first
-    var test_data = [];
-    var len = QUEUE.queue.length;
-    for (var i = 0; i < len; i++) {
-        test_data.push(QUEUE.dequeue());
-    }
-    var i = 0;
-    var _class = test_data.shift();
-    while (_class !== undefined) {
-        var possibleRooms = {}; // {points : [room, room, ...], points : [room, room, ...], ...} is also stored in order in memory
-        console.log(i++);
-        console.log("\Assigning class: " + _class[0].name);
-        var assignedRoom = false // boolean value to tell if class has already been assigned
-        var numRoomsChecked = 0; // number of classes we have looped through
-        while (numRoomsChecked < roomsList.length) {
-            if (numRoomsChecked >= roomsList.length) { break } // checked everyroom and couldn't find a slot
-            // console.log("\t\tChecking room: ", roomsList[numRoomsChecked].roomNumber);
-            if (!roomsList[numRoomsChecked].colleges[_class[0].campus]) { 
-                // console.log("\t\t\tWrong College");
-            }
-            else if (_class[0].isLab !== roomsList[numRoomsChecked].isLab) {
-                // console.log("\t\t\tLab Issue");
-            }
-            else if (_class[0].maximumEnrollments > roomsList[numRoomsChecked].roomSize) { 
-                // console.log("\t\t\tSmall Size");
-            }
-            else { 
-                var points = roomsList[numRoomsChecked].roomSize - _class[0].maximumEnrollments;
-                if (possibleRooms[points] !== undefined) {
-                    possibleRooms[points].push(roomsList[numRoomsChecked])
-                }
-                else {
-                    possibleRooms[points] = [roomsList[numRoomsChecked]];
-                }
-            }
-            numRoomsChecked++;
-        }
-        var r;
-        for (const [points, rooms] of Object.entries(possibleRooms)) {
-            for (var room of rooms) {
-                if (!canBeAssigned(_class[0], room)) {
-                    // console.log("\t\t\tNo Rooms Available");
-                }
-                else {
-                    // console.log(points);
-                    // console.log(room);
-                    _class[0].room = room.roomNumber;
-                    assignedRoom = true;
-                    r = room;
-                    break;
-                }
-            }
-            if (assignedRoom) {
-                break;
-            }
-        }
-        if (!assignedRoom) {
-            unassignedClasses.push(_class[0]);
-        }
-        // console.log(assignedRoom ? "\tAssigned: " + _class[0].name + "\n\tto: " + roomsList[--numRoomsChecked].roomNumber : "\tCouldn't find a classroom for " + _class[0].name);
-        console.log(assignedRoom ? "\tAssigned: " + _class[0].name + "\n\tto: " + r.roomNumber : "\tCouldn't find a classroom for " + _class[0].name);
-        _class = test_data.shift();
-    }
-    return null;
-}
-
-/* Put the classes from classData into a Queue */ 
-function Queueify() {
-    var totalCourseTime;
-    var classBusyness;
-    var start, end, startSplit, endSplit;
-    var i;
-    // loop through each class
-    for (var _class of classData) {
-        classBusyness = 0;
-        i = 0;
-        // loop through each meeting time
-        for (var date of _class.meetingDates) {
-            // loop through each day
-            totalCourseTime = 0;
-            // loop through each day of the individual meeting date
-            for (var day of date.days) { 
-                classBusyness += classDayFrequencies[day][date.start];
-                startSplit = date.start.split(":");
-                endSplit = date.end.split(":");
-                if (date.start.includes("pm") && !date.start.includes("12")) {
-                    start = startSplit.length > 1 
-                            ? 12*60 + parseInt(startSplit[0])*60 + parseInt(startSplit[1])
-                            : 12*60 + parseInt(startSplit[0])*60;
-                }
-                else {
-                    start = startSplit.length > 1 
-                            ? parseInt(startSplit[0])*60 + parseInt(startSplit[1])
-                            : parseInt(startSplit[0])*60;
-                }
-                if (date.end.includes("pm") && !date.end.includes("12")) {
-                    end = endSplit.length > 1 
-                            ? 12*60 + parseInt(endSplit[0])*60 + parseInt(endSplit[1])
-                            : 12*60 + parseInt(endSplit[0])*60;
-                }
-                else {
-                    end = endSplit.length > 1 
-                            ? parseInt(endSplit[0])*60 + parseInt(endSplit[1])
-                            : parseInt(endSplit[0])*60;
-                }
-                totalCourseTime += end - start;
-            }
-            QUEUE.enqueue(structuredClone(_class), i, totalCourseTime);
-            i++;
-        }
-    }
-    // QUEUE.displayContents();
-}
-
-/* writes roomsList into readable from */
-function writeToCSV() {
-    var data = "";
-    var days;
-    var daysLetter = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Sat/Sun"];
-    var currClass;
-    var counter = 0;
-    // loop through each room
-    for (var r of roomsList) {
-        data += `${r.roomNumber}, \n`;
-        days = [r.monClasses, r.tueClasses, r.wedClasses, r.thuClasses, r.friClasses, r.s_sClasses];
-        // loop through each of the classes
-        for (var i in days) {
-            data += " , " + daysLetter[i] + ", ";
-            // loop through each class
-            currClass = days[i];
-            while (currClass !== null && currClass.getClass() !== null) {
-                data += currClass.getClass().meetingDates.start + "-" + currClass.getClass().meetingDates.end + ", ";
-                currClass = currClass.getNext();
-                counter++;
-            }
-            data += "\n"; 
-        }
-    }
-    // write to file
-    fs.writeFile("./uploads/output.csv", data, (err) => {
-        if (err) {
-            console.log(err);
-        }
-        else {
-            console.log("Data has been written to output.csv");
-        }
-    });
-}
-
 /* main function, is async because fs.createReadStream() */
 export async function mainRestrictions(path) {
     await readCSVData(path);
@@ -438,6 +220,7 @@ export async function mainRestrictions(path) {
     howManyClassesPerDay();
     Queueify();
     assignRooms();
+    calendarFormat();
     writeToCSV();
     if (unassignedClasses.length > 0) 
     {
@@ -449,11 +232,10 @@ export async function mainRestrictions(path) {
     {
         console.log("Number of unassigned classes: " + unassignedClasses.length);
     }
-    calendarFormat();
 } // end of main
 
 /* launch main */
-var test_path = './uploads/test.csv';
+var test_path = './uploads/1715015603287_Spring2023NEW1.csv';
 mainRestrictions(test_path);
 
 export default {mainRestrictions};
