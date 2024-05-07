@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: client/src/pages/Calendar.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: client/src/pages/Calendar.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file Renders the calendar component and displays final classroom assignment
+ * @author Fredric Shope, Travis McMahon
+ * @namespace Calendar
+ */
+
+import * as React from 'react';
+import Paper from '@mui/material/Paper';
+import {
+  ViewState,
+  GroupingState,
+  IntegratedGrouping
+} from '@devexpress/dx-react-scheduler';
+import {
+  Scheduler,
+  Resources,
+  GroupingPanel,
+  WeekView,
+  DayView,
+  Appointments,
+  AppointmentTooltip,
+  ViewSwitcher,
+  Toolbar,
+  DateNavigator,
+} from '@devexpress/dx-react-scheduler-material-ui';
+import img from '../resources/O-UNO_Type_Color_White.png';
+import axios from 'axios';
+import "./Upload.css"; // Import the Upload.css styles
+
+var cData = [];
+let response;
+let result;
+
+response = await axios.get("http://localhost:3001/Data");
+
+result = response.data;
+cData = (JSON.stringify(result));
+cData = JSON.parse(cData, function (key, value) {
+  if (key == "room") {
+    return +value; //parse room key to int
+  } else {
+    return value;
+  }
+});
+
+const currentDate = '2024-01-01';
+//List all the classrooms
+const rooms = [
+  {text: 'Room 108', id: 108},
+  {text: 'Room 145', id: 145},
+  {text: 'Room 149', id: 149},
+  {text: 'Room 150', id: 150},
+  {text: 'Room 151', id: 151},
+  {text: 'Room 153', id: 153},
+  {text: 'Room 155', id: 155},
+  {text: 'Room 157', id: 157},
+  {text: 'Room 160', id: 160},
+  {text: 'Room 161', id: 161},
+  {text: 'Room 164', id: 164},
+  {text: 'Room 249', id: 249},
+  {text: 'Room 250', id: 250},
+  {text: 'Room 252', id: 252},
+  {text: 'Room 256', id: 256},
+  {text: 'Room 259', id: 259},
+  {text: 'Room 260', id: 260},
+  {text: 'Room 261', id: 261},
+  {text: 'Room 263', id: 263},
+  {text: 'Room 269', id: 269},
+  {text: 'Room 270', id: 270},
+  {text: 'Room 274', id: 274},
+  {text: 'Room 276', id: 276},
+  {text: 'Room 278', id: 278},
+  {text: 'Room 279', id: 279},
+  {text: 'Room 350', id: 350},
+  {text: 'Room 352', id: 352},
+  {text: 'Room 361', id: 361},
+  {text: 'Room 368', id: 368},
+  {text: 'Room 391A', id: 391}
+]
+
+export default class Demo extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: cData,
+      resources: [{
+        fieldName: 'room',
+        title: 'Classroom',
+        instances: rooms
+      }],
+      grouping: [{
+        resourceName: 'room'
+      }]
+    };
+  }
+/**
+ * Function for rendering the calendar page
+ * @returns {html} Html page for calendar component/GUI
+ * @memberof Calendar
+ */
+render() {
+  const {data, resources, grouping} = this.state;
+
+  return(
+    &lt;div className="upload-container"> {/* Apply the same class name */}
+    &lt;header className="upload-header"> {/* Apply the same class name */}
+      &lt;img src={img} alt="Logo" className="upload-logo" /> {/* Use the new logo */}
+      &lt;h1 className="upload-title">Class schedule for the week&lt;/h1> {/* Use the same title */}
+    &lt;/header>
+    
+  &lt;Paper>
+    &lt;Scheduler data={data}>
+    &lt;ViewState defaultCurrentDate={currentDate} />
+    &lt;GroupingState grouping = {grouping} />
+    &lt;WeekView startDayHour={8} endDayHour={20} excludedDays={[0,6]} />
+    &lt;DayView startDayHour={8} endDayHour={20} excludedDays={[0,6]} />
+    &lt;Appointments />
+    &lt;Resources data={resources} mainResourceName="room" />
+    &lt;IntegratedGrouping />
+    &lt;AppointmentTooltip/>
+    &lt;GroupingPanel />
+    &lt;Toolbar/>
+    &lt;DateNavigator/>
+    &lt;ViewSwitcher/>
+    &lt;/Scheduler>
+  &lt;/Paper>
+  &lt;/div>
+  );
+}
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="AlgorithmResults.html">AlgorithmResults</a></li><li><a href="Assignment.html">Assignment</a></li><li><a href="Calendar.html">Calendar</a></li><li><a href="ClassObjects.html">ClassObjects</a></li><li><a href="ClientIndex.html">ClientIndex</a></li><li><a href="FormatCalendar.html">FormatCalendar</a></li><li><a href="Home.html">Home</a></li><li><a href="Navbar.html">Navbar</a></li><li><a href="RenderNavbar.html">RenderNavbar</a></li><li><a href="Restrictions.html">Restrictions</a></li><li><a href="ServerIndex.html">ServerIndex</a></li><li><a href="Upload.html">Upload</a></li></ul><h3>Classes</h3><ul><li><a href="ClassObjects.exports.ClassroomTimeData.html">exports.ClassroomTimeData</a></li><li><a href="ClassObjects.exports.ClassroomTimeSlot.html">exports.ClassroomTimeSlot</a></li><li><a href="ClassObjects.exports.CourseDescription.html">exports.CourseDescription</a></li><li><a href="ClassObjects.exports.PriorityQueue.html">exports.PriorityQueue</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue May 07 2024 09:12:10 GMT-0500 (Central Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

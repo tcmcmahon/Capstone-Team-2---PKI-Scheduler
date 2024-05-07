@@ -1,3 +1,14 @@
+/**
+ * @file Handles formatting of the times into 24hr format to work with the calendar page
+ * @author Travis McMahon 
+ * @namespace FormatTimes
+ */
+
+/** Formats all times into 24hr format for the calendar
+ * @function
+ * @returns {void}
+ * @memberof FormatTimes
+ */
 export function formatTimes(v)//Reformats time and date information to work with the calendar page
 {   
     for(let i = 0; i < v.length; i++)//For all calendar data, reformat startTime from 12hr to 24hr format

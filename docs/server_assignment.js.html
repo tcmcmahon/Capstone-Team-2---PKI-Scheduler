@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: server/assignment.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: server/assignment.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * @file Takes the parsed and primed data from restrictions.js and runs it through the assignment algorithm
  * @author Jacob Finley, Travis McMahon 
  * @namespace Assignment
@@ -65,7 +93,7 @@ function canBeAssigned(_class, room) {
                 room = roomClone;
                 return false;
             }
-            else if (timeDiff < 0) {
+            else if (timeDiff &lt; 0) {
                 if (prevClass === null) {
                     currClass.setNext(new ClassroomTimeSlot(currClass.getClass(), currClass.getNext()));
                     currClass.setClass(_class);
@@ -106,7 +134,7 @@ export function Queueify() {
                 classBusyness += classDayFrequencies[day][date.start];
                 startSplit = date.start.split(":");
                 endSplit = date.end.split(":");
-                if (date.start.includes("pm") && !date.start.includes("12")) {
+                if (date.start.includes("pm") &amp;&amp; !date.start.includes("12")) {
                     start = startSplit.length > 1 
                             ? 12*60 + parseInt(startSplit[0])*60 + parseInt(startSplit[1])
                             : 12*60 + parseInt(startSplit[0])*60;
@@ -116,7 +144,7 @@ export function Queueify() {
                             ? parseInt(startSplit[0])*60 + parseInt(startSplit[1])
                             : parseInt(startSplit[0])*60;
                 }
-                if (date.end.includes("pm") && !date.end.includes("12")) {
+                if (date.end.includes("pm") &amp;&amp; !date.end.includes("12")) {
                     end = endSplit.length > 1 
                             ? 12*60 + parseInt(endSplit[0])*60 + parseInt(endSplit[1])
                             : 12*60 + parseInt(endSplit[0])*60;
@@ -149,7 +177,7 @@ export function assignRooms() {
         test_data.push([_class, -1]);
     }
     // push unassigned rooms by priority
-    for (var i = 0; i < len; i++) {
+    for (var i = 0; i &lt; len; i++) {
         test_data.push(QUEUE.dequeue());
     }
     var i = 0;
@@ -160,8 +188,8 @@ export function assignRooms() {
         logger.info("Assigning class: " + _class[0].name);
         var assignedRoom = false // boolean value to tell if class has already been assigned
         var numRoomsChecked = 0; // number of classes we have looped through
-        while (numRoomsChecked < roomsList.length) {
-            if (_class[0] !== null && _class[0].room === roomsList[numRoomsChecked].roomNumber) {
+        while (numRoomsChecked &lt; roomsList.length) {
+            if (_class[0] !== null &amp;&amp; _class[0].room === roomsList[numRoomsChecked].roomNumber) {
                 if(canBeAssigned(_class[0], roomsList[numRoomsChecked])) {
                     assignedRoom = true;
                 }
@@ -247,7 +275,7 @@ export function writeToCSV() {
         for (var i in days) {
             // loop through each class
             currClass = days[i];
-            while (currClass !== null && currClass.getClass() !== null) {
+            while (currClass !== null &amp;&amp; currClass.getClass() !== null) {
                 // console.log(currClass);
                 if (!roomCoursesNames.includes(currClass.getClass().name)) {
                     roomCoursesNames.push(currClass.getClass().name);
@@ -304,9 +332,31 @@ export function writeToCSV() {
         }
     }
     // write to file
-    fs.writeFile("./output/output.csv", header + data, (err) => {
+    fs.writeFile("./server/uploads/output.csv", header + data, (err) => {
         if (err) {
-            logger.error(err);
+            logger.erroror(err);
         }
     });
-}
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="AlgorithmResults.html">AlgorithmResults</a></li><li><a href="Assignment.html">Assignment</a></li><li><a href="Calendar.html">Calendar</a></li><li><a href="ClassObjects.html">ClassObjects</a></li><li><a href="ClientIndex.html">ClientIndex</a></li><li><a href="FormatCalendar.html">FormatCalendar</a></li><li><a href="Home.html">Home</a></li><li><a href="Navbar.html">Navbar</a></li><li><a href="RenderNavbar.html">RenderNavbar</a></li><li><a href="Restrictions.html">Restrictions</a></li><li><a href="ServerIndex.html">ServerIndex</a></li><li><a href="Upload.html">Upload</a></li></ul><h3>Classes</h3><ul><li><a href="ClassObjects.exports.ClassroomTimeData.html">exports.ClassroomTimeData</a></li><li><a href="ClassObjects.exports.ClassroomTimeSlot.html">exports.ClassroomTimeSlot</a></li><li><a href="ClassObjects.exports.CourseDescription.html">exports.CourseDescription</a></li><li><a href="ClassObjects.exports.PriorityQueue.html">exports.PriorityQueue</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue May 07 2024 09:12:10 GMT-0500 (Central Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

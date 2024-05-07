@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: server/restrictions.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: server/restrictions.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * @file Handles reading/parsing uploaded .CSV file according to certain restrictions. Sends processed data to 
  * assignment.js, then posts resulting data to the calendar and algorithm results pages.
  * Also sends data to the Calendar.js and AlgoResult.js pages.
@@ -9,7 +37,7 @@
 import { CourseDescription, ClassroomTimeData, PriorityQueue, unassignableClasses, unassignableClassesSections } from './Class_Objects.js';
 import fs from 'fs';
 import { parse } from 'csv-parse';
-import rooms from "./rooms.json" assert {type: "json"};
+import rooms from "./uploads/rooms.json" assert {type: "json"};
 import express from 'express';
 import cors from 'cors';
 import { finalForCalendar, ft } from './formatCalendar.js';
@@ -67,7 +95,7 @@ export const logger = new createLogger({
       ),
     transports: [
       new transports.File({
-        filename: './output/information.log',
+        filename: './uploads/information.log',
       }),
     ],
 });
@@ -100,14 +128,14 @@ function readCSVData(file_path) {
             var cd = new CourseDescription(); // creates object to store class data
             if (Number(row[7]) >= 800) { /* bad section number */ } 
             else if (row[0] === '' 
-                    && unassignableClasses.includes(prevClassName) 
-                    && unassignableClassesSections[unassignableClasses.indexOf(prevClassName)].includes(row[7])) { /* class is unassignable with bad section number */ }
+                    &amp;&amp; unassignableClasses.includes(prevClassName) 
+                    &amp;&amp; unassignableClassesSections[unassignableClasses.indexOf(prevClassName)].includes(row[7])) { /* class is unassignable with bad section number */ }
             else if (row[29] > 60 || row[35] > 60) { /* too many students to sit */ }
             else if (row[11].includes(";")) {
                 logger.warn(`Cannot assign ${prevClassName} sect. ${row[7]} due to irregular meetig time. Please assign mannually`);
             }
             else if (row[0] === '') {
-                var crossListed = row[34] !== '' && cd.checkIfCrossListed([row[6], row[7]], row[34], crossListedCoursesToCheck);
+                var crossListed = row[34] !== '' &amp;&amp; cd.checkIfCrossListed([row[6], row[7]], row[34], crossListedCoursesToCheck);
                 cd.setCourseName(prevClassName);
                 cd.term = row[1];
                 cd.termCode = row[2];
@@ -187,7 +215,7 @@ function createRoomData() {
         var room = new ClassroomTimeData();
         room.roomNumber = key;
         room.colleges['CoE'] = rooms[key].Info['CoE'];
-        room.colleges['IS&T'] = rooms[key].Info['IS&T'];
+        room.colleges['IS&amp;T'] = rooms[key].Info['IS&amp;T'];
         room.roomSize = rooms[key].Seats;
         room.isLab = rooms[key].RoomType === "Lab" ? true : false;
         roomsList.push(room);
@@ -250,9 +278,9 @@ export function compareMeetingDates(test, stable) {
     var testSplit = test.start.slice(0, -2).split(":");
     var stableSplit = stable.start.slice(0, -2).split(":");
     // set start hours
-    parsedTest.startHour = test.start.includes("pm") && parseInt(testSplit[0]) !== 12 
+    parsedTest.startHour = test.start.includes("pm") &amp;&amp; parseInt(testSplit[0]) !== 12 
                             ? parseInt(testSplit[0]) + 12 : parseInt(testSplit[0]);
-    parsedStable.startHour = stable.start.includes("pm") && parseInt(stableSplit[0]) !== 12 
+    parsedStable.startHour = stable.start.includes("pm") &amp;&amp; parseInt(stableSplit[0]) !== 12 
                             ? parseInt(stableSplit[0]) + 12 : parseInt(stableSplit[0]);
     // set start minutes 
     parsedTest.startMin = isNaN(parseInt(testSplit[1])) ? 0 : parseInt(testSplit[1]);
@@ -261,9 +289,9 @@ export function compareMeetingDates(test, stable) {
     testSplit = test.end.slice(0, -2).split(":");
     stableSplit = stable.end.slice(0, -2).split(":");
     // set end hours
-    parsedTest.endHour = test.end.includes("pm") && parseInt(testSplit[0]) !== 12 
+    parsedTest.endHour = test.end.includes("pm") &amp;&amp; parseInt(testSplit[0]) !== 12 
                             ? parseInt(testSplit[0]) + 12 : parseInt(testSplit[0]);
-    parsedStable.endHour = stable.end.includes("pm") && parseInt(stableSplit[0]) !== 12 
+    parsedStable.endHour = stable.end.includes("pm") &amp;&amp; parseInt(stableSplit[0]) !== 12 
                             ? parseInt(stableSplit[0]) + 12 : parseInt(stableSplit[0]);
     // set start minutes 
     parsedTest.endMin = isNaN(parseInt(testSplit[1])) ? 0 : parseInt(testSplit[1]);
@@ -274,12 +302,12 @@ export function compareMeetingDates(test, stable) {
     parsedStable.endTotal = parsedStable.endHour*60+parsedStable.endMin;
     parsedStable.startTotal = parsedStable.startHour*60+parsedStable.startMin;
     // during the same time
-    if (parsedStable.startTotal <= parsedTest.startTotal && parsedTest.startTotal < parsedStable.endTotal ||
-        parsedTest.startTotal <= parsedStable.startTotal && parsedStable.startTotal < parsedTest.endTotal) { return 0 }
+    if (parsedStable.startTotal &lt;= parsedTest.startTotal &amp;&amp; parsedTest.startTotal &lt; parsedStable.endTotal ||
+        parsedTest.startTotal &lt;= parsedStable.startTotal &amp;&amp; parsedStable.startTotal &lt; parsedTest.endTotal) { return 0 }
     // date1 is earlier
-    else if (parsedTest.endHour*60 + parsedTest.endMin <= parsedStable.startHour*60 + parsedStable.startMin) { return -1 }
+    else if (parsedTest.endHour*60 + parsedTest.endMin &lt;= parsedStable.startHour*60 + parsedStable.startMin) { return -1 }
     // date2 is earlier
-    else if (parsedStable.endHour*60 + parsedStable.endMin <= parsedTest.startHour*60 + parsedTest.startMin) { return 1 }
+    else if (parsedStable.endHour*60 + parsedStable.endMin &lt;= parsedTest.startHour*60 + parsedTest.startMin) { return 1 }
     else { return null }
 }
 
@@ -317,4 +345,26 @@ export async function mainRestrictions(path) {
 var test_path = './uploads/1715015603287_Spring2023NEW1.csv';
 mainRestrictions(test_path);
 
-export default {mainRestrictions};
+export default {mainRestrictions};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="AlgorithmResults.html">AlgorithmResults</a></li><li><a href="Assignment.html">Assignment</a></li><li><a href="Calendar.html">Calendar</a></li><li><a href="ClassObjects.html">ClassObjects</a></li><li><a href="ClientIndex.html">ClientIndex</a></li><li><a href="FormatCalendar.html">FormatCalendar</a></li><li><a href="Home.html">Home</a></li><li><a href="Navbar.html">Navbar</a></li><li><a href="RenderNavbar.html">RenderNavbar</a></li><li><a href="Restrictions.html">Restrictions</a></li><li><a href="ServerIndex.html">ServerIndex</a></li><li><a href="Upload.html">Upload</a></li></ul><h3>Classes</h3><ul><li><a href="ClassObjects.exports.ClassroomTimeData.html">exports.ClassroomTimeData</a></li><li><a href="ClassObjects.exports.ClassroomTimeSlot.html">exports.ClassroomTimeSlot</a></li><li><a href="ClassObjects.exports.CourseDescription.html">exports.CourseDescription</a></li><li><a href="ClassObjects.exports.PriorityQueue.html">exports.PriorityQueue</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue May 07 2024 09:12:10 GMT-0500 (Central Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
