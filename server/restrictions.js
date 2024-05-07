@@ -12,7 +12,7 @@ import { parse } from 'csv-parse';
 import rooms from "./rooms.json" assert {type: "json"};
 import express from 'express';
 import cors from 'cors';
-import { finalForCalendar, ft } from './formatCalendar.js';
+import { preCalendar, finalForCalendar } from './formatCalendar.js';
 import { calendarFormat } from './formatCalendar.js';
 import { assignRooms, Queueify, writeToCSV } from './assignment.js';
 import winston from 'winston';
@@ -37,7 +37,7 @@ ex.get("/Data", (req, res) => {res.json(finalForCalendar);});//Send data in json
  * @returns {void} Sends final object to requester
  * @memberof Restrictions
  */
-ex.get("/Algo", (req, res) => {res.json(ft);});//Send data in json
+ex.get("/Algo", (req, res) => {res.json(preCalendar);});//Send data in json
 
 /** Start server listener on port 3001 for data requests 
  * @function

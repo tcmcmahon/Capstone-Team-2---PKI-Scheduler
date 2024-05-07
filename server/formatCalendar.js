@@ -7,7 +7,7 @@
 import { roomsList } from "./restrictions.js";
 import { formatTimes } from "./formatTime.js";
 
-export let ft = [];
+export let preCalendar = [];
 export let finalForCalendar = [];
 
 /** Formats all dateTimes for each class for the calendar
@@ -29,7 +29,7 @@ export function calendarFormat()
             // loop through each class
             currClass = days[i];
             while (currClass !== null && currClass.getClass() !== null) {
-                ft.push({startTime: currClass.getClass().meetingDates.start,
+                preCalendar.push({startTime: currClass.getClass().meetingDates.start,
                         endTime: currClass.getClass().meetingDates.end, 
                         days: currClass.getClass().meetingDates.days, 
                         title: currClass.getClass().name, 
@@ -40,7 +40,7 @@ export function calendarFormat()
             }
         }
     }
-    formatTimes(ft);
+    formatTimes(preCalendar);
     let datesSymbol = {"M": "2024-01-01", 
                         "T": "2024-01-02", 
                         "W": "2024-01-03",
@@ -48,28 +48,28 @@ export function calendarFormat()
                         "F": "2024-01-05",
                         "S": "2024-01-06"}
     let y = {};
-    for(let i = 0; i < ft.length; i++)
+    for(let i = 0; i < preCalendar.length; i++)
     {
-        if (y[ft[i].title] !== undefined && y[ft[i].title].includes(ft[i].section)) {
-            console.log("Found a baddy: " + [ft[i].title, ft[i].section]);
+        if (y[preCalendar[i].title] !== undefined && y[preCalendar[i].title].includes(preCalendar[i].section)) {
+            console.log("Found a baddy: " + [preCalendar[i].title, preCalendar[i].section]);
             continue 
         }
-        console.log("We addin:  " + [ft[i].title, ft[i].section]);
-        if (y[ft[i].title] === undefined) {
-            y[ft[i].title] = [ft[i].section];
+        console.log("We addin:  " + [preCalendar[i].title, preCalendar[i].section]);
+        if (y[preCalendar[i].title] === undefined) {
+            y[preCalendar[i].title] = [preCalendar[i].section];
         }
         else {
-            y[ft[i].title].push(ft[i].section);
+            y[preCalendar[i].title].push(preCalendar[i].section);
         }
-        console.log(ft[i].title);
-        console.log(y[ft[i].title]);
+        console.log(preCalendar[i].title);
+        console.log(y[preCalendar[i].title]);
         console.log("\n\n");
-        for (var d in ft[i].days) {
+        for (var d in preCalendar[i].days) {
             finalForCalendar.push({
-                startDate: (datesSymbol[ft[i].days[d]] + "T" + ft[i].startTime),
-                endDate: (datesSymbol[ft[i].days[d]] + "T" + ft[i].endTime),
-                title: ft[i].title,
-                room: ft[i].room
+                startDate: (datesSymbol[preCalendar[i].days[d]] + "T" + preCalendar[i].startTime),
+                endDate: (datesSymbol[preCalendar[i].days[d]] + "T" + preCalendar[i].endTime),
+                title: preCalendar[i].title,
+                room: preCalendar[i].room
             });
         }
     }
