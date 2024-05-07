@@ -1,16 +1,95 @@
+//Unassignable classes
+export const unassignableClasses =["AREN 3030 - AE DESIGN AND SIMULATION STUDIO III",
+                            "CIVE 334 - INTRODUCTION TO GEOTECHNICAL ENGINEERING",
+                            "CIVE 378 - MATERIALS OF CONSTRUCTION",
+                            "AREN 3220 - ELECTRICAL SYSTEMS FOR BUILDINGS I",
+                            "AREN 4250 - LIGHTING DESIGN",
+                            "AREN 4940 - SPECIAL TOPICS IN ARCHITECTURAL ENGINEERING IV",
+                            "AREN 8220 - ELECTRICAL SYSTEMS FOR BUILDINGS II",
+                            "AREN 1030 - DESIGN AND SIMULATION STUDIO I",
+                            "AREN 4040 - BUILDING ENVELOPES",
+                            "CIVE 102 - GEOMATICS FOR CIVIL ENGINEERING",
+                            "CNST 112 - CONSTRUCTION COMMUNICATIONS",
+                            "CNST 225 - INTRODUCTION TO BUILDING INFORMATION MODELING",
+                            "ECEN 103 - ELECTRICAL AND COMPUTER ENGINEERING FUNDAMENTALS",
+                            "ECEN 106 - MICROPROCESSOR APPLICATIONS",
+                            "ECEN 123 - INTRODUCTION TO ELECTRICAL AND COMPUTER ENGINEERING",
+                            "ECEN 194 - SPECIAL TOPICS IN ELECTRICAL AND COMPUTER ENGINEERING I",
+                            "ECEN 313 - SWITCHING CIRCUITS THEORY",
+                            "ECEN 433 - MICROPROCESSOR SYSTEM DESIGN"];
+export const unassignableClassesSections =[['1', '2', '3', '4'],
+                                    ['2', '3', '4'],
+                                    ['2', '3', '4'],
+                                    ['1', '2', '3', '4'],
+                                    ['1', '2', '3', '4'],
+                                    ['1', '2', '3', '4'],
+                                    ['1', '2', '3', '4'],
+                                    ['1', '2', '3', '4'],
+                                    ['1', '2', '3', '4'],
+                                    ['2', '3'],
+                                    ['1', '2', '3', '4'],
+                                    ['1', '2', '3', '4'],
+                                    ['2'],
+                                    ['3', '4'],
+                                    ['1', '2', '3', '4'],
+                                    ['2', '4'],
+                                    ['2', '3'],
+                                    ['2']];
+const meetOnS = ["ECEN 891 - SPECIAL TOPICS IN ELECTRIC AND COMPUTER ENGINEERING IV",
+                "ECEN 491 - SPECIAL TOPICS IN ELECTRIC AND COMPUTER ENGINEERING IV"];
+
 /* object that grabs course details */
 export class CourseDescription {
     // TODO : move functions from restrictrions.js to here to reduce clutter there
     constructor() {
         this.name = null;                       // 0 - course code and title
+        this.term = null;                       // 1
+        this.termCode = null;                   // 2
+        this.deptCode = null;                   // 3
+        this.subjCode = null;                   // 4
+        this.catNumber = null;                  // 5
+        this.course = null;                     // 6
         this.sectionNumber = null;              // 7 - section number of course
+        this.courseTitle = null;                // 8
+        this.sectionType = null;                // 9
         this.isLab = null;                      // 9 - if lab or not lab
-        this.meetingDates = [];                 // 11 - will hold ClassroomTimeSlot object  
+        this.topic = null;                      // 10
+        this.meetingDates = {days: null, start: null, end: null}; // 11 - will hold ClassroomTimeSlot object 
+        this.meetingPattern = null;             // 11 
+        this.meetings = null;                   // 12
+        this.instructor = null;                 // 13
         this.room = null;                       // 14 - keep null, will assign later
+        this.status = null;                     // 15
         this.session = null;                    // 16 - if class is regular session or 6 weeks - May not be needed
+        this.campusCode = null;                 // 17
         this.campus = null;                     // 17 - if class is CoE or IS
+        this.instMethod = null;                 // 18
+        this.integPartner = null;               // 19
+        this.schedulePrint = null;              // 20
+        this.consent = null;                    // 21
+        this.creditHrsMin = null;               // 22
+        this.creditHrs = null;                  // 23
+        this.gradeMode = null;                  // 24
+        this.attributes = null;                 // 25
+        this.courseAttributes = null;           // 26
+        this.roomAttributes = null;             // 27
+        this.enrollment = null;                 // 28
         this.maximumEnrollments = null;         // 29 - room cap
+        this.maxEnrollments = null;             // 29
+        this.priorEnrollment = null;            // 30
+        this.projEnrollment = null;             // 31
+        this.waitCap = null;                    // 32
+        this.rmCapRequest = null;               // 33
+        this.crossListings = null;              // 34
         this.crossListedWith = [];              // self created - will have all courses class is cross listed with
+        this.crossListMax = null;               // 35
+        this.crossListProj = null;              // 36
+        this.crossListWaitCap = null;           // 37
+        this.crossListRmCapReq = null;          // 38
+        this.linkTo = null;                     // 39
+        this.comments = null;                   // 40
+        this.notes1 = null;                     // 41
+        this.notes2 = null;                     // 42
     }   
     setCourseName(courseString) {
         this.name = courseString;
@@ -21,21 +100,18 @@ export class CourseDescription {
     setLab(sectionString) {
         this.isLab = (sectionString === "Laboratory") ? true : false;
     }
-    spliceTime(timeString) { // e.g. "MW 10:30am-11:45am; F 12:00pm-1:15pm"
-        var timeDaySplit;
-        var startEndSplit;
-        var timeSlot = {days: null, start: null, end: null};
-        var days = timeString.split("; "); // ["MW 10:30am-11:45am", "F 12:00pm-1:15pm"]
-        for (var day in days) {
-            var tmp_timeSlot = structuredClone(timeSlot);
-            timeDaySplit = days[day].split(' '); // ["MW", "10:30am-11:45am"] : ["F", "12:00pm-1:15pm"]
-            startEndSplit = timeDaySplit[1].split('-'); // ["10:30am", "11:45am"] : ["12:00pm", "1:15pm"]
-            tmp_timeSlot.days = timeDaySplit[0];
-            tmp_timeSlot.start = startEndSplit[0];
-            tmp_timeSlot.end = startEndSplit[1];
-            this.meetingDates.push(tmp_timeSlot);
+    spliceTime(timeString) { // e.g. "MW 10:30am-11:45am
+        var timeDaySplit = timeString.split(' ');
+        var startEndSplit = timeDaySplit[1].split('-');
+        this.meetingDates.days = timeDaySplit[0];
+        this.meetingDates.start = startEndSplit[0];
+        this.meetingDates.end = startEndSplit[1];
+    }
+    setRoom(roomString) {
+        var pkiLen = "Peter Kiewit Institute ".length;
+        if (roomString !== "") {
+            this.room = roomString.substr(pkiLen, 3);
         }
-        return this.meetingDates;
     }
     setSession(sessionString) {
         this.session = sessionString;
@@ -128,15 +204,16 @@ export class PriorityQueue {
     constructor() {
         this.queue = [];
     }
-    enqueue(_class, classDay, courseTime) {
+    enqueue(_class, classDay, totalCourseTime) {
         var i = 0;
-        _class.meetingDates = _class.meetingDates[classDay];
-        while (i < this.queue.length) {
-            if (this.queue[i][1] < courseTime) { break }
-            else if (this.queue[i][1] === courseTime && this.queue[i][0].meetingDates.days.length < _class.meetingDates.days.length) { break }
-            else { i++ }
+        if (_class.room === null) {
+            while (i < this.queue.length) {
+                if (this.queue[i][1] < totalCourseTime) { break }
+                else if (this.queue[i][1] === totalCourseTime && this.queue[i][0].meetingDates.days.length < _class.meetingDates.days.length) { break }
+                else { i++ }
+            }
         }
-        this.queue.splice(i, 0, [_class, courseTime]);
+        this.queue.splice(i, 0, [_class, totalCourseTime]);
     }
     dequeue(i=0) {
         return this.queue.shift();

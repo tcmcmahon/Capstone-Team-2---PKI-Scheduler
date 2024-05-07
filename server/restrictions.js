@@ -1,5 +1,5 @@
 /* import data */
-import { CourseDescription, ClassroomTimeData, PriorityQueue } from './Class_Objects.js';
+import { CourseDescription, ClassroomTimeData, PriorityQueue, unassignableClasses, unassignableClassesSections } from './Class_Objects.js';
 import fs from 'fs';
 import { parse } from 'csv-parse';
 import rooms from "./uploads/rooms.json" assert {type: "json"};
@@ -8,6 +8,10 @@ import cors from 'cors';
 import { finalForCalendar, ft } from './formatCalendar.js';
 import { calendarFormat } from './formatCalendar.js';
 import { assignRooms, Queueify, writeToCSV } from './assignment.js';
+import winston from 'winston';
+
+const { transports, format, createLogger } = winston;
+const { combine, printf, timestamp } = format;
 
 //Set up express/cors
 const ex = express();
@@ -37,84 +41,128 @@ ex.listen(3001, () => console.log("Server is up"));//Listen on port 3001 for dat
 
 /* global variables */
 export var classData = []; // will hold instances of classDescription, will end up with the data for all of the classes
+export var unassignedClassData = []; // will hold instances of classDescription, will end up with the data for all of the classes
+export var assignedClassData = []; // will hold instances of classDescription for classes that are assigned
 var crossListedCoursesToCheck = []; // will temporarily hold classes that are cross listed and skip them if listed
-const unassignableClasses =["AREN 3030 - AE DESIGN AND SIMULATION STUDIO III",
-                            "CIVE 334 - INTRODUCTION TO GEOTECHNICAL ENGINEERING",
-                            "CIVE 378 - MATERIALS OF CONSTRUCTION",
-                            "AREN 3220 - ELECTRICAL SYSTEMS FOR BUILDINGS I",
-                            "AREN 4250 - LIGHTING DESIGN",
-                            "AREN 4940 - SPECIAL TOPICS IN ARCHITECTURAL ENGINEERING IV",
-                            "AREN 8220 - ELECTRICAL SYSTEMS FOR BUILDINGS II",
-                            "AREN 1030 - DESIGN AND SIMULATION STUDIO I",
-                            "AREN 4040 - BUILDING ENVELOPES",
-                            "CIVE 102 - GEOMATICS FOR CIVIL ENGINEERING",
-                            "CNST 112 - CONSTRUCTION COMMUNICATIONS",
-                            "CNST 225 - INTRODUCTION TO BUILDING INFORMATION MODELING",
-                            "ECEN 103 - ELECTRICAL AND COMPUTER ENGINEERING FUNDAMENTALS",
-                            "ECEN 106 - MICROPROCESSOR APPLICATIONS",
-                            "ECEN 123 - INTRODUCTION TO ELECTRICAL AND COMPUTER ENGINEERING",
-                            "ECEN 194 - SPECIAL TOPICS IN ELECTRICAL AND COMPUTER ENGINEERING I",
-                            "ECEN 313 - SWITCHING CIRCUITS THEORY",
-                            "ECEN 433 - MICROPROCESSOR SYSTEM DESIGN"];
-const unassignableClassesSections =[['1', '2', '3', '4'],
-                                    ['2', '3', '4'],
-                                    ['2', '3', '4'],
-                                    ['1', '2', '3', '4'],
-                                    ['1', '2', '3', '4'],
-                                    ['1', '2', '3', '4'],
-                                    ['1', '2', '3', '4'],
-                                    ['1', '2', '3', '4'],
-                                    ['1', '2', '3', '4'],
-                                    ['2', '3'],
-                                    ['1', '2', '3', '4'],
-                                    ['1', '2', '3', '4'],
-                                    ['2'],
-                                    ['3', '4'],
-                                    ['1', '2', '3', '4'],
-                                    ['2', '4'],
-                                    ['2', '3'],
-                                    ['2']];
-const meetOnS = ["ECEN 891 - SPECIAL TOPICS IN ELECTRIC AND COMPUTER ENGINEERING IV",
-                "ECEN 491 - SPECIAL TOPICS IN ELECTRIC AND COMPUTER ENGINEERING IV"];
 export var roomsList = [];
 export var classDayFrequencies = {'M': {},'T': {},'W': {},'R': {},'F': {},'S': {}}
 export var classDayTotals = {'M': 0,'T': 0,'W': 0,'R': 0,'F': 0,'S': 0}
-export var unassignedClasses = [];
 export const QUEUE = new PriorityQueue();
+var finalUnassignedClasses = [];
+
+export const logger = new createLogger({
+    level: process.env.LOG_LEVEL || 'info',
+    format: combine(
+        timestamp({
+          format: 'YYYY-MM-DD hh:mm:ss.SSS A',
+        }),
+        printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`)
+      ),
+    transports: [
+      new transports.File({
+        filename: 'server/uploads/information.log',
+      }),
+    ],
+});
 
 /* read data from the csv file */
 function readCSVData(file_path) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         var prevClassName; // holds the previous class stated in csv file
-        fs.createReadStream(file_path)
-        .pipe(
-            parse({from_line: 4}) // starts reading at line 4 with "AREN 1030 - DESIGN AND SIMULATION STUDIO I"
-        ) 
-        .on('data', function (row) { // iterates through each row in csv file
+        if (!fs.existsSync(file_path)) {
+            logger.error("File not found");
+            reject(new Error("File not found."));
+            return;
+        }
+        const fileStream = fs.createReadStream(file_path);
+        const parser = fileStream.pipe(parse({from_line: 4}));
+        fileStream.on('error', (err) => {
+            logger.error(err);
+            reject(err);
+        });
+        parser.on('error', (err) => {
+            logger.error(err);
+            reject(err);
+        });
+        parser.on('data', (row) => {
+            var crossListed;
             var cd = new CourseDescription(); // creates object to store class data
-            if (row[34] !== '' && cd.checkIfCrossListed([row[6], row[7]], row[34], crossListedCoursesToCheck)) { /* cross listed / class is already in classData */ }
-            else if (Number(row[7]) >= 800) { /* bad section number */ } 
+            if (Number(row[7]) >= 800) { /* bad section number */ } 
             else if (row[0] === '' 
                     && unassignableClasses.includes(prevClassName) 
                     && unassignableClassesSections[unassignableClasses.indexOf(prevClassName)].includes(row[7])) { /* class is unassignable with bad section number */ }
             else if (row[29] > 60 || row[35] > 60) { /* too many students to sit */ }
+            else if (row[11].includes(";")) {
+                logger.warn(`Cannot assign ${prevClassName} sect. ${row[7]} due to irregular meetig time. Please assign mannually`);
+            }
             else if (row[0] === '') {
+                var crossListed = row[34] !== '' && cd.checkIfCrossListed([row[6], row[7]], row[34], crossListedCoursesToCheck);
                 cd.setCourseName(prevClassName);
+                cd.term = row[1];
+                cd.termCode = row[2];
+                cd.deptCode = row[3];
+                cd.subjCode = row[4];
+                cd.catNumber = row[5];
+                cd.course = row[6];
                 cd.setSectionNum(row[7]);
+                cd.courseTitle = row[8];
+                cd.sectionType = row[9];
                 cd.setLab(row[9]);
+                cd.topic = row[10];
                 cd.spliceTime(row[11]);
+                cd.meetingPattern = row[11];
+                cd.meetings = row[12];
+                cd.instructor = row[13];
+                cd.setRoom(row[14]);
+                cd.status = row[15];
                 cd.setSession(row[16]);
+                cd.campusCode = row[17];
                 cd.setCampus(row[17]);
-                cd.setClassSize(row[29], row[35])
-                classData.push(cd);
+                cd.instMethod = row[18];
+                cd.integPartner = row[19];
+                cd.schedulePrint = row[20];
+                cd.consent = row[21];
+                cd.creditHrsMin = row[22];
+                cd.creditHrs = row[23];
+                cd.gradeMode = row[24];
+                cd.attributes = row[25];
+                cd.courseAttributes = row[26];
+                cd.roomAttributes = row[27];
+                cd.enrollment = row[28];
+                cd.maxEnrollments = row[29];
+                cd.priorEnrollment = row[30];
+                cd.projEnrollment = row[31];
+                cd.waitCap = row[32];
+                cd.rmCapRequest = row[33];
+                cd.crossListings = row[34];
+                cd.setClassSize(row[29], row[35]);
+                cd.crossListMax = row[35];
+                cd.crossListProj = row[36];
+                cd.crossListWaitCap = row[37];
+                cd.crossListRmCapReq = row[38];
+                cd.linkTo = row[39];
+                cd.comments = row[40];
+                cd.notes1 = row[41];
+                cd.notes2 = row[42];
+                if (crossListed) {
+                    for (var _class of crossListedCoursesToCheck) {
+                        
+                    }
+                }
+                if (cd.room === null) {
+                    unassignedClassData.push(cd);
+                }
+                else {
+                    assignedClassData.push(cd);
+                }
             }
             else { // will save the previous class name for the next row
                 prevClassName = row[0];
             } // end of if statement
+        });
+        parser.on('end', () => {
+            resolve(unassignedClassData);
         })
-        .on('end', function() {
-            resolve(classData); // saves the data for classData
-        }) // end of fs read
     }); // end of return
 } // end of readCSVData
 
@@ -216,22 +264,27 @@ export function compareMeetingDates(test, stable) {
 /* main function, is async because fs.createReadStream() */
 export async function mainRestrictions(path) {
     await readCSVData(path);
+    logger.info("Class data has been read");
     createRoomData();
+    logger.info("Room information has been read");
     howManyClassesPerDay();
+    logger.info("Number of classes per day has been calculated");
     Queueify();
+    logger.info("Class data has been queued");
     assignRooms();
-    calendarFormat();
+    logger.info("Finished assigning rooms");
     writeToCSV();
-    if (unassignedClasses.length > 0) 
-    {
-        for (var i in unassignedClasses) {
-            console.log(`#${i+1} : ${unassignedClasses[i].name}`);
+    logger.info("Data has been outputted");
+    if (finalUnassignedClasses.length > 0) {
+        for (var _class of finalUnassignedClasses) {
+            logger.warn(`Class ${_class.name} section ${_class.sectionNumber} was not assigned a room`)
         }
+        logger.warn(`A total number of ${finalUnassignedClasses.length} have not been assigned`);
     }
-    else 
-    {
-        console.log("Number of unassigned classes: " + unassignedClasses.length);
+    else {
+        logger.info("All classes have been assigned");
     }
+    calendarFormat();
 } // end of main
 
 /* launch main */
