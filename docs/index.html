@@ -44,8 +44,6 @@
 
     <section>
         <article><h1>Capstone-Team-2---PKI-Scheduler</h1>
-<p>LINK TO JSDOC ON GITHUB PAGES:
-https://tcmcmahon.github.io/Capstone-Team2-PKI-Scheduler/</p>
 <h3>ABOUT THE APPLICATION:</h3>
 <p>This application is a web application using React as the front-end and Node.js as the back-end. The goal is to take a CSV file given by the University of Nebraska at Omaha registrar/faculty that has information about the courses for the given semester. Our application will allow uploading of the file through the frontend, and parsing of the file in the backend. Parsing is to take the file and run the data through a scheduling algorithm to create an efficient assignment of courses to classrooms in the PKI building.</p>
 <h3>RELEASE NOTES:</h3>
@@ -55,6 +53,10 @@ We have multiple branches, each showing the work done by each person. We named e
 Josh's branch (jshadbolt) first created the basic web app and the basic backend.
 Travis's (tmcmahon) branch branched off of Josh's, and styled the web app and outputted the CSV file contents to the command line.
 Josh's branch (updated) then put the parsing code in a function, and added some changes to the overall parsing structure.</p>
+<p>MILESTONE 2: For Milestone 2, we made a calendar page and fed it test data to show its potential functionality. We bundled the client and server together so that once the client is built, we execute one command in the server and this starts both the client and the server at the same time. We extracted the classroom CSV data from our parsed version, and stored it in the MySQL database.</p>
+<p>MILESTONE 3: For Milestone 3, we integrated a Navigation bar to move back and forth between pages, we created an algorithm for assigning classes that resolves all time conflicts, and fed the calendar page with the output from that algorithm. Each class on the calendar can be clicked on to view its information, and you can choose day or week view, and move between different dates. Minor changes made to the look of each page, and an additional page for display of the raw algorithm output results.</p>
+<p>MILESTONE 4: For Milestone 4, we added room grouping to the calendar and integrated that with our data. We made style changes to modernize and improve the web pages, and began finalizing the algorithm for assignment.</p>
+<p>MILESTONE 5: For Milestone 5, we finalized the assignment algorithm, ran testing for different types of uploaded CSV files, formatted the algorithm output, and cleaned up all the code/organized files to make everything make sense.</p>
 <h3>APPLICATION ACCESS:</h3>
 <h4>IF NOT USING APP/TOOL SUCH AS FORK/GITHUB DESKTOP:</h4>
 <pre><code>1. Go to repository, tcmcmahon/Capstone-Team2-PKI-Scheduler
@@ -80,9 +82,9 @@ Josh's branch (updated) then put the parsing code in a function, and added some 
 </code></pre>
 <h3>RUNNING THE APPLICATION:</h3>
 <pre><code>1. Go to the command line/terminal and navigate to the where the unzipped app folder is; cd LOCATIONOFYOURFOLDER/Capstone-Team2-PKI-Scheduler.
-2. Once in this directory, cd into the &quot;client&quot; folder, and run npm install. You will only need to do this once. After this is complete, run &quot;npm run build&quot;, this will also need to only be done once.
+2. Once in this directory, cd into the &quot;client&quot; folder, and run npm install. You will only need to do this once. After this is complete, run npm start. The app should open in your web browser. If not, ctrl + click on the displayed link.
 3. Open a second command line/terminal, and go into the app folder, and then into the &quot;server&quot; folder. Run npm install. You will only need to do this once. After this is done, run Node index.js. You should see &quot;Server is running on port&quot;. 
-4. crtl + click the link the server is running on, or simply navigate to it in your browser and you should see the React Web page
+4. Go back to the web app opened in your browser, and select choose file. Find a csv to upload from the opened file explorer window, and select open. Then click the upload button. In the server command line window, you should see a message of &quot;file uploaded successfully&quot;, along with the csv data of the file displayed.
 </code></pre>
 <h3>THAT'S IT!</h3></article>
     </section>
@@ -95,13 +97,13 @@ Josh's branch (updated) then put the parsing code in a function, and added some 
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="AlgorithmResults.html">AlgorithmResults</a></li><li><a href="Calendar.html">Calendar</a></li><li><a href="ClassObjects.html">ClassObjects</a></li><li><a href="ClientIndex.html">ClientIndex</a></li><li><a href="Home.html">Home</a></li><li><a href="Navbar.html">Navbar</a></li><li><a href="RenderNavbar.html">RenderNavbar</a></li><li><a href="Restrictions.html">Restrictions</a></li><li><a href="Upload.html">Upload</a></li></ul><h3>Classes</h3><ul><li><a href="ClassObjects.ClassroomTimeSlot.html">ClassroomTimeSlot</a></li><li><a href="ClassObjects.exports.ClassroomTimeData.html">exports.ClassroomTimeData</a></li><li><a href="ClassObjects.exports.CourseDescription.html">exports.CourseDescription</a></li><li><a href="ClassObjects.exports.PriorityQueue.html">exports.PriorityQueue</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="AlgorithmResults.html">AlgorithmResults</a></li><li><a href="Assignment.html">Assignment</a></li><li><a href="Calendar.html">Calendar</a></li><li><a href="ClassObjects.html">ClassObjects</a></li><li><a href="ClientIndex.html">ClientIndex</a></li><li><a href="FormatCalendar.html">FormatCalendar</a></li><li><a href="Home.html">Home</a></li><li><a href="Navbar.html">Navbar</a></li><li><a href="RenderNavbar.html">RenderNavbar</a></li><li><a href="Restrictions.html">Restrictions</a></li><li><a href="ServerIndex.html">ServerIndex</a></li><li><a href="Upload.html">Upload</a></li></ul><h3>Classes</h3><ul><li><a href="ClassObjects.exports.ClassroomTimeData.html">exports.ClassroomTimeData</a></li><li><a href="ClassObjects.exports.ClassroomTimeSlot.html">exports.ClassroomTimeSlot</a></li><li><a href="ClassObjects.exports.CourseDescription.html">exports.CourseDescription</a></li><li><a href="ClassObjects.exports.PriorityQueue.html">exports.PriorityQueue</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon Apr 08 2024 15:16:08 GMT-0500 (Central Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue May 07 2024 09:25:24 GMT-0500 (Central Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

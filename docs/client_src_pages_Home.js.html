@@ -34,31 +34,37 @@
 
 import img from '../resources/O-UNO_Type_Color_White.png';
 import img2 from '../resources/photo-1606761568499-6d2451b23c66.avif';
+import "./Home.css"; // Import the Home.css file for styling
 
 /**
  * Function for rendering the home page for the web application
  * @returns {html} Html home page to be displayed on opening of web app
  * @memberof Home
  */
-export default function Home(){
+
+export default function Home() {
     return( 
-        &lt;div>
-            &lt;body style={{textAlign: 'center', margin: "auto", marginTop: "20px", backgroundImage: `url(${img2})`, height: "85vh", width: "100%", display: "block", margin: "auto"}}>
-            &lt;h1 style={{backgroundImage: `url(${img})`, backgroundSize: "cover", height: "110px", backgroundColor: "black"}}>&lt;/h1>
-            &lt;h2 style={{textAlign: 'center', margin: "auto", backgroundColor: "black", color: "white", width: "32%"}}>Welcome to the PKI Class Scheduler!&lt;/h2>
-            &lt;h3 style={{textAlign: 'center', margin: "auto", backgroundColor: "black", color: "white", width: "50%", marginTop: "10px"}}>This application will help you create a schedule of classes for the PKI building.&lt;/h3>
-                &lt;h4 style={{margin: "auto", backgroundColor: "black", color: "white", width: "55%", marginTop: "10px"}}>Use the Navigation Bar across the top of each page to move back and forth through the website.&lt;/h4>
-                &lt;ul style={{display: "inline-block", listStylePosition: "inside", backgroundColor: "black", color: "white", width: "40%", padding: "5px"}}>
-                &lt;li style={{textAlign: "left"}}>Upload will allow you to upload a .CSV file to be processed.&lt;/li>
-                &lt;li style={{textAlign: "left"}}>Calendar will allow you to view a layout of assigned classes for the week.&lt;/li>
-                &lt;li style={{textAlign: "left"}}>Algorithm Results will show you the schedule created from processing your uploaded .CSV file.&lt;/li>
-                &lt;li style={{textAlign: "left"}}>Click the title "PKI Class Scheduler" to return to the home page.&lt;/li>
+        &lt;div className="home-container">
+            &lt;header className="home-header" style={{backgroundImage: `url(${img2})`}}>
+                &lt;img src={img} alt="Logo" className="home-logo" />
+                &lt;h1 className="home-title">Welcome to the &lt;strong>PKI Class Scheduler&lt;/strong>!&lt;/h1>
+                &lt;p className="home-subtitle">This application will help you create a schedule of classes for the PKI building.&lt;/p>
+            &lt;/header>
+            &lt;section className="home-content">
+                &lt;p>Use the &lt;strong>Navigation Bar&lt;/strong> across the top of each page to move back and forth through the website.&lt;/p>
+                &lt;ul>
+                    &lt;li>&lt;strong>Upload&lt;/strong> will allow you to upload a .CSV file to be processed.&lt;/li>
+                    &lt;li>&lt;strong>Calendar&lt;/strong> will allow you to view a layout of assigned classes for the week.&lt;/li>
+                    &lt;li>&lt;strong>Algorithm Results&lt;/strong> will show you the schedule created from processing your uploaded .CSV file.&lt;/li>
+                    &lt;li>Click the title "&lt;strong>PKI Class Scheduler&lt;/strong>" to return to the home page.&lt;/li>
                 &lt;/ul>
-            &lt;/body>
-            &lt;h5 style={{backgroundColor: "black", color: "white", padding: "10px", textAlign: "center"}}>Created by Frederic Shope, Josh Shadbolt, Travis McMahon, Abdoul Latoundji, and Jacob Finley. AKA The Node Ninja React Force&lt;/h5>
+            &lt;/section>
+            &lt;footer className="home-footer">Created by Fredric Shope, Josh Shadbolt, Travis McMahon, Abdoul Latoundji, and Jacob Finley. AKA The Node Ninja React Force&lt;/footer>
         &lt;/div>
-    )
-}</code></pre>
+    );
+}
+
+</code></pre>
         </article>
     </section>
 
@@ -68,13 +74,13 @@ export default function Home(){
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="AlgorithmResults.html">AlgorithmResults</a></li><li><a href="Calendar.html">Calendar</a></li><li><a href="ClassObjects.html">ClassObjects</a></li><li><a href="ClientIndex.html">ClientIndex</a></li><li><a href="Home.html">Home</a></li><li><a href="Navbar.html">Navbar</a></li><li><a href="RenderNavbar.html">RenderNavbar</a></li><li><a href="Restrictions.html">Restrictions</a></li><li><a href="Upload.html">Upload</a></li></ul><h3>Classes</h3><ul><li><a href="ClassObjects.ClassroomTimeSlot.html">ClassroomTimeSlot</a></li><li><a href="ClassObjects.exports.ClassroomTimeData.html">exports.ClassroomTimeData</a></li><li><a href="ClassObjects.exports.CourseDescription.html">exports.CourseDescription</a></li><li><a href="ClassObjects.exports.PriorityQueue.html">exports.PriorityQueue</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="AlgorithmResults.html">AlgorithmResults</a></li><li><a href="Assignment.html">Assignment</a></li><li><a href="Calendar.html">Calendar</a></li><li><a href="ClassObjects.html">ClassObjects</a></li><li><a href="ClientIndex.html">ClientIndex</a></li><li><a href="FormatCalendar.html">FormatCalendar</a></li><li><a href="Home.html">Home</a></li><li><a href="Navbar.html">Navbar</a></li><li><a href="RenderNavbar.html">RenderNavbar</a></li><li><a href="Restrictions.html">Restrictions</a></li><li><a href="ServerIndex.html">ServerIndex</a></li><li><a href="Upload.html">Upload</a></li></ul><h3>Classes</h3><ul><li><a href="ClassObjects.exports.ClassroomTimeData.html">exports.ClassroomTimeData</a></li><li><a href="ClassObjects.exports.ClassroomTimeSlot.html">exports.ClassroomTimeSlot</a></li><li><a href="ClassObjects.exports.CourseDescription.html">exports.CourseDescription</a></li><li><a href="ClassObjects.exports.PriorityQueue.html">exports.PriorityQueue</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon Apr 08 2024 15:16:08 GMT-0500 (Central Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue May 07 2024 09:25:24 GMT-0500 (Central Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

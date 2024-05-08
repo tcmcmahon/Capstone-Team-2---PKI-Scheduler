@@ -62,6 +62,11 @@ app.post('/upload', upload.single('file'), (req, res) => {
   res.send('File uploaded successfully.');
 });
 
+// Handle React routing, return all requests to React app
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
+
 // Start the server
 /**
  * Starts a server listener to get uploaded files

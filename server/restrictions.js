@@ -1,22 +1,24 @@
 /**
- * @file Handles reading/parsing uploaded .CSV file, storing said data in database, taking classes from that data and
- * running the assignment algorithm on them, and formatting the data to send it to the calendar page.
+ * @file Handles reading/parsing uploaded .CSV file according to certain restrictions. Sends processed data to 
+ * assignment.js, then posts resulting data to the calendar and algorithm results pages.
  * Also sends data to the Calendar.js and AlgoResult.js pages.
  * @author Jacob Finley, Travis McMahon 
  * @namespace Restrictions
  */
 
-import { CourseDescription } from './Class_Objects.js';
+import { CourseDescription, ClassroomTimeData, PriorityQueue, unassignableClasses, unassignableClassesSections } from './Class_Objects.js';
 import fs from 'fs';
 import { parse } from 'csv-parse';
+import rooms from "./rooms.json" assert {type: "json"};
 import express from 'express';
 import cors from 'cors';
-import mysql from 'mysql2';
-import rooms from './uploads/rooms.json' assert {type: 'json'};
-import { finalForCalendar, formatTimes, storeAssigninCalendar} from './calendarFormat.js';
-import { exit } from 'process';
-import { link } from 'fs/promises';
-import { all } from 'axios';
+import { preCalendar, finalForCalendar } from './formatCalendar.js';
+import { calendarFormat } from './formatCalendar.js';
+import { assignRooms, Queueify, writeToCSV } from './assignment.js';
+import winston from 'winston';
+
+const { transports, format, createLogger } = winston;
+const { combine, printf, timestamp } = format;
 
 //Set up express/cors
 const ex = express();
@@ -35,7 +37,7 @@ ex.get("/Data", (req, res) => {res.json(finalForCalendar);});//Send data in json
  * @returns {void} Sends final object to requester
  * @memberof Restrictions
  */
-ex.get("/Algo", (req, res) => {res.json(final);});//Send data in json
+ex.get("/Algo", (req, res) => {res.json(preCalendar);});//Send data in json
 
 /** Start server listener on port 3001 for data requests 
  * @function
@@ -44,219 +46,275 @@ ex.get("/Algo", (req, res) => {res.json(final);});//Send data in json
  */
 ex.listen(3001, () => console.log("Server is up"));//Listen on port 3001 for data requests to /Data and /Algo 
 
-// Create connection to remote database
-//const connect = mysql.createConnection({
-//     host: '137.48.186.40',
-//     user: 'appuser',
-//     password: 'nnrf1234',
-//     database: 'scheduler'
-// });
-
-/** Attempt connection to remote database using credentials from connect
- * @function
- * @returns {void} Logs status of attempted connection to the console
- * @memberof Restrictions
- */ 
-// connect.connect((err) => {
-//     if (err) throw err;
-//     console.log('Connected to the remote database!');
-// });
-
-let z = Object.keys(rooms);//Total number of Rooms
-let seatNumbers = [];//Seats for each room
-
-for(let i = 0; i < z.length; i++)//For all rooms add seat number to seatNumbers
-{
-    seatNumbers.push(rooms[z[i]].Seats);//Put seat number in array seatNumbers
-}
-
-// Array of unassignable classes
-const unassignableClasses =  ["AREN 3030 - AE DESIGN AND SIMULATION STUDIO III", "CIVE 334 - INTRODUCTION TO GEOTECHNICAL ENGINEERING",
-                              "CIVE 378 - MATERIALS OF CONSTRUCTION",            "AREN 3220 - ELECTRICAL SYSTEMS FOR BUILDINGS I",
-                              "AREN 4250 - LIGHTING DESIGN",                     "AREN 4940 - SPECIAL TOPICS IN ARCHITECTURAL ENGINEERING IV",
-                              "AREN 8220 - ELECTRICAL SYSTEMS FOR BUILDINGS II", "AREN 1030 - DESIGN AND SIMULATION STUDIO I",
-                              "AREN 4040 - BUILDING ENVELOPES",                  "CIVE 102 - GEOMATICS FOR CIVIL ENGINEERING",
-                              "CNST 112 - CONSTRUCTION COMMUNICATIONS",          "CNST 225 - INTRODUCTION TO BUILDING INFORMATION MODELING "];
-
-export var final = [];//Array for final assignment
-
-/**
- * Sort nonFinal array of classes to resolve time conflicts in rooms
- * @param {Array<String>} totalRooms The total number of rooms in the building. Taken as parameter incase this ever changes
- * @returns {void} Stores sorted output in array final
- * @memberof Restrictions
-*/
-
-let leftOver = [];//unassigned classes after each sort
-
-function sort(v)
-{
-    if(v.length > 0)//if array length is > 0
-    {
-        for(let i = 0; i < z.length; i++)//for all rooms
-        {   let t = [];//start times
-            let e = [];//end times
-            for(let j = 0; j < v.length; j++)//for all classes
-            {   
-                if(v[j].maxEnrollment <= seatNumbers[i] && !e.includes(v[j].endTime.slice(0,2)) && !t.includes(v[j].startTime.slice(0,2)) && !e.includes(v[j].startTime.slice(0,2)))//constraints for size and times
-                {
-                    v[j].room = z[i];//assign room number if no constraint is violated
-                    t.push(v[j].startTime.slice(0,2));//add start time to array t
-                    e.push(v[j].endTime.slice(0,2));//add end time to array e
-                    final.push(v[j]);//push to final assignment array
-                    v.splice(j, 1);//remove assigned class
-                }
-            }
-        }
-        leftOver = nonFinal.filter(a => final.find(b => (a.class === b.class)));//filter out assigned classes
-        sort(leftOver);//keep sorting while we have classes
-    }
-    else
-    {
-        return final;//return final assignment and end
-    }
-}
-
-export var nonFinal = [];//Structure for all classes with room, first pass through
-
-/**
- * Function to assign all classes a room for first pass through. Rooms will have conflicts. Then calls the sorting algorithms to resolve conflicts.
- * @param {Array<String>} totalRooms Total number of rooms in the building. Taken as parameter in case this ever changes
- * @returns {void} Stores unsorted assignment in array nonFinal
- * @memberof Restrictions
- */
-
-let lowP = [];//low priority classes
-
-function firstAssign(totalRooms)
-{   
-    let k = 0;//room counter
-    let u = [];//startTimes
-    let d = [];//endTimes
-    let o = [];//days
-    let m = [];//maximumEnrollment
-    for(let i = 0; i < classData.length; i++)//For all classes in class data, assign a room number. Will be sorted later
-    {
-        let y = [];//stores meeting info
-            
-        y = classData[i].meetingDates;//store meeting info
-        u = y[0].startTime;//store startTimes
-        d = y[0].endTime;//store endTimes
-        o = y[0].days;//store days
-        m = classData[i].maximumEnrollments;//stores max enrollment number
-
-        if(k > 29)//If we are at the last room
-        {
-            k = 0;//Reset to room 0
-        }
-        else if(unassignableClasses.includes(classData[i].name) || classData[i].sectionNumber.includes("82"))//If class is an unassignable class or it is Lincoln, skip
-        {
-            continue;
-        }
-        else if(o == "MW" || o == "TR")//Store each class for each high priority day slot
-        {    
-            //Push class with information
-            nonFinal.push({room: totalRooms[k], class: (classData[i].name + " Section " + classData[i].sectionNumber), days: o, startTime: u, endTime: d, maxEnrollment: m});
-        }
-        else if(o == "MWF" || o == "MTWRF" || o == "WF" || o == "M" || o == "T" || o == "W" || o == "R" || o == "F")
-        {
-            lowP.push({room: totalRooms[k], class: (classData[i].name + " Section " + classData[i].sectionNumber), days: o, startTime: u, endTime: d, maxEnrollment: m});
-        }
-        k++;//Increment to next room number
-    }
-    formatTimes(nonFinal);//Reformat times to 24hr format
-    sort(nonFinal);
-    storeAssigninCalendar();
-}
-
-// global variables 
-var classData = []; // will hold instances of classDescription, will end up with the data for all of the classes
+/* global variables */
+export var classData = []; // will hold instances of classDescription, will end up with the data for all of the classes
+export var unassignedClassData = []; // will hold instances of classDescription, will end up with the data for all of the classes
+export var assignedClassData = []; // will hold instances of classDescription for classes that are assigned
 var crossListedCoursesToCheck = []; // will temporarily hold classes that are cross listed and skip them if listed
+export var roomsList = [];
+export var classDayFrequencies = {'M': {},'T': {},'W': {},'R': {},'F': {},'S': {}}
+export var classDayTotals = {'M': 0,'T': 0,'W': 0,'R': 0,'F': 0,'S': 0}
+export const QUEUE = new PriorityQueue();
+var finalUnassignedClasses = [];
 
-/**
- * Function for reading data from the uploaded .CSV file and storing it into an array
- * @returns {array} Array classData with parsed classroom information from uploaded .CSV file
+export const logger = new createLogger({
+    level: process.env.LOG_LEVEL || 'info',
+    format: combine(
+        timestamp({
+          format: 'YYYY-MM-DD hh:mm:ss.SSS A',
+        }),
+        printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`)
+      ),
+    transports: [
+      new transports.File({
+        filename: './output/information.log',
+      }),
+    ],
+});
+
+/** Read data from uploaded CSV file
+ * @function
+ * @returns {void} resolved and parsed data from CSV
  * @memberof Restrictions
  */
-function readCSVData()// read data from the csv file 
-{
-    return new Promise((resolve) => {
+function readCSVData(file_path) {
+    return new Promise((resolve, reject) => {
         var prevClassName; // holds the previous class stated in csv file
-        var crossListedCourses; // will either be empty or hold values for cross listed courses
-        fs.createReadStream('./uploads/test.csv')
-        .pipe(
-            parse({from_line: 4}) // starts reading at line 4 with "AREN 1030 - DESIGN AND SIMULATION STUDIO I"
-        ) 
-        .on('data', function (row) { // iterates through each row in csv file
+        if (!fs.existsSync(file_path)) {
+            logger.error("File not found");
+            reject(new Error("File not found."));
+            return;
+        }
+        const fileStream = fs.createReadStream(file_path);
+        const parser = fileStream.pipe(parse({from_line: 4}));
+        fileStream.on('error', (err) => {
+            logger.error(err);
+            reject(err);
+        });
+        parser.on('error', (err) => {
+            logger.error(err);
+            reject(err);
+        });
+        parser.on('data', (row) => {
+            var crossListed;
             var cd = new CourseDescription(); // creates object to store class data
-            if (row[18] === 'Distance Education') { } // ASK : are classes that are labeled Distance Education fully remote?
-                                                      // ASK : will all Distance Education classes that are cross listed with other class also be cross lised?
-            else if (row[0] === '') {
-                cd.setCourseName(prevClassName);
-                cd.setSectionNum(row[7]);
-                cd.setLab(row[9]);
-                cd.spliceTime(row[11]); //  ASK : what is the diff between meeting and meeting pattern in csv sheet
-                cd.setSession(row[16]);
-                cd.setCampus(row[17]);
-                if (crossListedCourses = cd.setClassSize(row[29], row[34], row[35])) {
-                    crossListedCoursesToCheck.push(crossListedCourses);
-                }
-                classData.push(cd);
+            if (Number(row[7]) >= 800) { /* bad section number */ } 
+            else if (row[0] === '' 
+                    && unassignableClasses.includes(prevClassName) 
+                    && unassignableClassesSections[unassignableClasses.indexOf(prevClassName)].includes(row[7])) { /* class is unassignable with bad section number */ }
+            else if (row[29] > 60 || row[35] > 60) { /* too many students to sit */ }
+            else if (row[11].includes(";")) {
+                logger.warn(`Cannot assign ${prevClassName} sect. ${row[7]} due to irregular meetig time. Please assign mannually`);
             }
-            else { 
-                prevClassName = row[0];// save the previous class name for the next row
+            else if (row[0] === '') {
+                var crossListed = row[34] !== '' && cd.checkIfCrossListed([row[6], row[7]], row[34], crossListedCoursesToCheck);
+                cd.setCourseName(prevClassName);
+                cd.term = row[1];
+                cd.termCode = row[2];
+                cd.deptCode = row[3];
+                cd.subjCode = row[4];
+                cd.catNumber = row[5];
+                cd.course = row[6];
+                cd.setSectionNum(row[7]);
+                cd.courseTitle = row[8];
+                cd.sectionType = row[9];
+                cd.setLab(row[9]);
+                cd.topic = row[10];
+                cd.spliceTime(row[11]);
+                cd.meetingPattern = row[11];
+                cd.meetings = row[12];
+                cd.instructor = row[13];
+                cd.setRoom(row[14]);
+                cd.status = row[15];
+                cd.setSession(row[16]);
+                cd.campusCode = row[17];
+                cd.setCampus(row[17]);
+                cd.instMethod = row[18];
+                cd.integPartner = row[19];
+                cd.schedulePrint = row[20];
+                cd.consent = row[21];
+                cd.creditHrsMin = row[22];
+                cd.creditHrs = row[23];
+                cd.gradeMode = row[24];
+                cd.attributes = row[25];
+                cd.courseAttributes = row[26];
+                cd.roomAttributes = row[27];
+                cd.enrollment = row[28];
+                cd.maxEnrollments = row[29];
+                cd.priorEnrollment = row[30];
+                cd.projEnrollment = row[31];
+                cd.waitCap = row[32];
+                cd.rmCapRequest = row[33];
+                cd.crossListings = row[34];
+                cd.setClassSize(row[29], row[35]);
+                cd.crossListMax = row[35];
+                cd.crossListProj = row[36];
+                cd.crossListWaitCap = row[37];
+                cd.crossListRmCapReq = row[38];
+                cd.linkTo = row[39];
+                cd.comments = row[40];
+                cd.notes1 = row[41];
+                cd.notes2 = row[42];
+                if (crossListed) {
+                    for (var _class of crossListedCoursesToCheck) {
+                        
+                    }
+                }
+                if (cd.room === null) {
+                    unassignedClassData.push(cd);
+                }
+                else {
+                    assignedClassData.push(cd);
+                }
+            }
+            else { // will save the previous class name for the next row
+                prevClassName = row[0];
             } // end of if statement
+        });
+        parser.on('end', () => {
+            resolve(unassignedClassData);
         })
-        .on('end', function() {
-            resolve(classData); // saves the data for classData
-        }) // end of fs read
     }); // end of return
 } // end of readCSVData
 
-/**
- * Function for taking data read from .CSV file and storing it into the remote MySQL database
- * Output: Data inserted into MySQL table successfully, or an error if unsuccessful
- * @returns {void} stores parsed CSV data in array classData
+/** Primes room data for algorithm
+ * @function
+ * @returns {void} primed data in roomsList
  * @memberof Restrictions
  */
-function storeParsedData()// Store parsed data in db
-{
-    var x = [];//holds all values to be stored in database
-    var y = [];//holds meeting time information
-
-    for(var i = 0; i < classData.length; i++)//loops through and assigns data from classData object into array x to be stored in database
-    {
-        y = classData[i].meetingDates;//meeting information
-      
-        x[0] = classData[i].name;//class name
-        x[1] = classData[i].sectionNumber;//class section number
-        x[2] = y[0].days;//days of class i.e. MW
-
-        x[3] = classData[i].session;//class session
-        x[4] = classData[i].campus;//class campus
-        if(classData[i].maximumEnrollments == '')//if no maximum enrollment skip
-        {
-            continue;
-        }
-        else
-        {
-            x[5] = classData[i].maximumEnrollments;//else maximum enrollment
-        }
-        //Store data in db with INSERT INTO sql query
-        //var query = "INSERT INTO Stage_Course_Sheet (Course_Header, Section_Num, Meeting_Pattern, Session, Campus, Maximum_Enrollment) VALUES (?)";
-        // connect.query(query, [x], function(err, result){
-        //     if(err) throw err;
-        //     console.log(result.affectedRows);
-        // });
-    }   
+function createRoomData() {
+    for (const key in rooms){
+        var room = new ClassroomTimeData();
+        room.roomNumber = key;
+        room.colleges['CoE'] = rooms[key].Info['CoE'];
+        room.colleges['IS&T'] = rooms[key].Info['IS&T'];
+        room.roomSize = rooms[key].Seats;
+        room.isLab = rooms[key].RoomType === "Lab" ? true : false;
+        roomsList.push(room);
+    }
 }
 
-async function main()// main function, is async because fs.createReadStream() 
-{
-    await readCSVData();
-    storeParsedData();
-    firstAssign(z);
+/** Tests how many classes can be assigned per day
+ * @function
+ * @returns {void}
+ * @memberof Restrictions
+ */
+function howManyClassesPerDay() {
+    var total_count = 0;
+    // loop through each class
+    for (var _class of classData) {
+        // loop through each of the meeting dates
+        for (var ses of _class.meetingDates) {
+            // loop through each day of the meeting dates
+            var days = ses.days.split("");
+            for (var day of days) {
+                if (ses.start in classDayFrequencies[day]) {
+                    classDayFrequencies[day][ses.start]++;
+                }
+                else {
+                    classDayFrequencies[day][ses.start] = 1;
+                }
+                classDayTotals[day]++;
+            }
+        }
+        total_count++;
+    }
+}
+
+/**  Will compare two meeting dates, return types:
+    -2 if stable is null
+    -1 if test is earlier
+    0  if during the same time 
+    1  if stable is earlier
+ * @function
+ * @returns {void}
+ * @memberof Restrictions
+ */
+export function compareMeetingDates(test, stable) { 
+    if (stable === null) {
+        return -2;
+    }
+    var parsedTest = {'startHour': null,
+                        'startMin': null,
+                        'endHour': null,
+                        'endMin': null,
+                        'startTotal': null,
+                        'endTotal': null};
+    var parsedStable = {'startHour': null,
+                        'startMin': null,
+                        'endHour': null,
+                        'endMin': null,
+                        'startTotal': null,
+                        'endTotal': null};
+    // splice the start hours
+    var testSplit = test.start.slice(0, -2).split(":");
+    var stableSplit = stable.start.slice(0, -2).split(":");
+    // set start hours
+    parsedTest.startHour = test.start.includes("pm") && parseInt(testSplit[0]) !== 12 
+                            ? parseInt(testSplit[0]) + 12 : parseInt(testSplit[0]);
+    parsedStable.startHour = stable.start.includes("pm") && parseInt(stableSplit[0]) !== 12 
+                            ? parseInt(stableSplit[0]) + 12 : parseInt(stableSplit[0]);
+    // set start minutes 
+    parsedTest.startMin = isNaN(parseInt(testSplit[1])) ? 0 : parseInt(testSplit[1]);
+    parsedStable.startMin = isNaN(parseInt(stableSplit[1])) ? 0 : parseInt(stableSplit[1]);
+    // splice the end hours
+    testSplit = test.end.slice(0, -2).split(":");
+    stableSplit = stable.end.slice(0, -2).split(":");
+    // set end hours
+    parsedTest.endHour = test.end.includes("pm") && parseInt(testSplit[0]) !== 12 
+                            ? parseInt(testSplit[0]) + 12 : parseInt(testSplit[0]);
+    parsedStable.endHour = stable.end.includes("pm") && parseInt(stableSplit[0]) !== 12 
+                            ? parseInt(stableSplit[0]) + 12 : parseInt(stableSplit[0]);
+    // set start minutes 
+    parsedTest.endMin = isNaN(parseInt(testSplit[1])) ? 0 : parseInt(testSplit[1]);
+    parsedStable.endMin = isNaN(parseInt(stableSplit[1])) ? 0 : parseInt(stableSplit[1]);
+    // set totals
+    parsedTest.endTotal = parsedTest.endHour*60+parsedTest.endMin;
+    parsedTest.startTotal = parsedTest.startHour*60+parsedTest.startMin;
+    parsedStable.endTotal = parsedStable.endHour*60+parsedStable.endMin;
+    parsedStable.startTotal = parsedStable.startHour*60+parsedStable.startMin;
+    // during the same time
+    if (parsedStable.startTotal <= parsedTest.startTotal && parsedTest.startTotal < parsedStable.endTotal ||
+        parsedTest.startTotal <= parsedStable.startTotal && parsedStable.startTotal < parsedTest.endTotal) { return 0 }
+    // date1 is earlier
+    else if (parsedTest.endHour*60 + parsedTest.endMin <= parsedStable.startHour*60 + parsedStable.startMin) { return -1 }
+    // date2 is earlier
+    else if (parsedStable.endHour*60 + parsedStable.endMin <= parsedTest.startHour*60 + parsedTest.startMin) { return 1 }
+    else { return null }
+}
+
+/** Main function for all classes
+ * @function
+ * @returns {void}
+ * @memberof Restrictions
+ */
+export async function mainRestrictions(path) {
+    await readCSVData(path);
+    logger.info("Class data has been read");
+    createRoomData();
+    logger.info("Room information has been read");
+    howManyClassesPerDay();
+    logger.info("Number of classes per day has been calculated");
+    Queueify();
+    logger.info("Class data has been queued");
+    assignRooms();
+    logger.info("Finished assigning rooms");
+    writeToCSV();
+    logger.info("Data has been outputted");
+    if (finalUnassignedClasses.length > 0) {
+        for (var _class of finalUnassignedClasses) {
+            logger.warn(`Class ${_class.name} section ${_class.sectionNumber} was not assigned a room`)
+        }
+        logger.warn(`A total number of ${finalUnassignedClasses.length} have not been assigned`);
+    }
+    else {
+        logger.info("All classes have been assigned");
+    }
+    calendarFormat();
 } // end of main
 
-main();// launch main
-// EOF
+/* launch main */
+var test_path = './uploads/1715015603287_Spring2023NEW1.csv';
+mainRestrictions(test_path);
+
+export default {mainRestrictions};

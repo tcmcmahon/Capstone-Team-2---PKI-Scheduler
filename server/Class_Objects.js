@@ -4,6 +4,46 @@
  * @namespace ClassObjects
  */
 
+//Unassignable classes
+export const unassignableClasses =["AREN 3030 - AE DESIGN AND SIMULATION STUDIO III",
+                            "CIVE 334 - INTRODUCTION TO GEOTECHNICAL ENGINEERING",
+                            "CIVE 378 - MATERIALS OF CONSTRUCTION",
+                            "AREN 3220 - ELECTRICAL SYSTEMS FOR BUILDINGS I",
+                            "AREN 4250 - LIGHTING DESIGN",
+                            "AREN 4940 - SPECIAL TOPICS IN ARCHITECTURAL ENGINEERING IV",
+                            "AREN 8220 - ELECTRICAL SYSTEMS FOR BUILDINGS II",
+                            "AREN 1030 - DESIGN AND SIMULATION STUDIO I",
+                            "AREN 4040 - BUILDING ENVELOPES",
+                            "CIVE 102 - GEOMATICS FOR CIVIL ENGINEERING",
+                            "CNST 112 - CONSTRUCTION COMMUNICATIONS",
+                            "CNST 225 - INTRODUCTION TO BUILDING INFORMATION MODELING",
+                            "ECEN 103 - ELECTRICAL AND COMPUTER ENGINEERING FUNDAMENTALS",
+                            "ECEN 106 - MICROPROCESSOR APPLICATIONS",
+                            "ECEN 123 - INTRODUCTION TO ELECTRICAL AND COMPUTER ENGINEERING",
+                            "ECEN 194 - SPECIAL TOPICS IN ELECTRICAL AND COMPUTER ENGINEERING I",
+                            "ECEN 313 - SWITCHING CIRCUITS THEORY",
+                            "ECEN 433 - MICROPROCESSOR SYSTEM DESIGN"];
+export const unassignableClassesSections =[['1', '2', '3', '4'],
+                                    ['2', '3', '4'],
+                                    ['2', '3', '4'],
+                                    ['1', '2', '3', '4'],
+                                    ['1', '2', '3', '4'],
+                                    ['1', '2', '3', '4'],
+                                    ['1', '2', '3', '4'],
+                                    ['1', '2', '3', '4'],
+                                    ['1', '2', '3', '4'],
+                                    ['2', '3'],
+                                    ['1', '2', '3', '4'],
+                                    ['1', '2', '3', '4'],
+                                    ['2'],
+                                    ['3', '4'],
+                                    ['1', '2', '3', '4'],
+                                    ['2', '4'],
+                                    ['2', '3'],
+                                    ['2']];
+const meetOnS = ["ECEN 891 - SPECIAL TOPICS IN ELECTRIC AND COMPUTER ENGINEERING IV",
+                "ECEN 491 - SPECIAL TOPICS IN ELECTRIC AND COMPUTER ENGINEERING IV"];
+
 /** Object that grabs course details
  * @memberof ClassObjects
  */
@@ -11,14 +51,53 @@ export class CourseDescription {
     // TODO : move functions from restrictrions.js to here to reduce clutter there
     constructor() {
         this.name = null;                       // 0 - course code and title
+        this.term = null;                       // 1
+        this.termCode = null;                   // 2
+        this.deptCode = null;                   // 3
+        this.subjCode = null;                   // 4
+        this.catNumber = null;                  // 5
+        this.course = null;                     // 6
         this.sectionNumber = null;              // 7 - section number of course
+        this.courseTitle = null;                // 8
+        this.sectionType = null;                // 9
         this.isLab = null;                      // 9 - if lab or not lab
-        this.meetingDates = [];                 // 11 - will hold ClassroomTimeSlot object  
+        this.topic = null;                      // 10
+        this.meetingDates = {days: null, start: null, end: null}; // 11 - will hold ClassroomTimeSlot object 
+        this.meetingPattern = null;             // 11 
+        this.meetings = null;                   // 12
+        this.instructor = null;                 // 13
         this.room = null;                       // 14 - keep null, will assign later
+        this.status = null;                     // 15
         this.session = null;                    // 16 - if class is regular session or 6 weeks - May not be needed
+        this.campusCode = null;                 // 17
         this.campus = null;                     // 17 - if class is CoE or IS
+        this.instMethod = null;                 // 18
+        this.integPartner = null;               // 19
+        this.schedulePrint = null;              // 20
+        this.consent = null;                    // 21
+        this.creditHrsMin = null;               // 22
+        this.creditHrs = null;                  // 23
+        this.gradeMode = null;                  // 24
+        this.attributes = null;                 // 25
+        this.courseAttributes = null;           // 26
+        this.roomAttributes = null;             // 27
+        this.enrollment = null;                 // 28
         this.maximumEnrollments = null;         // 29 - room cap
+        this.maxEnrollments = null;             // 29
+        this.priorEnrollment = null;            // 30
+        this.projEnrollment = null;             // 31
+        this.waitCap = null;                    // 32
+        this.rmCapRequest = null;               // 33
+        this.crossListings = null;              // 34
         this.crossListedWith = [];              // self created - will have all courses class is cross listed with
+        this.crossListMax = null;               // 35
+        this.crossListProj = null;              // 36
+        this.crossListWaitCap = null;           // 37
+        this.crossListRmCapReq = null;          // 38
+        this.linkTo = null;                     // 39
+        this.comments = null;                   // 40
+        this.notes1 = null;                     // 41
+        this.notes2 = null;                     // 42
     }   
     setCourseName(courseString) {
         this.name = courseString;
@@ -27,20 +106,20 @@ export class CourseDescription {
         this.sectionNumber = sectionString;
     }
     setLab(sectionString) {
-        this.lab = (sectionString === "Laboratory") ? true : false;
+        this.isLab = (sectionString === "Laboratory") ? true : false;
     }
-    spliceTime(timeString) { // e.g. "MW 10:30am-11:45am; F 12:00pm-1:15pm"
-        var timeDaySplit;
-        var startEndSplit;
-        var timeSlot;
-        var days = timeString.split("; "); // ["MW 10:30am-11:45am", "F 12:00pm-1:15pm"]
-        for (var day in days) {
-            timeDaySplit = days[day].split(' '); // ["MW", "10:30am-11:45am"] : ["F", "12:00pm-1:15pm"]
-            startEndSplit = timeDaySplit[1].split('-'); // ["10:30am", "11:45am"] : ["12:00pm", "1:15pm"]
-            timeSlot = new ClassroomTimeSlot(timeDaySplit[0], startEndSplit[0], startEndSplit[1]);
-            this.meetingDates.push(timeSlot);
+    spliceTime(timeString) { // e.g. "MW 10:30am-11:45am
+        var timeDaySplit = timeString.split(' ');
+        var startEndSplit = timeDaySplit[1].split('-');
+        this.meetingDates.days = timeDaySplit[0];
+        this.meetingDates.start = startEndSplit[0];
+        this.meetingDates.end = startEndSplit[1];
+    }
+    setRoom(roomString) {
+        var pkiLen = "Peter Kiewit Institute ".length;
+        if (roomString !== "") {
+            this.room = roomString.substr(pkiLen, 3);
         }
-        return this.meetingDates;
     }
     setSession(sessionString) {
         this.session = sessionString;
@@ -49,12 +128,15 @@ export class CourseDescription {
         this.campus = (campusString == "UNO-IS") ? "IS&T" : "CoE";
     }
     setClassSize(classSize, crossListedSize) {
-        if (this.crossListedWith) {
-            this.maximumEnrollments = Number(classSize);
+        if (this.crossListedWith.length > 0) {
+            this.maximumEnrollments = Number(crossListedSize);
             return false;
         }
         else {
-            this.maximumEnrollments = Number(crossListedSize);
+            this.maximumEnrollments = Number(classSize);
+        }
+        if (this.maximumEnrollments > 18) {
+            this.isLab = false;
         }
     }
     checkIfCrossListed(thisCourse, crossListings, allCrossListings) {
@@ -81,13 +163,15 @@ export class CourseDescription {
 /** Linked list of classroom time data 
  * @memberof ClassObjects
 */
-class ClassroomTimeSlot {
-    constructor(days=null, start=null, end=null, next=null) {
-        this.days = days
-        this.startTime = start;
-        this.endTime = end;
-        this.nextClass = next;
+export class ClassroomTimeSlot {
+    constructor(_class=null, next=null) {
+        this.class = _class;
+        this.next = next;
     }
+    getNext() { return this.next }
+    setNext(next) { this.next = next }
+    getClass() { return this.class }
+    setClass(_class) {this.class = _class }
 }
 
 
@@ -97,21 +181,32 @@ class ClassroomTimeSlot {
     @memberof ClassObjects
 */
 export class ClassroomTimeData {
-    constructor(roomNumber) {
+    constructor(roomNumber=null) {
         this.roomNumber = roomNumber;   // room number of classroom
         this.colleges = {'CoE': null,
                          'IS&T': null};   // {bool, bool} {IS&T, CoE}
         this.roomSize = -1;
         this.isLab = null;     
-        this.monClasses = null;           // monday classes in order
-        this.tueClasses = null;           // tuesday classes in order
-        this.wedClasses = null;           // wednesday classes in order
-        this.thuClasses = null;           // thursday classes in order
-        this.friClasses = null;           // friday classes in order
+        this.monClasses = new ClassroomTimeSlot();           // monday classes in order
+        this.tueClasses = new ClassroomTimeSlot();           // tuesday classes in order
+        this.wedClasses = new ClassroomTimeSlot();           // wednesday classes in order
+        this.thuClasses = new ClassroomTimeSlot();           // thursday classes in order
+        this.friClasses = new ClassroomTimeSlot();           // friday classes in order
+        this.s_sClasses = new ClassroomTimeSlot();           // s classes in order
     }
     checkTimeConflicts() {
         var days = [this.monClasses, this.tueClasses, this.wedClasses, this.thuClasses, this.friClasses];
         // TODO : make sure that the classes do not have any time conflicts
+    }
+}
+
+
+function sleep(milliseconds) {
+    var start = new Date().getTime();
+    for (var i = 0; i < 1e7; i++) {
+        if ((new Date().getTime() - start) > milliseconds){
+        break;
+        }
     }
 }
 
@@ -123,53 +218,28 @@ export class PriorityQueue {
     constructor() {
         this.queue = [];
     }
-    enqueue(_class) {
-        // make an amount of instances of _class that only have one meetingDate
-        // classes with a higher priority will be near the beginning and ones of smallest priority will be towards the end
-        var _classList = [];
-        for (var i in _class.meetingDates) {
-            _classList.push(structuredClone(_class));
-            _classList[i].meetingDates = _class.meetingDates[i];
-        }
-        // classes may have multiple different meeting times, this will loop through each
-        //      although very rare still needs to be accounted for
-        for (var _classInstance of _classList) {
-            var numDays = _classInstance.meetingDates.days.length
-            // loops through each class in the queue
-            if (this.queue.lenth === 0) {
-                this.queue.push(_classInstance);
-            }
-            else if (numDays === 1) {
-                this.queue.push(_classInstance);
-            }
-            else {
-                var i = 0;
-                var assigned = false;
-                // loop through each class in queue
-                while (!assigned && i < this.queue.length) {
-                    if (numDays < this.queue[i].meetingDates.days.length) { continue }
-                    else {
-                        this.queue.splice(i, 0, _classInstance);
-                        assigned = true;
-                    }
-                    i++;
-                }
-                if (!assigned) {
-                    this.queue.push(_classInstance);
-                }
+    enqueue(_class, classDay, totalCourseTime) {
+        var i = 0;
+        if (_class.room === null) {
+            while (i < this.queue.length) {
+                if (this.queue[i][1] < totalCourseTime) { break }
+                else if (this.queue[i][1] === totalCourseTime && this.queue[i][0].meetingDates.days.length < _class.meetingDates.days.length) { break }
+                else { i++ }
             }
         }
+        this.queue.splice(i, 0, [_class, totalCourseTime]);
     }
-    dequeue() {
+    dequeue(i=0) {
         return this.queue.shift();
     }
     displayContents() {
         for (var i in this.queue) {
             console.log(i)
-            console.log(this.queue[i]);
+            console.log(this.queue[i][0]);
             console.log("\n");
+            sleep(10000);
         }
     }
 }
 
-export default {CourseDescription, ClassroomTimeData, PriorityQueue};
+export default {CourseDescription, ClassroomTimeData, PriorityQueue, ClassroomTimeSlot};
