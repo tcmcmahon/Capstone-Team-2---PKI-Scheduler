@@ -224,7 +224,7 @@ export function assignRooms() {
     return null;
 }
 
-/** Writes final assignment to new CSV file in the uploads folder
+/** Writes final assignment to new CSV file in the output folder
  * @function
  * @returns {void}
  * @memberof Assignment
