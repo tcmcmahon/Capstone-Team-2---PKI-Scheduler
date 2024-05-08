@@ -36,7 +36,7 @@ response = await axios.get("http://localhost:3001/Data");
 result = response.data;
 cData = (JSON.stringify(result));
 cData = JSON.parse(cData, function (key, value) {
-  if (key == "room") {
+  if (key === "room") {
     return +value; //parse room key to int
   } else {
     return value;

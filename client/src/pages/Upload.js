@@ -7,9 +7,7 @@
 
 import React, { useState } from 'react';
 import img from '../resources/O-UNO_Type_Color_White.png';
-import img2 from '../resources/photo-1606761568499-6d2451b23c66.avif';
 import "./Upload.css";
-
 
 /**
  * Function for displaying the upload page
