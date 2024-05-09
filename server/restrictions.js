@@ -314,7 +314,7 @@ export async function mainRestrictions(path) {
 } // end of main
 
 /* launch main */
-var test_path = './uploads/1715015603287_Spring2023NEW1.csv';
+var test_path = './uploads/1710813723353_test.csv';
 mainRestrictions(test_path);
 
 export default {mainRestrictions};
