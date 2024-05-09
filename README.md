@@ -8,7 +8,6 @@ https://tcmcmahon.github.io/Capstone-Team2-PKI-Scheduler/
 
 ### RELEASE NOTES:
   MILESTONE 1:
-    MILESTONE 1:
   In the current version as of now, we have created the front-end and styled it, and created the back-end with basic parsing functionality. The front-end allows for uploading of a CSV file, and the back-end takes the file and outputs the contents of the file to the command line.
   We have multiple branches, each showing the work done by each person. We named each branch as first initial/lastname/point of branch. Frederic's branch (fshope) created the database definitions for the upcoming milestone. This is not merged to main for Milestone 1, but will be merged in Milestone 2.
   Josh's branch (jshadbolt) first created the basic web app and the basic backend. 
@@ -23,12 +22,6 @@ https://tcmcmahon.github.io/Capstone-Team2-PKI-Scheduler/
   
   MILESTONE 4:
   For Milestone 4, we added room grouping to the calendar and integrated that with our data. We made style changes to modernize and improve the web pages, and began finalizing the algorithm for assignment.
-
-  MILESTONE 2: For Milestone 2, we made a calendar page and fed it test data to show its potential functionality. We bundled the client and server together so that once the client is built, we execute one command in the server and this starts both the client and the server at the same time. We extracted the classroom CSV data from our parsed version, and stored it in the MySQL database.
-
-  MILESTONE 3: For Milestone 3, we integrated a Navigation bar to move back and forth between pages, we created an algorithm for assigning classes that resolves all time conflicts, and fed the calendar page with the output from that algorithm. Each class on the calendar can be clicked on to view its information, and you can choose day or week view, and move between different dates. Minor changes made to the look of each page, and an additional page for display of the raw algorithm output results.
-
-  MILESTONE 4: For Milestone 4, we added room grouping to the calendar and integrated that with our data. We made style changes to modernize and improve the web pages, and began finalizing the algorithm for assignment.
 
   MILESTONE 5: For Milestone 5, we finalized the assignment algorithm, ran testing for different types of uploaded CSV files, formatted the algorithm output, and cleaned up all the code/organized files to make everything make sense.
 
@@ -58,7 +51,7 @@ https://tcmcmahon.github.io/Capstone-Team2-PKI-Scheduler/
  ### RUNNING THE APPLICATION:
     1. Go to the command line/terminal and navigate to the where the unzipped app folder is; cd LOCATIONOFYOURFOLDER/Capstone-Team2-PKI-Scheduler.
     2. Once in this directory, cd into the "client" folder, and run npm install. You will only need to do this once. After this is complete, run "npm run build", this will also need to only be done once.
-    3. Open a second command line/terminal, and go into the app folder, and then into the "server" folder. Run npm install. You will only need to do this once. After this is done, run Node index.js. You should see "Server is running on port". 
+    3. Open a second command line/terminal, and go into the app folder, and then into the "server" folder. Run npm install, and npm install winston. You will only need to do this once. After this is done, run Node index.js. You should see "Server is running on port". 
     4. crtl + click the link the server is running on, or simply navigate to it in your browser and you should see the React Web page
 
 ### THAT'S IT!

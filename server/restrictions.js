@@ -104,7 +104,7 @@ function readCSVData(file_path) {
                     && unassignableClassesSections[unassignableClasses.indexOf(prevClassName)].includes(row[7])) { /* class is unassignable with bad section number */ }
             else if (row[29] > 60 || row[35] > 60) { /* too many students to sit */ }
             else if (row[11].includes(";")) {
-                logger.warn(`Cannot assign ${prevClassName} sect. ${row[7]} due to irregular meetig time. Please assign mannually`);
+                logger.warn(`Cannot assign ${prevClassName} sect. ${row[7]} due to irregular meeting time. Please assign manually`);
             }
             else if (row[0] === '') {
                 var crossListed = row[34] !== '' && cd.checkIfCrossListed([row[6], row[7]], row[34], crossListedCoursesToCheck);

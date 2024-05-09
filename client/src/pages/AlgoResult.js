@@ -7,9 +7,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import img from '../resources/O-UNO_Type_Color_White.png';
-import img2 from '../resources/photo-1606761568499-6d2451b23c66.avif';
 import "./AlgoResult.css";
-
 
 /**
  * Function for displaying the raw data output from the algorithm

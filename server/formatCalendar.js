@@ -51,19 +51,14 @@ export function calendarFormat()
     for(let i = 0; i < preCalendar.length; i++)
     {
         if (y[preCalendar[i].title] !== undefined && y[preCalendar[i].title].includes(preCalendar[i].section)) {
-            console.log("Found a baddy: " + [preCalendar[i].title, preCalendar[i].section]);
             continue 
         }
-        console.log("We addin:  " + [preCalendar[i].title, preCalendar[i].section]);
         if (y[preCalendar[i].title] === undefined) {
             y[preCalendar[i].title] = [preCalendar[i].section];
         }
         else {
             y[preCalendar[i].title].push(preCalendar[i].section);
         }
-        console.log(preCalendar[i].title);
-        console.log(y[preCalendar[i].title]);
-        console.log("\n\n");
         for (var d in preCalendar[i].days) {
             finalForCalendar.push({
                 startDate: (datesSymbol[preCalendar[i].days[d]] + "T" + preCalendar[i].startTime),
