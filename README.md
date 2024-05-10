@@ -50,9 +50,9 @@ https://tcmcmahon.github.io/Capstone-Team2-PKI-Scheduler/
 
  ### RUNNING THE APPLICATION:
     1. Go to the command line/terminal and navigate to the where the unzipped app folder is; cd LOCATIONOFYOURFOLDER/Capstone-Team2-PKI-Scheduler.
-    2. Once in this directory, cd into the "client" folder, and run npm install. You will only need to do this once. After this is complete, run "npm run build", this will also need to only be done once.
-    3. Open a second command line/terminal, and go into the app folder, and then into the "server" folder. Run npm install, and npm install winston. You will only need to do this once. After this is done, run Node index.js. You should see "Server is running on port". 
-    4. crtl + click the link the server is running on, or simply navigate to it in your browser and you should see the React Web page
+    2. Once in this directory, cd into the "client" folder (cd client), and run npm install. 
+    ***IF YOU GET AN ERROR REGARDING "Legacy Peer Dependency Conflicts" YOU NEED TO RUN "npm install --force"***. You will only need to do this once. After this is complete, run "npm run build", this will also need to only be done once.
+    3. Open a second command line/terminal, and cd up a level into the main folder, and then into the "server" folder (cd ../server). Run npm install, and npm install winston. You will only need to do this once. After this is done, run npm start. The app should open in your browser.
 
 ### THAT'S IT!
     
