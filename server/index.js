@@ -88,21 +88,21 @@ ex.use(express.json());
 ex.use(cors());
 
 /** Send calendar data when /Data path is GET requested
- * @function
+ * @function get
  * @returns {void} Sends finalForCalendar object to requester
  * @memberof ServerIndex
  */
 ex.get("/Data", (req, res) => {res.json(finalForCalendar);});//Send data in json
 
 /** Send final assignment data when /Algo path is GET requested
- * @function
+ * @function get
  * @returns {void} Sends final object to requester
  * @memberof ServerIndex
  */
 ex.get("/Algo", (req, res) => {res.json(preCalendar);});//Send data in json
 
 /** Start server listener on port 3001 for data requests 
- * @function
+ * @function listen
  * @returns {void} Starts a listener for data on http://localhost:3001
  * @memberof ServerIndex
  */
