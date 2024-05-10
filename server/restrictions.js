@@ -10,9 +10,6 @@ import { CourseDescription, ClassroomTimeData, PriorityQueue, unassignableClasse
 import fs from 'fs';
 import { parse } from 'csv-parse';
 import rooms from "./rooms.json" assert {type: "json"};
-import express from 'express';
-import cors from 'cors';
-import { preCalendar, finalForCalendar } from './formatCalendar.js';
 import { calendarFormat } from './formatCalendar.js';
 import { assignRooms, Queueify, writeToCSV } from './assignment.js';
 import winston from 'winston';
