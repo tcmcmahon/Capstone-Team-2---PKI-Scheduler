@@ -20,32 +20,6 @@ import winston from 'winston';
 const { transports, format, createLogger } = winston;
 const { combine, printf, timestamp } = format;
 
-//Set up express/cors
-const ex = express();
-ex.use(express.json());
-ex.use(cors());
-
-/** Send calendar data when /Data path is GET requested
- * @function
- * @returns {void} Sends finalForCalendar object to requester
- * @memberof Restrictions
- */
-ex.get("/Data", (req, res) => {res.json(finalForCalendar);});//Send data in json
-
-/** Send final assignment data when /Algo path is GET requested
- * @function
- * @returns {void} Sends final object to requester
- * @memberof Restrictions
- */
-ex.get("/Algo", (req, res) => {res.json(preCalendar);});//Send data in json
-
-/** Start server listener on port 3001 for data requests 
- * @function
- * @returns {void} Starts a listener for data on http://localhost:3001
- * @memberof Restrictions
- */
-ex.listen(3001, () => console.log("Server is up"));//Listen on port 3001 for data requests to /Data and /Algo 
-
 /* global variables */
 export var classData = []; // will hold instances of classDescription, will end up with the data for all of the classes
 export var unassignedClassData = []; // will hold instances of classDescription, will end up with the data for all of the classes
@@ -314,7 +288,7 @@ export async function mainRestrictions(path) {
 } // end of main
 
 /* launch main */
-var test_path = './uploads/1710813723353_test.csv';
-mainRestrictions(test_path);
+// var test_path = './uploads/1710813723353_test.csv';
+// mainRestrictions(uploadedFilePath);
 
 export default {mainRestrictions};

@@ -11,6 +11,8 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import fs from 'fs';
 import { parse } from 'csv-parse';
+import { preCalendar, finalForCalendar } from './formatCalendar.js';
+import { mainRestrictions } from './restrictions.js';
 
 const app = express();
 const PORT = 3000;
@@ -45,6 +47,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  */ 
 app.use(express.static(path.join(__dirname, '../client/build')));
 
+export var uploadedFilePath;
 // Handle file upload
 /**
  * handles the uploading of a file and outputs the status
@@ -56,10 +59,11 @@ app.post('/upload', upload.single('file'), (req, res) => {
   if (!req.file) {
     return res.status(400).send('No files were uploaded.');
   }
-
+  uploadedFilePath = "./uploads/" + req.file.filename;
   console.log('Uploaded file:', req.file.originalname);
-  printCSVtoCLI("./uploads/" + req.file.filename)
+  // printCSVtoCLI("./uploads/" + req.file.filename)
   res.send('File uploaded successfully.');
+  mainRestrictions(uploadedFilePath)
 });
 
 // Handle React routing, return all requests to React app
@@ -77,6 +81,32 @@ app.get('*', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+//Set up express/cors
+const ex = express();
+ex.use(express.json());
+ex.use(cors());
+
+/** Send calendar data when /Data path is GET requested
+ * @function
+ * @returns {void} Sends finalForCalendar object to requester
+ * @memberof ServerIndex
+ */
+ex.get("/Data", (req, res) => {res.json(finalForCalendar);});//Send data in json
+
+/** Send final assignment data when /Algo path is GET requested
+ * @function
+ * @returns {void} Sends final object to requester
+ * @memberof ServerIndex
+ */
+ex.get("/Algo", (req, res) => {res.json(preCalendar);});//Send data in json
+
+/** Start server listener on port 3001 for data requests 
+ * @function
+ * @returns {void} Starts a listener for data on http://localhost:3001
+ * @memberof ServerIndex
+ */
+ex.listen(3001, () => console.log("Server is up"));//Listen on port 3001 for data requests to /Data and /Algo 
 
 /**
  * Outputs uploaded CSV to console
